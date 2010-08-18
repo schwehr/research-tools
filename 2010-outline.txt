@@ -1,0 +1,47 @@
+Here is Dave Monahan's 2010 proposal:
+
+ESCI 895
+  “Research Tools in Ocean Mapping”
+ 
+Fall Semester, 2010
+ 
+It's about six weeks before classes begin, so time to think about this year's version of this course.
+ 
+Objective
+Idea is to have training and education sessions on the tools that are used throughout Ocean Mapping. Intent is to introduce and develop the essential skills that all practitioners in our field should have.
+ 
+In the past this has been compulsory for all incoming grad students, but some have not taken it.
+ 
+This will be the sixth time this course has been offered – we have fine tuned it each year.
+ 
+Last year  modules and  people.
+ 
+MATLAB Schmidt
+FLEDERMAUS Gee / Hefron (IVS)
+GIS Theory Monahan
+GIS Practical ESRI
+GMT Smith
+MAPPING TOOL Gardener
+REPORT WRITING Monahan
+PROBLEM SOLVING Monahan
+LIBRARY RESEARCH Thompson (UNH Library)
+GeoMapApp –Goodwillie (LDEO)
+WIKI  Schwehr
+GOOGLE EARTH Schwehr
+TERM PROJECT Monahan
+ 
+Questions
+ 
+1. Should any topics be added? Should any be removed?
+ 
+2. Is there anyone listed who won't be available?
+ 
+3. Is everyone else listed still available and willing?
+ 
+4. Any general thoughts or comments?
+ 
+ 
+Thank You
+Dave Monahan
+GEBCO website http://gebco.net/
+ 

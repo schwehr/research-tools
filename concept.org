@@ -1,0 +1,20 @@
+
+
+- Start by giving them the NOAA and ACOE survey manuals
+- Need to cover svn
+- Can I do emacs and org mode?
+- Handling references.  Monica on JabRef and Zotero
+- Can I have them use python and provided readers for formats to read
+  lidar, simrad em, single beam, etc to make google earth KML files?
+- Can we incorporate Jonathan B's simrad parsing course or at least
+  lead up to it?
+- QGIS for sure, but maybe even a little GRASS?  And the others like
+  uDig?
+- Can the python lead towards using python in ArcGIS?
+- How can I incorporate databases into the course?
+- How do I lead into matlab?
+
+Talked to Will about the idea of a linux server.  He suggested that we
+cookup a VM for each student that runs linux with gmt/mbsystem/etc all
+in there.  He likes the idea of python to really get the students
+going on programming in a friendly, but informative way with OOP etc.
