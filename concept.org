@@ -13,8 +13,106 @@
 - Can the python lead towards using python in ArcGIS?
 - How can I incorporate databases into the course?
 - How do I lead into matlab?
+- Time: windows time protocol, timed, ntp, ptp, GMT vrs UTC
 
 Talked to Will about the idea of a linux server.  He suggested that we
 cookup a VM for each student that runs linux with gmt/mbsystem/etc all
 in there.  He likes the idea of python to really get the students
 going on programming in a friendly, but informative way with OOP etc.
+
+The goal of this course is to give first year graduate students a
+background in data processing and visualization that will assist them
+in their other course work at UNH.  CCOM will provide Windows
+workstations in the classroom that will run allow students to run
+local software and log into server running linux.  Students will gain
+experience in editing files, parsing data, electronic science logs,
+simple databases using SQLite and PostGIS, plotting, scripting with
+the BASH shell and Python, KML for Google Earth, GeoMapApp,
+Fledermaus, MATLAB, and GIS tools including proj, uDIG, QGIS, and
+ArcGIS.  Do to the time constraints, students will not go into depth
+on these tools, but will attempt to give the students a basis upon
+which they can build their skills.  Examples for the class will be
+primarily focus on the Seacoast, NH area in order to familiarize
+students taking the Summer Hydro course with their field area.
+
+- Introduction
+  - Go over course goals
+  - CCOM Wiki - Both as a source of material and adding content
+  - The NOAA and ACOE survey manuals, NOS Survey Specifications,
+    CoastPilot Manual (if we can get NOAA permission),  - We
+    will not follow these, but students should compare and contrast
+    what they do in their courses with these documents
+  - Kickstart a class project.  Candidates:
+    - As if you are writing a wikipedia entry for one of the relevant
+      pages that is weak or does not exist
+  - Group chat for during class and after hours - IRC
+- Introduction to the Linux VM - Logging in and getting started
+  - ssh, scp, sftp
+  - Basic shell commands and shell script
+  - Editing with Emacs
+  - Revision control with Subversion (svn)
+  - Keeping a log book with Emacs and org-mode
+  - Creating very basic HTML web pages using UNH Pub Pages or internal
+    demo server
+- Introduction to databases using SQLite
+  - Simple queries with SELECT from existing databases
+  - Creating a new database with CREATE and INSERT
+  - Global bore hole catalog
+  - Make a KML of the borehole plots using a shell script and SQLite
+- Introduction to Python
+  - Simple language use with just variables and for loops
+  - Lists, Sets, Tuples
+  - Reading data from a file
+  - Talking to a SQLite database
+- Python Part II
+  - Functions and simple classes
+- Time, location, NMEA and logging data
+  - Clock drift
+  - Windows Time Service, NTP, PTP, Time Zones (GMT, UTC, and Local
+    Times), Time sources (NIST, CDMA, etc)
+  - Introduction to NMEA - http://gpsd.berlios.de/NMEA.txt
+  - Parsing NMEA with python (ZDA and GGA strings)
+- Tide lab using Python
+  - Computing 6 minute averages from high rate tide sensors
+  - Comparing tide sensors
+  - Plotting using matplotlib
+- Introduction to GIS concepts
+  - Using uDig and Quantum GIS
+  - Reading in points, lines, areas, shape files, 
+  - Projection and vertical datum transformations using pyproj (and
+    possibly NOAA's vdatum)
+- Mapping from the command line
+  - GMT map generation and GDAL transformations
+  - Line: Plot ship tracks from multibeam files
+  - Grids - GMT grids, BAGs
+- Metadata
+  - What are the FGDC and ISO 19115 standards? (Just a simplistic view)
+  - Create a metadata file for a sample survey file
+  - Python and XML
+  - Create a Google Earth visualization from a sample set of metadata files
+- Research Papers
+  - Electronic Library Resources at UNH, Google Scholar
+  - Personal journal management with Zotero and/or JabRef
+  - Mention EndNote and Papers
+  - How to use Wikipedia without getting in trouble
+  - A light introduction to LaTeX
+- GeoMapApp
+  - Guest Lecture by Andrew Goodwillie
+- Fledermaus
+  - Guest Lecture by Gee / Hefron (IVS)
+- Introduction to Matlab
+  - Especially reading data from SQLite databases
+- GIS Practical with ArcGIS
+  - Guest ESRI or Mike Routhier from Morse Hall
+  - I hope that we can leverage students' python and PostGIS experience
+    from before
+
+If there is time:
+
+- Parsing a multibeam file using python or Jonathan's parsing
+  multibeam with C
+
+Possible addition if someone could provide it and there is time:
+
+- Quick introduction to R for statistical analysis
+  http://cran.R-project.org/
