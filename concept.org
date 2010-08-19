@@ -39,7 +39,8 @@ students taking the Summer Hydro course with their field area.
   - Go over course goals
   - CCOM Wiki - Both as a source of material and adding content
   - The NOAA and ACOE survey manuals, NOS Survey Specifications,
-    CoastPilot Manual (if we can get NOAA permission),  - We
+    CoastPilot Manual (if we can get NOAA permission),  [[http://www.iho-ohi.net/iho_pubs/CB/C13_Index.htm][IHO C-13]]
+    Manual on Hydrography, etc. - We
     will not follow these, but students should compare and contrast
     what they do in their courses with these documents
   - Kickstart a class project.  Candidates:
