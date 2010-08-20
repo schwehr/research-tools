@@ -24,16 +24,18 @@ The goal of this course is to give first year graduate students a
 background in data processing and visualization that will assist them
 in their other course work at UNH.  CCOM will provide Windows
 workstations in the classroom that will run allow students to run
-local software and log into server running linux.  Students will gain
+local software and log into server running Linux.  Students will gain
 experience in editing files, parsing data, electronic science logs,
 simple databases using SQLite and PostGIS, plotting, scripting with
 the BASH shell and Python, KML for Google Earth, GeoMapApp,
 Fledermaus, MATLAB, and GIS tools including proj, uDIG, QGIS, and
 ArcGIS.  Do to the time constraints, students will not go into depth
-on these tools, but will attempt to give the students a basis upon
-which they can build their skills.  Examples for the class will be
-primarily focus on the Seacoast, NH area in order to familiarize
-students taking the Summer Hydro course with their field area.
+on these tools - the class will attempt to give the students a basis
+upon which they can build their skills.
+
+Examples for the class will be primarily focus on the Seacoast, NH
+area in order to familiarize students taking the Summer Hydro course
+with their field area.
 
 - Introduction
   - Go over course goals
@@ -44,7 +46,7 @@ students taking the Summer Hydro course with their field area.
     will not follow these, but students should compare and contrast
     what they do in their courses with these documents
   - Kickstart a class project.  Candidates:
-    - As if you are writing a wikipedia entry for one of the relevant
+    - Writing a wikipedia entry for one of the relevant
       pages that is weak or does not exist
   - Group chat for during class and after hours - IRC
 - Introduction to the Linux VM - Logging in and getting started
@@ -55,10 +57,11 @@ students taking the Summer Hydro course with their field area.
   - Keeping a log book with Emacs and org-mode
   - Creating very basic HTML web pages using UNH Pub Pages or internal
     demo server
+  - Inspecting data files and the difference between ASCII and binary data
 - Introduction to databases using SQLite
   - Simple queries with SELECT from existing databases
   - Creating a new database with CREATE and INSERT
-  - Global bore hole catalog
+  - Global borehole catalog
   - Make a KML of the borehole plots using a shell script and SQLite
 - Introduction to Python
   - Simple language use with just variables and for loops
@@ -102,6 +105,8 @@ students taking the Summer Hydro course with their field area.
 - Fledermaus
   - Guest Lecture by Gee / Hefron (IVS)
 - Introduction to Matlab
+  - Start the basics using Octave, then show them that they can switch
+    right to Matlab
   - Especially reading data from SQLite databases
 - GIS Practical with ArcGIS
   - Guest ESRI or Mike Routhier from Morse Hall
@@ -115,5 +120,6 @@ If there is time:
 
 Possible addition if someone could provide it and there is time:
 
-- Quick introduction to R for statistical analysis
-  http://cran.R-project.org/
+- Quick introduction to statistical analysis
+  - Using http://cran.R-project.org/
+  - Accessing R from python
