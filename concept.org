@@ -29,7 +29,7 @@ experience in editing files, parsing data, electronic science logs,
 simple databases using SQLite and PostGIS, plotting, scripting with
 the BASH shell and Python, KML for Google Earth, GeoMapApp,
 Fledermaus, MATLAB, and GIS tools including proj, uDIG, QGIS, and
-ArcGIS.  Do to the time constraints, students will not go into depth
+ArcGIS.  Due to the time constraints, students will not go into depth
 on these tools - the class will attempt to give the students a basis
 upon which they can build their skills.
 
