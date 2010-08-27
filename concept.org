@@ -98,7 +98,6 @@ with their field area.
   - Electronic Library Resources at UNH, Google Scholar
   - Personal journal management with Zotero and/or JabRef
   - Mention EndNote and Papers
-  - How to use Wikipedia without getting in trouble
   - A light introduction to LaTeX
 - GeoMapApp
   - Guest Lecture by Andrew Goodwillie
