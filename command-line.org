@@ -1,0 +1,74 @@
+#+BEGIN_COMMENT
+Local Variables:
+mode: org
+mode: flyspell
+mode: auto-fill
+End:
+#+END_COMMENT
+
+#+STARTUP: showall
+
+#+TITLE:     Chapter XXX: Revision Control, SVN and GIT
+#+AUTHOR:    Kurt Schwehr
+#+EMAIL:     schwehr@ccom.unh.edu>
+#+DATE:      $Date: $
+#+DESCRIPTION: Marine Research Data Manipulation and Practices - Databases
+#+TEXT:      $Id: kurt-2010.org 13030 2010-01-14 13:33:15Z schwehr $
+#+KEYWORDS: 
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:nil toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   TeX:t LaTeX:nil skip:t d:nil todo:t pri:nil tags:not-in-toc
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+LINK_HOME: http://schwehr.org
+
+* Introduction
+
+** Why learn about the command line?
+
+Today people are often uncomfortable working on the command line to
+get things done with computers or perhaps have never even used the
+command line.  Before windowing systems and mice were common, this was
+really the only way that people able to tell a computer what to do.
+The advent of the Graphical User Interface (GUI) made some tasks
+easier, but it also made many tasks harder.  If you need to rename
+hundreds of files, using a mouse is going to take you a long time or
+you are going to have to find and learn a small utility program.  With
+the command line, using a "shell", you can write a quick command to
+rename large numbers of files easily.  In the process, you have gained
+something over the GUI method: an inherently easy way to document or
+repeat the task - the text command.  You can paste that command into a
+text file for documentation or you can make the file executable and
+run it as a "script" in the future.  The shell will remember commands
+that you have run before and let you rerun them the same way you did
+before or help you edit the commands to run slightly altered versions.
+
+** Why choose bash as your shell environment?
+
+There are many flavors of shells with the most common being tcsh, sh
+bash, zsh, Windows/DOS command, and Windows PowerShell. The Microsoft
+Windows shells are too limited and are not portable to other operating
+systems. Unix systems started with C-shell (csh) and the Bourne shell
+(sh). Both of these shells were pretty limited in features. tcsh,
+bash, and zsh are improved versions of the old csh and sh shells. If
+you gain experience with csh and sh, you will find the syntax of sh to
+be more flexible and consistent than csh. sh provides basic functions
+that you can call that make writing scripts a bit easier.
+Additionally, sh is used on Unix type systems to start up the system
+and manage server type processes ("daemons", not demons) that work in
+the background to make the computer more functional. You will likely
+want to create or modify a daemon as you get comfortable with the
+Linux environment to do tasks such as logging data from serial ports.
+If you learn csh/tcsh, you will likely later have to learn at least
+some sh/bash.
+
+The Bourne Again Shell (bash) has become the defacto standard rewrite
+of sh that provides a more usable experience than the limited sh. It
+gives us command completion (hit tab to finish a word if it can),
+histories and scrollback of previous command, the ability to control
+processes, etc.
+
+* Beginning bash
+
+** Connecting to your Linux environment
