@@ -72,3 +72,31 @@ processes, etc.
 * Beginning bash
 
 ** Connecting to your Linux environment
+
+Hopefully, you are working directly on a laptop or desktop computer
+that is running linux and you are already logged into the computer.
+If you are on a Windows computer, you mush securely log into a
+"remote" computer running Linux
+
+*** Never use telnet, rsh, or ftp if you must type a password
+
+It is important to start off thinking a little bit about computer
+security.  When you are sending data across the network, for example,
+by typing your password, people can placing "sniffing" programs on the
+network connection to grab any un-encrypted text (things sent in the
+clear) and thereby grab your password.  In the 1980's and early 1990's
+people used programs called telnet and rsh (remote shell) to connect
+to other computers.  To send files, people used ftp (file transfer
+protocol).  These programs did not encrypt anything.  As a
+result, many passwords were stollen and computers were broken into.
+
+Thankfully, today we have free programs with excellent encryption to
+protect the text going between you and remote Linux computers.  From
+the command line, there is OpenSSH (SSH means "Secure Shell") and from
+Windows there is PuTTY that provides a GUI that will use the Secure
+Shell protocol to create a protected connection to a remote.  To
+transfer files, we now have, as a part of OpenSSH, scp for secure copy
+and sftp for secure file transfer protocol.  These programs encrypt
+all the data that goes between your computer and the remote computer.
+
+** Where am I and what is here?  (pwd and ls)
