@@ -1,0 +1,319 @@
+#+BEGIN_COMMENT
+Local Variables:
+mode: org
+mode: flyspell
+mode: auto-fill
+End:
+#+END_COMMENT
+
+#+STARTUP: showall
+
+#+TITLE:     Chapter XXX: Databases and SQL
+#+AUTHOR:    Kurt Schwehr
+#+EMAIL:     schwehr@ccom.unh.edu>
+#+DATE:      $Date: $
+#+DESCRIPTION: Marine Research Data Manipulation and Practices - Databases
+#+TEXT:      $Id: kurt-2010.org 13030 2010-01-14 13:33:15Z schwehr $
+#+KEYWORDS: 
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:nil toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   TeX:t LaTeX:nil skip:t d:nil todo:t pri:nil tags:not-in-toc
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+LINK_HOME: http://schwehr.org
+
+* Introduction
+
+This chapter is meant to give you an introductory knowledge of
+databases that use the Structured Query Language (SQL).  For more
+theory and complicated commands, you will need to consult references
+that focus on databases.
+
+** Why use a database
+
+Outlined only
+
+ *** Trying to work with column based data can get tiring
+ *** SQL provides a useful language for querying data
+ *** Allows uniform access to things like R, Python, and QGIS
+
+** Which database software to use
+
+We will work with two open source databases in this chapter: [[Http://Sqlite.Org/][SQLite]]
+and [[Http://Www.Postgresql.Org/][PostgreSQL]].  These two systems cover the range of power of
+databases.
+
+[[Http://Sqlite.Org/][SQLite]] is the simplest of databases.  It uses a
+single file on your computer to store the database.  This makes it
+easy to delete the file and start again or send the file to a coworker
+to share data.  SQLite, by virtual of being very simple, is very fast
+for basic tasks.  However, it is missing a very large number of
+features required in the SQL standard.  For example it only has a
+couple data types and uses strings to represent many of the types.  It
+does not follow the strict typing of SQL, meaning that you can store
+an integer in a string field and it will not complain.  There are a
+number of very like web sites that use SQLite behind the scenes.
+
+[[Http://Www.Postgresql.Org/][PostgreSQL]] is one of the most feature complete SQL databases around.
+It focuses on trying to do a very good job of following the SQL
+standard.  It supports scripts that run inside the database (called
+store procedures), has a spatial add module called PostGIS, and has
+extensive documentation.  PostgreSQL runs a server program (called a
+daemon) that is always in the background.  Programs can talk to the
+database, which can be on the same computer or can connect over a
+network connection.  However, for getting started learning
+databases, we will focus on SQLite to avoid the complexities of
+setting up a PostgreSQL.
+
+Once you have the basics of SQL, we will start to use Python to talk
+to the database.  First we will put SQL right into the Python code.
+This is the simplest way to talk to a database and allows you to see
+exactly what is happening.  After that, we will use [[http://www.sqlalchemy.org/][SQLAlchemy]], which
+hides the SQL commands and allows you to interact with the database
+without having to think about the exact SQL commands that are being
+run for you.
+
+** Acquiring the data
+
+database@iodp.tamu.edu
+
+Explain where I got the data, what it means, why I chose it, and where
+how to get a copy.
+
+* Getting started with SQLite
+
+** Sample dataset - world ocean drilling
+
+There is no better way to start learning SQL than to create a small
+database and to make use of it.  For this section, we will use a data
+set of the world locations of bore holes drilled by the
+[[http://en.wikipedia.org/wiki/Deep_Sea_Drilling_Program][Deep Sea Drilling Program]] (DSDP), [[http://en.wikipedia.org/wiki/Ocean_Drilling_Program][Ocean Drilling Program]] (ODP), and
+[[http://en.wikipedia.org/wiki/IODP][Integrated Ocean Drilling Program]] (IODP).  We have fairly complete
+version of the table,  but we will start with just 6 rows of the table
+to start.
+
+#+ATTR_HTML: border="2" rules="all" frame="all"
+| LEG | SITE | H | LONGITUDE | LATITUDE | Date Arrived  | Water Depth (m) | TOTAL PEN (m) |
+|-----+------+---+-----------+----------+---------------+-----------------+---------------|
+| 100 |  625 | A |  -87.1600 |  28.8317 | 01/12/85 1010 |             889 |         234.9 |
+| 101 |  626 | A |  -79.5468 |  25.6000 | 02/01/85 0415 |           846.8 |          12.8 |
+| 103 |  637 | A |  -12.8633 |  42.0883 | 04/28/85 1800 |            5311 |         285.6 |
+| 104 |  642 | A |    2.9283 |  67.2250 | 06/28/85 0315 |          1281.6 |          10.8 |
+
+** Creating a table in the database
+
+We need to create a table in our database to store this data.  SQL has
+a number of standard data types for each column of a database table.
+SQLite plays pretty loosely with data types, but for most purposes it
+just works. The basic SQL types are as follows:
+
+#+ATTR_HTML: border="2" rules="all" frame="all"
+| Type    | Description                 |
+|---------+-----------------------------|
+| BOOLEAN | TRUE or FALSE               |
+| INTEGER | A whole number - same as an |
+| REAL    | A floating point number     |
+|         |     FIX: doc the rest       |
+
+
+We will start off by creating a database.  With SQLite, this is a lot
+easier than you might imagine.  All we have to do is start SQLite and
+give it the name of the database file.  Make sure not to use the
+"sqlite" command (without the 3), as you will be using a much older
+version of SQLite.
+
+#+BEGIN_SRC sh
+sqlite3 holes.db3
+#+END_SRC sh
+
+SQLite will respond with its initialization and leave you at a
+prompt.  It is waiting for you to get started!
+
+#+BEGIN_EXAMPLE
+SQLite version 3.6.13
+Enter ".help" for instructions
+Enter SQL statements terminated with a ";"
+sqlite> 
+#+END_EXAMPLE
+
+Now we need to create the table for our holes.  Just paste this text
+directly into your sqlite
+
+#+BEGIN_SRC sql
+CREATE TABLE IF NOT EXISTS holes (
+       -- Two dashes are a comment to the end of a line
+       id INTEGER PRIMARY KEY, -- every table should have a primary key
+       leg INTEGER,
+       site INTEGER,
+       hole VARCHAR(1),  -- a string of length 1
+       arrived TIMESTAMP,
+       water_depth REAL, -- in meters. It is helpful to comment the units!
+       total_pen REAL -- in meters
+);
+#+END_SRC
+
+FIX: Write a walk through of what just happened.
+
+You now have a table that you can add data to.  But first we should
+ask SQLite what it thinks it has in the database.  SQLite has built-in
+commands that are not a part of SQL.  The most important one is
+*.help*.  That is a period followed by the word *help*.  The *.tables*
+command will list the tables that we have.  There will only be one:
+*holes*.  Then the *.schema* command will list the definitions of all
+the tables.  A schema is what SQL calls the definition of the contents
+of a table.  SQLite preserves the comments, thereby keeping things
+like the units about which SQL knows nothing.
+
+#+BEGIN_EXAMPLE
+sqlite> .tables
+holes
+sqlite> .schema
+CREATE TABLE holes (
+       -- Two dashes are a comment to the end of a line
+       id INTEGER PRIMARY KEY, -- every table should have a primary key
+       leg INTEGER,
+       site INTEGER,
+       hole VARCHAR(1),  -- a string of length 1
+       lon REAL, -- Longitude.  X before Y.
+       lat REAL, -- Latitude
+       arrived TIMESTAMP,
+       water_depth REAL, -- in meters. It is helpful to comment the units!
+       total_pen REAL -- in meters
+);
+#+END_EXAMPLE
+
+** Adding data to a table
+
+Now that you have a table defined, you would like to add data to it.
+Let's start with just one line:
+
+#+ATTR_HTML: border="2" rules="all" frame="all"
+| Leg | Site | H | Longitude | Latitude | Date Arrived  | Water Depth (m) | Total Pen (m) |
+|-----+------+---+-----------+----------+---------------+-----------------+---------------|
+| 100 |  625 | A |  -87.1600 |  28.8317 | 01/12/85 1010 |             889 |         234.9 |
+
+The *INSERT* command puts data in the table.
+
+#+BEGIN_SRC sql
+INSERT INTO holes (leg, site, hole, lon, lat, arrived, water_depth, total_pen)
+       VALUES (100,  625, 'A', -87.1600, 28.8317, '1985-01-12 10:10', 889, 234.9);
+#+END_SRC sql
+
+** Getting the data back
+
+FIX: write stuff to explain this!
+
+#+BEGIN_EXAMPLE
+sqlite> SELECT * FROM holes;
+1|100|625|A|-87.16|28.8317|1985-01-12 10:10|889.0|234.9
+#+END_EXAMPLE
+
+The output from the select is ugly and hard to read.  Lets try again,
+but first ask SQLite to do a better job formatting the output.
+
+#+BEGIN_EXAMPLE
+sqlite> .header ON
+sqlite> .separator "\t"
+sqlite> SELECT * FROM holes;
+id      leg     site    hole    lon     lat     arrived water_depth     total_pen
+1       100     625     A       -87.16  28.8317 1985-01-12 10:10        889.0   234.9
+#+END_EXAMPLE
+
+Tab characters are better, but not perfect.
+
+** Repeating the above from within Python
+
+A SQLite driver comes with python starting with version 2.5 of
+python.  If you are using Python 2.4 or older, you need to update
+your computer.
+
+#+BEGIN_SRC python
+python
+import sqlite3
+cx = sqlite3.connect('holes2.db3')
+cx.execute('''CREATE TABLE IF NOT EXISTS holes (
+       -- Two dashes are a comment to the end of a line
+        id INTEGER PRIMARY KEY, -- every table should have a primary key
+        leg INTEGER,
+        site INTEGER,
+        hole VARCHAR(1),  -- a string of length 1
+        lon REAL, -- Longitude
+        lat REAL, -- Latitude
+        arrived TIMESTAMP,
+        water_depth REAL, -- in meters. It is helpful to comment the units!
+        total_pen REAL -- in meters
+ );
+ ''')
+cx.execute('''INSERT INTO holes (leg, site, hole, lon, lat, arrived, water_depth, total_pen)
+       VALUES (100,  625, 'A', -87.1600, 28.8317, '1985-01-12 10:10', 889, 234.9);''')
+#+END_SRC python
+Now we need to fetch the data back from the database.  The *SELECT*
+call will return a "cursor".  
+
+FIX: explain cursors
+#+BEGIN_SRC
+cu = cx.execute('SELECT * FROM holes;')
+print cu.fetchone()
+#+END_SRC
+The print should return the first line from the database.
+
+#+BEGIN_EXAMPLE
+(1,
+ 100,
+ 625,
+ u'A',
+ -87.159999999999997,
+ 28.831700000000001,
+ u'1985-01-12 10:10',
+ 889.0,
+ 234.90000000000001)
+#+END_EXAMPLE
+
+* Conventions - CAPITALIZATION
+
+By now you have noticed that I capitalize some things and not others.
+SQL does not care, but there is a convention with most database
+programmers.  Keywords in SQL are written in *CAPITAL LETTERS*, while
+column names are all lower case.
+
+FIX: flush out
+
+* Switching to PostgreSQL
+
+createuser -U postgres $USER
+createdb drilling
+
+** backup and restore
+
+** pgAdmin3 interface
+
+* Other databases and tools
+
+** Old school
+
+CSV and gdbm/bdb
+
+** XML
+
+It's not a traditional database, but XML can work like a database.
+
+** SpatialLite
+** MySQL
+** Oracle and OracleSpatial
+** Fancy Non-traditional databases
+
+couch, column focused databases
+
+* Knowing when you need to get a pro
+
+* Additional Reading and References
+
+FIX: write this!
+
+** Web sites
+** Cheat sheets
+** Books
+** Videos
+
+Google Tech Talks?  PostGIS status video
