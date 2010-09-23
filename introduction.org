@@ -1,0 +1,224 @@
+#+TITLE:     Marine Research Vol I: Data Manipulation and Practices
+#+AUTHOR:    Kurt Schwehr
+#+EMAIL:     schwehr@ccom.unh.edu
+#+DATE:      $Date: $
+#+DESCRIPTION: 
+#+TEXT:      $Id: kurt-2010.org 13097 2010-01-22 22:40:19Z schwehr $
+#+KEYWORDS: 
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:nil toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   TeX:t LaTeX:nil skip:t d:nil todo:t pri:nil tags:not-in-toc
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+LINK_HOME: http://schwehr.org
+
+* Thoughts
+
+Perhaps I need to start with the emacs, bash command line, and svn,
+but then move into task based learning... like processing tide file or
+GPS logs from a station.
+
+Dale Chayes suggested looking at what the Bioinformatics crowd has
+done with the O'Reilly.  I think that maybe *Bioinformatics Programming Using Python* 
+by Model might be an interesting place to look.
+
+** Need a separate book/volume for instruments and procedures on the ship
+
+* License and distribution - an Open Book
+
+Please buy a copy of the book from me the author.  I will be working
+to find a publishing site.  The electronic version of this book will
+always be available under a Non-commercial Creative Commons license.
+The best way to tell an open source author that you appreciate their
+work and want more is to purchase the physical book (or e-Reader
+version if I get around to making one).
+
+You are free to use any code that I have included in this book under
+either the GPL version 3, BSD, or MIT license.
+
+ - FIX: explain that code is usable either open or closed source
+ - FIX: point to license files.
+
+* Goals
+
+By the end of the book, you will be able to go out on ship for a
+research cruise, collect a range of data types, process the data,
+interpret the data, prepare a series of reports, and submit the data
+to NOAA's NGDC for permanent archive.  Along the way you will learn
+how to do these tasks using free open source software (FOSS) and know
+where to look for help and additional closed software should you need
+more.
+
+** Provide the basis for a year long research tools course as it might be tought at UNH
+
+** Be able to go to sea and prepare a cruise report
+
+But not limited to marine science, however it will focus on tasks that would be done in general ocean mapping
+
+** Learn FOSS software that can last you through your career
+
+I will try to provide closed source alternatives if your needs outstrip the FOSS software 
+
+** Tools that can work even when out to sea without internet
+
+** Provide a reference for how perform many data analysis tasks
+
+** A new edition every year
+
+Hopefully, each year will result in a new copy of the book.
+
+* Introduction
+
+** What this book is not
+
+A manual for devices and sensors used in the field.
+
+** The platform - a ubuntu live CD
+** The importance of open file formats
+Longevity and access
+** The scientific method and repeatability
+
+** References to have on hand
+NOAA Field Procedures manual
+
+* Finding software
+** Identifying projects
+
+Freshmeat.net, rpmfind, version tracker, sourceforge
+
+** Evaluating software
+
+How can you tell how good software is?
+
+*** History of releases
+*** Take a quick look at the code
+
+You don't have to be a programmer to see some aspects of code quality.
+
+*** IRC and Mailing lists
+
+Are they active?  Are people getting help?
+
+* Emacs - text is the universal format
+** Basic editing and navigation
+** Simple customizations
+** org mode
+** org-babel
+** yasnippet - Templating code tasks
+*** Creating presentations with Beamer
+* The unix command line and bash shell
+** Managing files
+
+ls, cp, mv
+
+** Glob - specifying multiple files at once
+
+** Looping over commands
+
+* Make - another automation tool
+* Version control - SVN and GIT
+** Compressing, archiving, and verifying files
+*** checksums and hash functions - is the data valid
+ - Straight forward checksum.  This will be used with NMEA
+ - MD5, SHA, and other hash functions
+
+* Version control
+* Image processing
+
+** ImageMagick
+** The GIMP
+
+* Beginning programming with Python
+* Databases
+FIX: include the databases chapter here
+** SQL and SQLite
+
+** Spatial Lite
+
+** PostgreSQL and PostGIS
+
+* Regular expressions, NMEA, GPS, AIS
+** What is NMEA
+** Verifying NMEA by calculating checksums
+** Basics of regular expressions to parse NMEA
+
+* Gridded data and maps - GMT
+* Multibeam data and MBSystem
+* Geographical Information Systems - QGIS
+* Google Earth and KML
+* 3D modeling and animation (This topic might just be too much)
+Blender
+MeshLab
+Google Sketchup (closed but free)
+Creating a 3D PDF
+
+** Additional closed tools
+IVS3D Fledermaus
+* Statistics and R
+* Wiki's and corporate knowledge
+* Instant Messenging and IRC
+* Blogs, podcasts and videos
+These media types are great ways to capture what was done at the
+time and provide an excellent resource to train those that follow in
+your footsteps.
+** Blogging
+* Instant Messaging and IRCs
+How to collaborate in the office or at sea.
+
+** podcasts (and/or ocean sounds)
+
+FIX: write.  Why would you want noises from the ocean?
+ - Volcanoes
+ - Ship noise
+ - Animal noises
+ - Structures and devices in the ocean make noise (platforms, coring, etc).
+
+FIX: how to record sound
+FIX: cover audacity for editing audio
+
+*** Closed tools
+Adobe's SoundBooth
+
+** Video
+
+Playing and converting
+
+http://www.openshotvideo.com/ 
+
+*** Closed tools
+
+Final Cut Pro and Adobe Premier
+
+* Giving back to the community
+
+There are very wide range of ways that you can contribe back to the
+community.  Please consider one or more of these.  The more you
+contribute to these communities the more they will give back to you.
+You don't have to be a serious programmer to help out.  Easy ways to
+help are donate (assuming your institution allows it), but support
+contracts from the authors, blog about how you use the software, help
+with translating manuals and the software itself if you speak other
+languages, answer a question or two in IRC.  Or if the author of the
+software has written a book about it, purchase a copy of the book.
+
+* Appendix - Templates and Cheat Sheets
+Once you know the basics of a language or tool, you often need
+something to jog your memory.  Templates and cheat sheets are often
+the perfect form to get the brain moving again.  I encourage you to
+alter these to make them your own.
+** Emacs
+** SQL
+*** SQLite
+*** PostgreSQL / PostGIS
+** Python
+** Make
+** bash scripting
+=======
+* Understanding data and computer security
+Enough to keep you safe and when to get an expert to help
+* Things to work in
+** How and where to hire help
+support contracts, contractors, checking on peoples capabilities and
+responsiveness
+** How to write a bug report
