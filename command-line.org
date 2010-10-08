@@ -100,3 +100,22 @@ and sftp for secure file transfer protocol.  These programs encrypt
 all the data that goes between your computer and the remote computer.
 
 ** Where am I and what is here?  (pwd and ls)
+
+* Managing Files
+
+Dealing with large numbers of files can be really painful if you are
+not ready for it.  In this section, we will go over how to survice the
+process of managing huge numbers of files.  In your research, you will
+likely have to submit your data to an archive facility.  An example in
+the United States is that government funded multibeam sonar data is
+submitted to NGDC.  You will want to make the process easier and be
+able to verify that all files have made it into the archive.  The
+archiving service may have to rename your files to meet a standard
+that they have agreed apon, so you will have to learn how to properly
+verify your files.
+
+** Checksums
+
+- What types of checksums are there and how are they different?
+  cryptographic hash (md5/sha), bytewise checksum, xor. 
+- Why is md5 the current standard for file checksums?
