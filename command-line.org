@@ -8,7 +8,7 @@ End:
 
 #+STARTUP: showall
 
-#+TITLE:     Chapter XXX: Revision Control, SVN and GIT
+#+TITLE:     Chapter XXX: The power of the command line and bash
 #+AUTHOR:    Kurt Schwehr
 #+EMAIL:     schwehr@ccom.unh.edu>
 #+DATE:      $Date: $
@@ -101,51 +101,597 @@ all the data that goes between your computer and the remote computer.
 
 ** Where am I and what is here?  (pwd and ls)
 
+First, you need some basic command to know where you on the computer's
+storage disks and what files are there.  The first command that you
+need to know tells you the current working directory: '''pwd'''.  This
+command writes where you are to the terminal.
+
+#+BEGIN_EXAMPLE
+pwd
+#+END_EXAMPLE
+
+You type '''pwd''', press enter/return and it will tell you where you
+are.  
+
+#+BEGIN_EXAMPLE
+/home/kurt
+#+END_EXAMPLE
+
+The '''path''' that you see will be different than I show above, but
+hopefully, you get the idea.
+
+If you are accustomed to DOS or Microsoft windows, you have seen that
+directories (called "Folders" on Windows) are separated by the "\"
+character.  With bash, directories are separated byt the "/"
+character.  It is definitely annoying that Microsoft decided to change
+the character, but we are now stuck with this difference.
+
+We can create a new directory with the '''mkdir''' (make directory)
+command.
+
+#+BEGIN_EXAMPLE
+mkdir example
+#+END_EXAMPLE
+
+Let's now move into that directory with the '''cd''' (change
+directory) command.
+
+#+BEGIN_EXAMPLE
+cd example
+#+END_EXAMPLE
+
+We should take a look at what is in that directory with the '''ls'''
+(list directory contents) command.
+
+#+BEGIN_EXAMPLE
+ls
+#+END_EXAMPLE
+
+This will print out nothing.  There are no files in the directory.
+Now is a good time to learn about options to command line programs.
+You can ask the '''ls''' command to behave differently.  First let's
+try asking for '''all''' files with the "-a" option.  This means it
+will show any '''hidden''' files that have a name starting with a ".".
+These are refered to as "dot" files. 
+
+#+BEGIN_EXAMPLE
+ls -a
+.  ..
+#+END_EXAMPLE
+
+You can pass multiple options to a command.  With the '''ls'''
+command, we might also want to see the "long" output.  This will give
+us a lot more information than we want right now, but it will show you
+the date and time that the files were last changed and who "ownes"
+each file.
+
+#+BEGIN_EXAMPLE
+ls -a -l
+total 8
+drwxr-xr-x  2 kurt kurt 4096 2010-10-15 08:13 .
+drwxr-xr-x 42 kurt kurt 4096 2010-10-15 08:13 ..
+#+END_EXAMPLE
+
+You can often combine these options into one short option.  The
+previous command can be written like this.
+
+#+BEGIN_EXAMPLE
+ls -la
+#+END_EXAMPLE
+
+When working with bash, each directory has two special dot files.  One
+"." refers to the current working directory.  This is only
+occasionally useful.  More interesting is the file with two dots.  The
+".." entry refers to the directory above this one.  Let's try moving
+to the parent directory.
+
+#+BEGIN_EXAMPLE
+pwd
+/home/kurt/example
+
+cd ..
+
+pwd
+/home/kurt
+#+END_EXAMPLE
+
+Now is a good time to show you a special change directory command.
+Giving a directory of "-" takes you to the previous directory that you
+were just in.  Give it a try.
+
+#+BEGIN_EXAMPLE
+pwd
+/home/kurt
+
+cd -
+/home/kurt/example
+
+pwd
+/home/kurt/example
+#+END_EXAMPLE
+
+Finally, if you are somewhere on the disk and want to get back to your
+home directory, the "~".  We can use the '''echo''' command to see
+what the "~" means and then give it a try.  '''echo''' prints what it
+is given to the terminal.
+
+#+BEGIN_EXAMPLE
+echo ~
+/home/schwehr
+
+cd ~
+
+pwd
+/home/schwehr
+
+cd ~/example
+
+pwd
+/home/schwehr/example
+#+END_EXAMPLE
+
+bash keeps track of all the commands that you run.  This is helpful
+when you want to run a command that you typed before or want to save
+what you have done to a notes file.
+#+BEGIN_EXAMPLE
+history
+
+ 1  cd example
+ 2  ls
+ 3  ls -a
+ 4  ls -a -l
+ 5  ls -la
+ 6  pwd
+ 7  cd ..
+ 8  pwd
+ 9  cd -
+ 10 pwd
+ 11 echo ~
+ 12 pwd
+ 13 cd ~/example
+ 14 pwd
+ 15 history
+#+END_EXAMPLE
+
+You can scroll back to previous commands, edit them if necessary, and
+rerun them.  Press the up and down arrows to scroll back through
+previous commands and left/right to edit a command.  We will get into
+more advanced editing of commands later.
+
+We can also ask the shell to tell us which disks are "mounted" (aka
+"attached" or "installed") on the computer with the '''df''' (disk
+free) command.  Here is an example from a Linux system.  Windows with
+cygwin will look pretty different.  You can also ask it to write out 
+the space on the device in a more "human-readable''' format with the
+"-h" option.  Note, you will see "non-disk" things on a linux
+computer, that
+
+#+BEGIN_EXAMPLE
+df 
+Filesystem           1K-blocks      Used Available Use% Mounted on
+/dev/sda1            237351616  11421400 213873436   6% /
+
+df -h
+Filesystem            Size  Used Avail Use% Mounted on
+/dev/sda1             227G   11G  204G   6% /
+#+END_EXAMPLE
+
+Here is an example from a Linux computer with two 2 terra byte drives
+attached.
+#+BEGIN_EXAMPLE
+df -h
+Filesystem            Size  Used Avail Use% Mounted on
+/dev/mapper/vg0-root   37G   29G  6.1G  83% /
+/dev/sdb1             1.8T   75G  1.7T   5% /data1
+/dev/sdc1             1.8T   27G  1.7T   2% /data2
+#+END_EXAMPLE
+
+* Find help and documentation for commands
+
+Linux and cygwin have what are called "manual pages" or "man pages"
+that describe most commands.  Give it a try.
+
+#+BEGIN_EXAMPLE
+man df
+
+DF(1)                              User Commands                             DF(1)
+
+NAME
+       df - report file system disk space usage
+
+SYNOPSIS
+       df [OPTION]... [FILE]...
+
+DESCRIPTION
+       This  manual  page documents the GNU version of df.  df displays the amount
+       of disk space available on the file system containing each file name  argu‐
+       ment.   If  no  file  name  is  given, the space available on all currently
+       mounted file systems is shown.   Disk  space  is  shown  in  1K  blocks  by
+       default,  unless  the environment variable POSIXLY_CORRECT is set, in which
+       case 512-byte blocks are used.
+...
+#+END_EXAMPLE
+
+When you are in the man page, you are interacting with a "pager"
+program (it's actually a program called '''less''').  You have use the
+up and down arrow keys, the space bar, the '''b''' key, '''<''', and
+'''>''' to move up and down the manual.  A very important key to know
+is '''q''' to quit out of the manual.
+
+You can also search for commands that might help you get a job done.
+This is known as "apropos" and you can ask for it with the "-k" option
+to man.
+
+#+BEGIN_EXAMPLE
+man -k sort
+
+apt-sortpkgs (1)     - Utility to sort package index files
+bunzip2 (1)          - a block-sorting file compressor, v1.0.4
+bzip2 (1)            - a block-sorting file compressor, v1.0.4
+comm (1)             - compare two sorted files line by line
+FcFontSetSort (3)    - Add to a font set
+FcFontSetSortDestroy (3) - DEPRECATED destroy a font set
+FcFontSort (3)       - Return list of matching fonts
+sort (1)             - sort lines of text files
+sort-dctrl (1)       - sort Debian control files
+tsort (1)            - perform topological sort
+winop (3blt)         - Perform assorted window operations
+#+END_EXAMPLE
+
+On the right, after the dash ("-"), is a description of the command.
+On the left is the name of the command.  Entries with a "(1)" after
+the name are things you can access from the bash command line.
+Entries with a "(2)" or "(3)" are things that are accessible from a
+full programming language such as C, perl, python, etc.
+
 * Managing Files
 
 Dealing with large numbers of files can be really painful if you are
-not ready for it.  In this section, we will go over how to survice the
+not ready for it.  In this section, we will go over how to survive the
 process of managing huge numbers of files.  In your research, you will
 likely have to submit your data to an archive facility.  An example in
 the United States is that government funded multibeam sonar data is
 submitted to NGDC.  You will want to make the process easier and be
 able to verify that all files have made it into the archive.  The
 archiving service may have to rename your files to meet a standard
-that they have agreed apon, so you will have to learn how to properly
+that they have agreed upon, so you will have to learn how to properly
 verify your files.
 
-pwd - print working directory - where am I
+** Specifying groups of files (pattern matching)
 
-df - disk free / mounted disks
+First let's get back to the example directory:
 
-ls - list
+#+BEGIN_EXAMPLE
+cd ~/example
+#+END_EXAMPLE
 
-ls -la  This is list with more info
+Now we can use a command called '''touch''' to create some files.
+touch is designed to update the last modified time, but if the file
+does not exist, it will create an empty file.  Here we will create
+three files.  Many commands can work on many files at the same time.
 
-mkdir my_ocean_data
+#+BEGIN_EXAMPLE
+touch 1 2 3
 
-'''Never''' user spaces in file names
+ls -l
+total 0
+-rw-r--r-- 1 schwehr schwehr 0 2010-10-15 09:39 1
+-rw-r--r-- 1 schwehr schwehr 0 2010-10-15 09:39 2
+-rw-r--r-- 1 schwehr schwehr 0 2010-10-15 09:39 3
+#+END_EXAMPLE
 
-cd my_ocean_data
+We can now try removing the files with the "rm" (remove) command.
 
-cd -  # Go back to the previous directory you were in
+#+BEGIN_EXAMPLE
+rm 1 2 3
+#+END_EXAMPLE
 
-touch 
+Now, let's create a bunch of files to give ourselves something to work with.
 
-for loop to rename
-
-echo > somefile.txt
-
-cat
-
-wc file
-
-less
-
-man cat
-
+#+BEGIN_EXAMPLE
+touch 1 2 3 4 5 6 7 8 9 10 11 12 13 100
+#+END_EXAMPLE
 
 
+
+
+We can now start trying out some of the shells abilities to select
+groups of files.  This is know in shell terminology as pattern
+matching or "glob".  The complete bash manual on matching files is
+here.
+
+http://www.gnu.org/software/bash/manual/bash.html#Pattern-Matching
+
+This is a bit of a big topic, but just jump in and over time you will
+pick up these tricks.  I will use them throughout the rest of the book
+and with repetition, you will start to get the hang of them.
+
+First, the "*" matches anything.  By itself, it will match all the
+files.  When combined with text, it will match anything with that
+text.  Here are some examples to give you the idea.  In bash, the "#"
+character starts a comment on a line.  I will use comments to explain
+each entry.
+
+#+BEGIN_EXAMPLE
+# all files in a directory (effectively the same a just a plain "ls")
+ls *
+1  10  100  11  12  13  2  3  4  5  6  7  8  9
+
+# anything starting with "1"
+ls 1*
+1  10  100  11  12  13
+
+# anything ending with a "0"
+ls *0
+
+# anything starting with 1 and ending with a 0
+ls 1*0
+10  100
+#+END_EXAMPLE
+
+The "?" is more specific than the "*".  The "?" matches any
+character.  Give it a try.
+
+#+BEGIN_EXAMPLE
+# Match anything that has just 1 character
+ls ?
+1  2  3  4  5  6  7  8  9
+
+# anything with exactly two letters
+ls ??
+10  11  12  13
+
+# the letter "1" followed by any single character
+ls 1?
+10  11  12  13
+#+END_EXAMPLE
+
+You can get fancier by using square brackets for "[]" specifying sets
+of characters or ranges by putting a dash between two characters.
+It's best to just see some examples.
+
+#+BEGIN_EXAMPLE
+# List files that are one character of the number 2 through 5
+ls [2-5]
+2  3  4  5
+
+# List files that start with 1 and have a 1 or 3 following.
+ls 1[13]
+11  13
+
+# Combine the * and [] to ask for any file ending in 1 or 3
+ls *[13]
+1  11  13  3
+
+# Here we are using a special system directory for an example using a
+# range of alphabetical characters (x, y, & z).
+# Please do not worry about what these files are
+ls /sbin/*[x-z]
+/sbin/fsck.minix  /sbin/getty  /sbin/iwspy  /sbin/mkfs.minix  /sbin/pam_tally
+#+END_EXAMPLE
+
+** Making commands work together (pipes) and writing results to a file
+
+Bash command line programs are frequently designed to be chained
+together.  The output from one command can be passed to the next
+command, then on to the next command, and so forth.  Each one helps
+you change the text a little bit more.  The is one of the features
+that makes the command line super powerful.  If your commands get too
+crazy, you will want to switch to a more powerful language than bash
+such as python.
+
+If we take a look at the list of these files, we will see that they
+are coming in an alphabetical type order, not a numeric order.  This
+is a good time to introduce the '''sort''' command to get things into
+a numerical order.  It's default is to sort the same way as ls, but we
+can ask it to sort the files numerically with the "-n" flag.
+#+BEGIN_EXAMPLE
+ls 
+1  10  100  11  12  13  2  3  4  5  6  7  8  9
+
+ls -1
+1
+10
+100
+11
+12
+13
+2
+3
+4
+5
+6
+7
+8
+9
+#+END_EXAMPLE
+
+If we take a look at the list of these files, we will see that they
+are coming in an alphabetical type order, not a numeric order.  This
+is a good time to introduce the '''sort''' command to get things into
+a numerical order.  It's default is to sort the same way as ls, but we
+can ask it to sort the files numerically with the "-n" flag.
+
+#+BEGIN_EXAMPLE
+ls | sort -n
+1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+100
+#+END_EXAMPLE
+
+Now it is time to get away from the above made up example and use some
+real earth science data.  Let's go grab the global catalog of
+boreholes that says where the ocean drilling projects gone.  The
+command line utility '''curl''' lets you grab data from any ftp or
+http url.
+#+BEGIN_EXAMPLE
+curl -o holes.csv http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/holes.csv
+#+END_EXAMPLE
+
+Before we start chaining together programs with pipes to work with
+this database, you should take a look at the file in a pager program.
+The current best program for this is called '''less'''.  The name is a
+little strange in that there was original a program called '''more'''
+that was okay, but was replaced by something better and the author
+felt that '''less''' is more.  There is also a '''most''' that claims
+to be better than less.  Yes, computer programmers make these kinds of
+jokes all the time.
+
+#+BEGIN_EXAMPLE
+ls -l holes.csv
+s -l holes.csv 
+-rw-r--r-- 1 kurt kurt 125783 2010-10-15 11:06 holes.csv
+
+less holes.csv
+Expedition,Site,Hole,Program,Longitude,Latitude,Water Depth (m),Core Recovered (m)
+1,1,,DSDP,-92.1833,25.8583,2827,50
+1,2,,DSDP,-92.0587,23.0455,3572,13
+1,3,,DSDP,-92.0433,23.03,3747,47
+1,4,,DSDP,-73.792,24.478,5319,15
+1,4,A,DSDP,-73.792,24.478,5319,5.8
+1,5,,DSDP,-73.641,24.7265,5354,6.4
+1,5,A,DSDP,-73.641,24.7265,5354,1.8
+1,6,,DSDP,-67.6477,30.8398,5124,28
+1,6,A,DSDP,-67.6477,30.8398,5124
+1,7,,DSDP,-68.2967,30.134,5182,9.8
+1,7,A,DSDP,-68.2967,30.134,5182,4.6
+2,10,,DSDP,-52.2153,32.8622,4712,77
+2,11,,DSDP,-44.7467,29.943,3571,6.1
+2,11,A,DSDP,-44.7467,29.9433,3571,6.7
+:
+#+END_EXAMPLE
+
+Use the arrow keys, space bar, "b", "<", and ">" to move through the
+file and examine the contents.  When you are done, press "q".  You
+should now have sense of generally what is in the file.  We will now
+start digging into the contents of the file with command line programs.
+
+First, let's start by counting lines in the file with the '''wc'''
+(word count, not water closet) command.
+
+#+BEGIN_EXAMPLE
+wc holes.csv 
+  3047   3053 125783 holes.csv
+#+END_EXAMPLE
+
+The first column on the left is the number of lines in the file,
+followed by the number of words, and finishing with the number of
+characters.  Notice that the number of characters is the same as the
+size of the file when you did a '''ls'''.
+
+Now we are going to use a program called '''cut''' to try to crag the
+"Program" column of the file.  You can see above in the comma
+separated value (CSV) formatted data that there is at least a "DSDP",
+which is the
+[[http://en.wikipedia.org/wiki/Deep_Sea_Drilling_Program][Deep Sea
+Drill Program] that ran from 1968 to 1983.  Cut can work a couple
+different ways, but here we are going to ask it to work in "field
+mode" and tell it that commas (",") are the delimiter (or separator)
+between fields.  We do that with a "-d" and the comma character.  We
+then specify the number of the field we want.  Looking at the first
+line of the file, you can see that "Program" appears in the fourth
+position.
+#+BEGIN_EXAMPLE
+cut -d, -f4 holes.csv
+#+END_EXAMPLE
+
+When you run the above command, you will see 3047 lines whiz by on the
+screen.  That is not very helpful.  We only want to see how many
+unique entry types there are.  The '''uniq''' command removes
+duplicates in the lines of text that it receives.
+
+#+BEGIN_EXAMPLE
+cut -d, -f4 holes.csv | uniq
+Program
+DSDP
+ODP
+IODP
+#+END_EXAMPLE
+We can see now that there are 3 programs in there and that the CSV
+first line that tells us what the fields in there gets lumped in there
+with it.
+
+There is a search tool for text that can help us separate apart called
+'''egrep'''.  This command has a very powerful syntax for specifying
+patters called a "regular expression".  Don't worry about what that
+means right now, but I want to you at least see the term.  Right now
+we are going to use a very simple pattern that is just the exact text
+that we are searching for.  Here is searching for all the DSDP bore holes.
+We will give egrep the string that we are looking for followed by the
+file we want to search.
+#+BEGIN_EXAMPLE
+egrep DSDP holes.csv
+#+END_EXAMPLE
+
+You will get a lot of lines scrolling by, but they only are the lines
+that contain the string DSDP.
+
+Next, let's see how many lines there are for each program.  We can
+pass the output of the grep to the word count program we used before.
+'''wc''' has an option to only print the number of lines, so we will
+add "-l" to the command line.  
+
+The data gets passed from one program to another by a '''pipe'''.
+What goes in one side, comes out the other.  A pipe is created by the
+vertical bar character: "|".  This might look like to vertical bars on
+some keyboards and in the United States is between the return and
+delete keys to the right of the "p" key.
+
+#+BEGIN_EXAMPLE
+egrep DSDP holes.csv | wc -l
+1116
+
+egrep ODP holes.csv | wc -l
+1930
+
+egrep IODP holes.csv | wc -l
+153
+#+END_EXAMPLE
+
+We have a slight problem here in that things are not adding up.  The
+string ODP is found in both the ODP and IODP entries.  If we check
+things out, the do not add up.  Here I am using the "binary
+calculator" to do a little math.  I suspect you can just do this by
+hand, but it shows another pipe.
+
+#+BEGIN_EXAMPLE
+# The 3 results from the word counts above
+echo  "1116 + 1930 + 153" | bc
+3199
+
+# That adds up to more than the number of lines in the file@
+wc -l holes.csv
+3047 holes.csv
+#+END_EXAMPLE
+
+We can use the "," that precedes the ODP to help avoid the IODP.
+
+#+BEGIN_EXAMPLE
+egrep 'ODP' holes.csv  | wc -l
+1930
+
+egrep ',ODP' holes.csv  | wc -l
+1777
+#+END_EXAMPLE
+
+There are lots of other ways that we could have solved this, but this
+way is pretty simple compared to some of the others.
+
+** Inspecting the contents of binary files
+
+
+** Variables and looping
 
 
 ** Checksums
@@ -153,3 +699,9 @@ man cat
 - What types of checksums are there and how are they different?
   cryptographic hash (md5/sha), bytewise checksum, xor. 
 - Why is md5 the current standard for file checksums?
+
+* Additional resources
+
+- http://www.gnu.org/software/bash/manual/
+- http://tldp.org/LDP/abs/html/
+- http://www.digilife.be/quickreferences/QRC/Bash%20Quick%20Reference.pdf
