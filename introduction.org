@@ -1,3 +1,5 @@
+#+STARTUP: showall
+
 #+TITLE:     Marine Research Vol I: Data Manipulation and Practices
 #+AUTHOR:    Kurt Schwehr
 #+EMAIL:     schwehr@ccom.unh.edu
@@ -63,6 +65,22 @@ I will try to provide closed source alternatives if your needs outstrip the FOSS
 ** Tools that can work even when out to sea without internet
 
 ** Provide a reference for how perform many data analysis tasks
+
+** Give enough to meet the IHO Category A certified hydrography program
+
+http://www.iho-ohi.net/iho_pubs/standard/M510thed08.pdf
+
+M510thed08.pdf - STANDARDS OF COMPETENCE for Hydrographic Surveyors,
+M-5 Tenth Edition, 2008, Guidance and Syllabus for Educational and
+Training Programmes
+
+| B2.1 Computer Fundamentals | PF | Explain how the following components interact to form a computer system: central processor unit, storage devices, storage media, input and output ports and devices. Describe the input and output devices particularly useful in geomatics (hydrographic) computer systems. | List appropriate criteria for selecting computer systems for hydrographic data acquisition, processing, and management. Explain the interfacing hardware standards for peripheral devices: RS-232, USB, SCSI etc.|
+|B2.2 System and Application Software | PP | Describe the architecture of operating system software, such as Windows, UNIX and Linux. List the functions and operations provided by an operating system. Operate common application software systems such as spreadsheet, word processor, graphics software, and internet browser. |
+| B2.3 Programming | PF | Describe software development procedures: statement of requirements, interface design, algorithm development, flowcharts, pseudocode.  Define syntax, data types and structures, control structures, arrays, pointers, functions, and file processing	procedures	for	a	modern programming language, such as Visual Basic, Visual C++, or Java. |Write computer programs using a modern programming language, to solve practical problems. |
+|B2.4 Communication Tools and Internet | PP | Explain the networking concepts underlying Internet and intranet communications. Describe the features, resources and security issues of the Internet. Conduct searches for specialized information using Internet tools. | Explain the different Internet access modes, and their bandwidths. Upload hydrographic information to a web page. |
+| B2.5 Database and Information Systems | FF | Define different types of database management systems, and explain the architecture, functions and operations provided by each. | Describe the development of an information system, built upon database management software. Explainthespecialrequirements of geospatial information systems |
+
+Also E4.4 a & b, E4.5
 
 ** A new edition every year
 

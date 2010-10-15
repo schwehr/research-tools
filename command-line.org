@@ -114,6 +114,40 @@ archiving service may have to rename your files to meet a standard
 that they have agreed apon, so you will have to learn how to properly
 verify your files.
 
+pwd - print working directory - where am I
+
+df - disk free / mounted disks
+
+ls - list
+
+ls -la  This is list with more info
+
+mkdir my_ocean_data
+
+'''Never''' user spaces in file names
+
+cd my_ocean_data
+
+cd -  # Go back to the previous directory you were in
+
+touch 
+
+for loop to rename
+
+echo > somefile.txt
+
+cat
+
+wc file
+
+less
+
+man cat
+
+
+
+
+
 ** Checksums
 
 - What types of checksums are there and how are they different?

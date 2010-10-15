@@ -23,11 +23,22 @@ End:
 #+EXPORT_EXCLUDE_TAGS: noexport
 #+LINK_HOME: http://schwehr.org
 
+* todo
+
+- Put in small examples of each language to give a flavor
+
 * Introduction
 
 Computer scientists often learn new programming languages just to
 expand their thinking.  Earth scientists do not usually have that
-luxury.
+luxury.  My hope is that you will read the introduction and skim the
+rest.  When you encounter a language or are looking for another
+language because the ones you are currently using are not up to a
+particular task, you can look here to get a sense of what is
+available.  With a lot of these languages, you can solve almost any
+problem, but the language might not make your job easy or might not be
+fast enough for your purposes.  There is no perfect programming
+language.
 
 Choosing which programming language(s) (and software) to learn is a
 very important decision for several reasons.  First, you have a
@@ -54,26 +65,185 @@ learn as you begin into the world of using computers.
 - SQL: The defacto database programming language of our time.  Not
   overly flexible, but critical for managing data.
 
-In addition, this book will cover lots of other languages to give you
-a sense of what they can do so that you can judge for yourself if you
-should invest time in them.
+In addition, this book will cover lots of other languages for small
+tasks to give you a sense of what they can do so that you can judge
+for yourself if you should invest time in them.
+
+There are hundreds of programming languages.  Here is a list of 200+
+languages with "Hello World" examples.
+
+http://en.wikibooks.org/wiki/List_of_hello_world_programs
 
 ** Factors in judging a language
 
 Objector Oriented, Functional, Procedural... what does it all mean.
 
-** Now on to the languages!
+** Shell scripting languages
+
+*** csh/tsch
+
+The C SHell (csh) is a tempting shell to learn, but the syntax has
+quirks that make it much less expandable than sh/bash.  If you are
+interested in learning the csh, stop right now and go learn bash
+instead.  csh has much less functionality than bash and Linux systems
+use sh/bash for their system scripts, not csh.
+
+*** sh/ksh/zsh and the Bourne Again SHell (BASH)
+
+The Bourne (after David Bourne of AT&T) shells have been the back bone
+of Unix and Linux systems for many years.  The sh shell was pretty
+limited and there have been a number of attempts to improve upon it.
+The bash shell won out as the defacto shell for Linux systems.
+
+- http://www.gnu.org/software/bash/
+
+*** DOS
+
+Many people are familiar with the command line of old PCs or the
+command.exe prompt in Windows XP/Vista/7.  If this is what you are
+used to, I'm sorry.  It's not a very powerful environment and has many
+quirks from it's personal computer heritage from the early 1980's.
+Stop using DOS and go get bash.
+
+*** Windows Power Shell
+
+This really is only for Windows system administrators.  Yes, it's
+powerful for windows machines, but it's not cross platform and from
+what I have heard it is quirky.
+
+** ipython
+
+ipython tries to be a shell like bash but using python.  You can run
+commands somewhat like with bash.  It's definitely useful, but I find
+I still need bash to make simple scripts quickly.
+
+** Basic text processing languages
 
 *** SED
 
 Stream editor
+
+- http://en.wikipedia.org/wiki/Sed
 
 *** Awk/Gawk
 
 AWK is a pretty complete basic language, but it is not worth digging
 into.  If you find yourself writing more than one line of AWK, run to
 Python.  Skill in AWK is wasted time that should be spent learning a
-language that will grow more with you.
+language that will grow more with you.  Perl was designed as a
+replacement to Awk and SED, but Python is generally better for
+anything that is longer than 1 line.  We will try out a little bit of
+AWK for some very basic tasks, but not go into any depth.
 
-***
+- http://www.gnu.org/software/gawk/
+- http://en.wikipedia.org/wiki/AWK
 
+*** Fortran
+
+Formula Translations (FORTRAN) is the old guy on the block being
+starting in the 1950s and 1960s.  Some scientists say that Fortran is
+the fastest language available.  That might be true for a few special
+cases, but this is a language that is tuned to work like a
+mathematician.  Only recently has it gained features that allow modern
+data structures (linked lists and trees) and these are not commonly
+used by most fortran compilers.  To get great speed from Fortran, you
+will have to purchase expensive compilers.
+
+*** COBOL
+
+This is a business language that just might have the most number of
+lines of code written in it of any language in the world.  All I can
+say is that anyone with a choice should stay far away from it.
+
+*** Visual Basic
+
+This language by Microsoft tempts many people to use it as getting
+started is fairly easy and 
+
+*** Ada
+
+This is a language typically used by the US Department of Defense
+(DOD).  It's not a fun language to work with.
+
+** General Purpose Scripting Languages
+
+This is the area that most scientists will want to work in.
+
+*** Groovy
+
+This is a dynamic language built on top of the engine that drives java
+(the java virtual machine; jvm).  It allows a less wordy way to work
+with the powerful java libraries out there.  It is noteworthy in that
+NOAA's NGDC is using Groovy for some of their work.
+
+- http://groovy.codehaus.org/
+
+*** Ruby
+
+*** Perl
+
+*** Python
+
+*** Tcl/Tk
+
+The Tool Command Language (TCL) was the language that seemed to be all
+the rage as the scripting solution to save the world back in the early
+1990's.  The language scales poorly to large projects and has not seen
+much in the way of attention from its authors in many years.  It's a
+poor choice these days with Python being so well developed.
+
+*** Lisp / Common Lisp / Emacs Lisp
+
+Lisp has been commonly used in artificial intelligence research.
+However, for my point of view, it has the main use today of being the
+language
+
+
+** The "C" family of languages
+
+*** C
+
+*** C++
+
+*** Objective-C
+
+This language is really only relevant if you are writing software
+
+*** C# / Mono
+
+*** Java
+
+
+** Specialized languages of merit
+
+*** GDL / IDL
+
+*** Octave / Matlab
+
+*** SQL - Structured Query Language
+
+This is currently the most common way that databases are accessed.
+SQL was designed to be the programming language for managers.  Basic
+queries are easy, but over the expert level uses of SQL can get very
+complicated.  We will stick to the simple day-to-day uses that
+scientists might run into.  This will hopefully give you the working
+knowledge to talk to the experts for help with more complicated
+problems.
+
+*** GNU Make
+
+There are many different flavors of "make" out there all inheriting
+from the original Unix versions, but I will only talk about GNU Make
+here.
+
+GNU Make is a great tool for simple automation of tasks.  It is build
+around rules for how to construct files.  For example, you tell it how
+to make a program out of the original source code files or how to
+create your journal paper pdf from the LaTeX source.  Make is good for
+small tasks and can even do things like upload updates of a web page
+to a server.  Putting a "makefile" in a directory provides a place for
+people to look at the common tasks that people might want to do in
+that directory.  It started off for controlling how to build software,
+but is generally useful.
+
+#*** Arc Macro Language
