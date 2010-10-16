@@ -8,7 +8,7 @@ End:
 
 #+STARTUP: showall
 
-#+TITLE:     Chapter XXX: The power of the command line and bash
+#+TITLE:     Chapter XXX: The power of the command line and bash - introduction
 #+AUTHOR:    Kurt Schwehr
 #+EMAIL:     schwehr@ccom.unh.edu>
 #+DATE:      $Date: $
@@ -17,7 +17,7 @@ End:
 #+KEYWORDS: 
 #+LANGUAGE:  en
 #+OPTIONS:   H:3 num:nil toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
-#+OPTIONS:   TeX:t LaTeX:nil skip:t d:nil todo:t pri:nil tags:not-in-toc
+#+OPTIONS:   TeX:nil LaTeX:nil skip:t d:nil todo:t pri:nil tags:not-in-toc
 #+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
 #+EXPORT_SELECT_TAGS: export
 #+EXPORT_EXCLUDE_TAGS: noexport
@@ -100,6 +100,26 @@ Shell protocol to create a protected connection to a remote.  To
 transfer files, we now have, as a part of OpenSSH, scp for secure copy
 and sftp for secure file transfer protocol.  These programs encrypt
 all the data that goes between your computer and the remote computer.
+
+** What to do if you get stuck?
+
+Before we get into the commands, we need to talk about what to do if
+things get stuck.  If you mistype a command and it just sits there
+doing nothing, you should first try holding down the "control" key and
+hitting the "C" key.  This sends a "break" or "kill" message to the
+program.  This is often written as "Ctrl-C" or "C-c".  Here is a
+command that hangs.  I then use Ctrl-C to get out of it.  The bash
+shell responds with a "^C" and gives a prompt again.
+
+#+BEGIN_EXAMPLE
+egrep some-string
+^C
+#+END_EXAMPLE
+
+If the command really gets stuck and does not respond to the Ctrl-C,
+you can close the terminal window and open a new window.  Later on,
+you will learn fancier techniques for controlling programs (also known
+as processes), but this will work for now.
 
 ** Where am I and what is here?  (pwd and ls)
 
@@ -472,7 +492,7 @@ ls /sbin/*[x-z]
 /sbin/fsck.minix  /sbin/getty  /sbin/iwspy  /sbin/mkfs.minix  /sbin/pam_tally
 #+END_EXAMPLE
 
-** Making commands work together (pipes) and writing results to a file
+** Making commands work together (pipes)
 
 Bash command line programs are frequently designed to be chained
 together.  The output from one command can be passed to the next
@@ -536,9 +556,14 @@ Now it is time to get away from the above made up example and use some
 real earth science data.  Let's go grab the global catalog of
 boreholes that says where the ocean drilling projects gone.  The
 command line utility '''curl''' lets you grab data from any ftp or
-http url.
+http url.  The "-O" (capital letter O as in [[http://en.wikipedia.org/wiki/ICAO_spelling_alphabet][Oscar]]) tells curl to use
+the same filename as on the remote web server.
+
 #+BEGIN_EXAMPLE
-curl -o holes.csv http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/holes.csv
+curl -O http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/holes.csv
+
+ls -l holes.csv
+-rw-r--r-- 1 kurt staff  122677 2010-10-15 10:37 holes.csv
 #+END_EXAMPLE
 
 Before we start chaining together programs with pipes to work with
@@ -690,6 +715,150 @@ egrep ',ODP' holes.csv  | wc -l
 There are lots of other ways that we could have solved this, but this
 way is pretty simple compared to some of the others.
 
+**  Writing results to a file and making a quick plot with Gnuplot
+
+It is always important to get a graphical view of spatial data.  Later
+in this chapter, we will start using Google Earth and in a future
+chapter, we will load our data into a Geographical Information System
+(GIS).  For now, we will draw the locations with [[http://www.gnuplot.info/][Gnuplot]].  This
+graphing program is not as flexible as matplotlib that we will cover
+in the programming in Python chapters, but it can definitely get the
+job done.
+
+Gnuplot works most easily with files that have space delimited rather
+than comma delimited text data values.  We need to pull out the
+longitude and latitude values from the holes.csv file.  We can start
+back with the cut command that we used before.  This time we will give
+it two different fields in the csv to print with "-f5-6".  This means
+we are asking for fields 5 through 6.  We could also have said
+"-f5,6", which would be fields 5 and 6.
+
+#+BEGIN_EXAMPLE
+cut -d, -f5-6 holes.csv
+#+END_EXAMPLE
+
+While working on preparing the commands, we can use the '''head'''
+command to print just the first few lines of the results.  This keeps
+our last command from scrolling off the screen.  We could always use
+the up arrow or '''history''' to see the previous command, but it is
+annoying to have several thousand lines that keep scrolling across the
+screen.
+
+#+BEGIN_EXAMPLE
+cut -d, -f5-6 holes.csv | head
+Longitude,Latitude
+-92.1833,25.8583
+-92.0587,23.0455
+-92.0433,23.03
+-73.792,24.478
+-73.792,24.478
+-73.641,24.7265
+-73.641,24.7265
+-67.6477,30.8398
+-67.6477,30.8398
+#+END_EXAMPLE
+
+Gnuplot will get confused by the "Longitude,Latitude" strings on the
+first line.  We can get rid of this line with the egrep command.
+Normally, egrep returns the lines that match, be we can ask it to
+return all lines that do not match by giving it the inverse option of
+"-v".  We then give it string "Longitude" to match and it returns all
+lines that do not match.
+
+#+BEGIN_EXAMPLE
+egrep -v Longitude holes.csv | cut -d, -f5-6 | head
+-92.1833,25.8583
+-92.0587,23.0455
+-92.0433,23.03
+-73.792,24.478
+-73.792,24.478
+-73.641,24.7265
+-73.641,24.7265
+-67.6477,30.8398
+-67.6477,30.8398
+-68.2967,30.134
+#+END_EXAMPLE
+
+The output above is pretty close to being usable, but we have a ","
+characters between each longitude and latitude.  We can use the
+'''tr''' (translate) command to exchange the "," for a " " (space).
+Make sure to place the '''tr''' after the '''cut''' command or cut
+will not be able to tell the comma separated fields apart.
+
+#+BEGIN_EXAMPLE
+egrep -v Longitude holes.csv | cut -d, -f5-6 | tr "," " " | head
+-92.1833 25.8583
+-92.0587 23.0455
+-92.0433 23.03
+-73.792 24.478
+-73.792 24.478
+-73.641 24.7265
+-73.641 24.7265
+-67.6477 30.8398
+-67.6477 30.8398
+-68.2967 30.134
+#+END_EXAMPLE
+
+This is the format that we need for Gnuplot, but we need the longitude
+and latitude lines saved to a file.  The ">" (great than character)
+"redirects" the output from the last program in the chain of pipes to
+a file that is named after the ">".  Be warned that ">" will overwrite
+a previous file with the same name if one existed.  First, try a
+simpler example to see ">" in action.  Here, I also use the '''cat'''
+(concatenate and print files) command to dump the contents of the
+"listing" file to the terminal.  '''cat''' is much simpler than
+'''less''', but if a file is very long or you are not sure how long
+the file is, you are better off using '''less'''.
+
+#+BEGIN_EXAMPLE
+ls > listing
+
+# You output may be different depending on the files you have in your
+# current directory
+cat listing
+1
+2
+3
+holes.csv
+listing
+#+END_EXAMPLE
+
+Now that you know how to redirect the output to a file, send the
+results of the chain of pipes consisting of '''egrep''', '''cut''',
+and '''tr''' to the file "xy.dat".
+
+#+BEGIN_EXAMPLE
+egrep -v Longitude holes.csv | cut -d, -f5-6 | tr "," " " > xy.dat
+
+head xy.dat
+-92.1833 25.8583
+-92.0587 23.0455
+-92.0433 23.03
+-73.792 24.478
+-73.792 24.478
+-73.641 24.7265
+-73.641 24.7265
+-67.6477 30.8398
+-67.6477 30.8398
+-68.2967 30.134
+#+END_EXAMPLE
+
+It is time to give Gnuplot a quick try.  This does not give you much
+of a sense of what Gnuplot can do, but we can at least look at the
+locations of the cores.
+
+#+BEGIN_EXAMPLE
+gnuplot
+plot 'xy.dat'
+# There should be a plot of the data on your screen.
+quit
+#+END_EXAMPLE
+
+You can see examples of the wide range of plots that can be made with
+Gnuplot here:
+
+http://www.gnuplot.info/screenshots/
+
 ** Inspecting the contents of binary files
 
 Often times, files are not ascii text, but non-human readable binary.
@@ -708,7 +877,7 @@ have compressed the file with the bzip2 command.  You will need to
 uncompress the file with bunzip2 before using it.
 
 #+BEGIN_EXAMPLE
-curl -o 0034_20100604_005123_Healy.all.bz2 http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/0034_20100604_005123_Healy.all.bz2
+curl -O http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/0034_20100604_005123_Healy.all.bz2
 
 # The -h option for ls gives a "human readable" file size.
 ls -lh 0034_20100604_005123_Healy.all.bz2 
@@ -720,11 +889,390 @@ ls -lh 0034_20100604_005123_Healy.all
 -rw-r--r--  1 kurt  staff    11M Oct 15 13:57 0034_20100604_005123_Healy.all
 #+END_EXAMPLE
 
-FIX: write the rest of this section
+You should also get a couple other files to work with in this
+section.  The focus will be on multibeam, but it is good to have these
+for our next command.
+
+#+BEGIN_EXAMPLE
+curl -O http://mgds.ldeo.columbia.edu/healy/reports/aloftcon/2010/20101009-1801.jpeg
+curl -O http://schwehr.org/blog/attachments/2010-03/sons-2010-usgs-gnis.png
+curl -O http://schwehr.org/blog/attachments/2006-11/CoreSheetBlank-v2.pdf
+curl -O http://schwehr.org/blog/attachments/2010-03/weather-try1-georss.xml
+curl -O http://schwehr.org/blog/attachments/2005-10/cracks-wireout-angle-fit.gif
+curl -O http://vislab-ccom.unh.edu/~schwehr/TTN136B/Data/hysweep/TN136HS.308.bz2
+bunzip2 TN136HS.308.bz2
+curl -O http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/examples/terrain.grd
+#+END_EXAMPLE
+
+Now we have a collection of different file types with some being
+binary and some being ascii.  You can now use the command line program
+called '''file''' to see if it can identify the type of each file.  It
+does not look too deep into the contents of each file, so it sometimes
+gets things wrong, but it is a start.  One important note:  It does
+not use the extension after the "." to figure out file type.  People
+can rename files to whatever they like and using the file extension
+can be trouble.
+
+#+BEGIN_EXAMPLE
+file *
+0034_20100604_005123_Healy.all: data
+1:                              empty
+20101009-1801.jpeg:             JPEG image data, JFIF standard 1.01
+CoreSheetBlank-v2.pdf:          PDF document, version 1.4
+TN136HS.308:                    ASCII text
+cracks-wireout-angle-fit.gif:   GIF image data, version 87a, 640 x 480
+holes.csv:                      ASCII text
+listing:                        ASCII text
+sons-2010-usgs-gnis.png:        PNG image, 600 x 296, 8-bit/color RGB, non-interlaced
+terrain.grd:                    NetCDF Data Format data
+weather-try1-georss.xml:        XML document text
+xy.dat:                         ASCII text
+#+END_EXAMPLE
+
+You can see that the 0034_20100604_005123_Healy.all EM122 multibeam file
+came up just as "data", while "TN136HS.308" Hydrosweep file came up as
+"ASCII text".  Let's compare these two files using less.  Press "y"
+when it asks you if you want to "See it anyway?".  Then press "q" to quit.
+Using '''cat''' with binary data will likely really mess up your
+terminal window.  The window might interpret some of the strange
+characters going by as special control characters.
+
+#+BEGIN_EXAMPLE
+less 0034_20100604_005123_Healy.all 
+"0034_20100604_005123_Healy.all" may be a binary file.  See it anyway? 
+
+<F4>^B^@^@^BIz^@<FC><B5>2^A<B8>^N/^@"^@j^@^@^@WLZ=0.53,SMH=106,S1X=-18.40,S1Y=-1
+.91,S1Z=8.92,S1H=0.00,S1P=-0.02,S1R=-0.01,S1S=1,S2X=-7.66,S2Y=0.00,S2Z=9.02,S2H=
+0.02,S2P=-0.14,S2R=0.02,S2S=2,GO1=0.00,TSV=1.1.1 080617,RSV=1.1.1080425,BSV=2.2.
+3 090702,PSV=1.1.9 100410,DSV=3.1.1 060110,DDS=3.4.9 070328,P1M=1,P1T=1,P1Q=1,P1
+X=0.00,P1Y=0.00,P1Z=0.00,P1D=0.000,P1G=WGS84,P2M=0,P2T=0,P2Q=1,P2X=0.00,P2Y=0.00
+,P2Z=0.00,P2D=0.000,P2G=WGS84,P3M=0,P3T=0,P3Q=1,P3X=0.00,P3Y=0.00,P3Z=0.00,P3D=0
+.000,P3G=WGS84,P3S=1,MSX=0.00,MSY=0.00,MSZ=0.00,MRP=RP,MSD=0,MSR=-0.15,MSP=0.15,
+MSG=0.00,NSX=0.00,NSY=0.00,NSZ=0.00,NRP=RP,NSD=0,NSR=0.00,NSP=0.00,NSG=0.00,MAS=
+1.000,GCG=0.00,APS=0,AHS=2,ARO=2,AHE=2,CLS=1,CLO=0,VSN=1,VSE=2,VSI=192.168.10.54
+,VSM=255.255.255.0,VSU=5602,SID=HLY10TC_survey1_2010-06-03,^@^C<U+052D>4^@^@^@
+^BRz^@<FC><B5>2^A<B8>^N/^@^C?j^@^@^@^@^@<93>^N<C4>       p^Ww^@^P'
+^@^@^TP^@^F^@ N^CA<86>A N^@^@^Q^C`      4^@^@^@^BRz^@<FC><B5>2^A<B8>^N/^@^C?j^@
+^@^@^@^@<93>^N<C4>       p^Ww^@^P'
+^@^@^TP^@^F^@ N^CA<86>A N^@^@^Q^C`      4^@^@^@^BRz^@<FC><B5>2^A<B8>^N/^@^C?j^@
+^@^@^@^@<93>^N<C4>       p^Ww^@^P'
+
+less TN136HS.308
+
+ERGNMESS
+-124.4324645 +41.058044420011104031924  19924168.3     +4.8     +1.4B -.60001  466.7 .10 1
+29 123 247 373 497 623 752 879101211431279141515551695184019902139230124612623279029523146331135133730394441604383   0
+29467146774688467646744690468047014696   0470947164717472247314730474947524753475247354759473147454769477447714765   0
+29 124 247 371 497 620 747 873 99811261260138815211652179419372076222323722527268928393006316633433554373239274139   0
+294647464546514665464146484643462746234632461746094593460046034587458345764574457645504545452145134541451545024497   0
+ERGNSLZT
+-124.4324645 +41.058044420011104031924168.3166.8     +4.8  +.89 -.6 +1.60061620.0010
+2906170618062106200622062706280634063806290649065506610668067706850696070607160727073607520762077907980817083508540000
+2906130614061606190618062106230624062806330636064006440651065906640672068006890700070707180727074007600772078708050867
+168.2168.2168.2168.3168.3168.3168.3168.3168.2168.2168.2
+ERGNAMPL
+-124.4324645 +41.058044420011104031924M229226229030103432401000045808094149992 +2.70884001
+22223333290510510470780220320480620420300800450680660680661191671411561401301511
+#+END_EXAMPLE
+
+The second file, TN136HS.308, while strange, is all numbers and
+readable codes.  This file contains just readable text.
+
+For 0034_20100604_005123_Healy.all, notice the "^B", "^@", "^A", and
+so forth.  These are '''less''' trying to give you a printable version
+of binary data.  However, it does look like there is some human
+readable [[http://en.wikipedia.org/wiki/ASCII][ASCII]] text in the file.  ASCII is now the most common
+character set for text on the command line.  You might be familar with
+Unicode, but we can ignore that for working with the shell.  There is 
+man page for ASCII.  Each byte in a file is a number that represents a
+character.  Not all code are characters that can be directly display.
+For example, number 7 will make a terminal put out a beep sound.
+
+#+BEGIN_EXAMPLE
+ASCII(7)             BSD Miscellaneous Information Manual             ASCII(7)
+
+NAME
+     ascii -- octal, hexadecimal and decimal ASCII character sets
+
+DESCRIPTION
+     The octal set:
+
+     000 nul  001 soh  002 stx  003 etx  004 eot  005 enq  006 ack  007 bel
+     010 bs   011 ht   012 nl   013 vt   014 np   015 cr   016 so   017 si
+     020 dle  021 dc1  022 dc2  023 dc3  024 dc4  025 nak  026 syn  027 etb
+     030 can  031 em   032 sub  033 esc  034 fs   035 gs   036 rs   037 us
+     040 sp   041  !   042  "   043  #   044  $   045  %   046  &   047  '
+     050  (   051  )   052  *   053  +   054  ,   055  -   056  .   057  /
+     060  0   061  1   062  2   063  3   064  4   065  5   066  6   067  7
+     070  8   071  9   072  :   073  ;   074  <   075  =   076  >   077  ?
+     100  @   101  A   102  B   103  C   104  D   105  E   106  F   107  G
+...
+#+END_EXAMPLE
+
+Thankfully, there is a program on the command line called
+'''strings''' that tries to find all the human readable text in a
+binary file.  It finds all sequences of printable characters that are
+4 characters or longer.  Give it a try.
+
+#+BEGIN_EXAMPLE
+strings 0034_20100604_005123_Healy.all | head
+WLZ=0.53,SMH=106,S1X=-18.40,S1Y=-1.91,S1Z=8.92,S1H=0.00,S1P=-0.02,S1R=-0.01,S1S=
+1,S2X=-7.66,S2Y=0.00,S2Z=9.02,S2H=0.02,S2P=-0.14,S2R=0.02,S2S=2,GO1=0.00,TSV=1.1
+.1 080617,RSV=1.1.1 080425,BSV=2.2.3 090702,PSV=1.1.9 100410,DSV=3.1.1 060110,DD
+S=3.4.9 070328,P1M=1,P1T=1,P1Q=1,P1X=0.00,P1Y=0.00,P1Z=0.00,P1D=0.000,P1G=WGS84,
+P2M=0,P2T=0,P2Q=1,P2X=0.00,P2Y=0.00,P2Z=0.00,P2D=0.000,P2G=WGS84,P3M=0,P3T=0,P3Q
+=1,P3X=0.00,P3Y=0.00,P3Z=0.00,P3D=0.000,P3G=WGS84,P3S=1,MSX=0.00,MSY=0.00,MSZ=0.
+00,MRP=RP,MSD=0,MSR=-0.15,MSP=0.15,MSG=0.00,NSX=0.00,NSY=0.00,NSZ=0.00,NRP=RP,NS
+D=0,NSR=0.00,NSP=0.00,NSG=0.00,MAS=1.000,GCG=0.00,APS=0,AHS=2,ARO=2,AHE=2,CLS=1,
+CLO=0,VSN=1,VSE=2,VSI=192.168.10.54,VSM=255.255.255.0,VSU=5602,SID=HLY10TC_surve
+y1_2010-06-03,
+$GRPg
+[A:@3*X
+}Mpv@
+$GRPg
+(_A:@
+Aqv@
+GINGGA,005124.508,2615.32662,N,15924.40376,W,2,07,1.0,3.83,M,,,2,0260*07
+@5Fo
+&54<
+#+END_EXAMPLE
+
+Sometimes we get unlucky and '''strings''' finds data that by chance
+happens to have 4 or more characters in a row.  However, we are seeing
+important parts of the multibeam file that we can read without writing
+software that understands the binary format of Kongsberg multibeam
+files.  The string starting with "WLZ" is the setup parameters for the
+multibeam and the ship.  We will ignore that part.  The 3rd line from
+the bottom contains the string "GGA".  This is an ASCII [[http://en.wikipedia.org/wiki/NMEA_0183][NMEA 0183]]
+string from the ships Global Position System (GPS) containing the
+position of the ship at that time.  We can combine '''strings''' with
+an '''egrep''' to see some of the position information in the sonar
+log file.
+
+#+BEGIN_EXAMPLE
+strings 0034_20100604_005123_Healy.all | egrep GGA | head
+GINGGA,005124.508,2615.32662,N,15924.40376,W,2,07,1.0,3.83,M,,,2,0260*07
+GINGGA,005125.508,2615.32959,N,15924.40381,W,2,07,1.0,3.77,M,,,3,0260*03
+GINGGA,005126.508,2615.33258,N,15924.40389,W,2,07,1.0,3.72,M,,,4,0260*01
+GINGGA,005127.508,2615.33558,N,15924.40399,W,2,07,1.0,3.69,M,,,1,0260*09
+GINGGA,005128.508,2615.33858,N,15924.40406,W,2,07,1.0,3.70,M,,,2,0260*01
+GINGGA,005129.508,2615.34155,N,15924.40406,W,2,07,1.0,3.78,M,,,4,0260*0D
+GINGGA,005130.508,2615.34448,N,15924.40400,W,2,07,1.0,3.76,M,,,5,0260*05
+GINGGA,005131.508,2615.34739,N,15924.40393,W,2,07,1.0,3.57,M,,,3,0260*09
+GINGGA,005132.508,2615.35032,N,15924.40390,W,2,07,1.0,3.36,M,,,1,0260*01
+GINGGA,005133.507,2615.35324,N,15924.40389,W,2,07,1.0,3.26,M,,,2,0260*01
+#+END_EXAMPLE
+ 
+Here is the format for a GGA message taken from the GPSD [[http://gpsd.berlios.de/NMEA.txt][AIVDM.txt]] 
+document that describes many of the NMEA strings in use.
+
+#+BEGIN_EXAMPLE
+$--GGA,hhmmss.ss,llll.ll,a,yyyyy.yy,a,x,xx,x.x,x.x,M,x.x,M,x.x,xxxx*hh
+#+END_EXAMPLE
+
+The "llll.ll" is the latidude and "yyyyy.yy" is the longitude.  We can
+start to split out the position messages using '''cut'''.  First we
+will use '''egrep''' and '''cut''' to put all the "GGA" string's
+position text in a file called "position.raw."  Note that I
+will use head with a number of lines to return to shorten up the
+examples here with a "-5" for five lines.
+
+#+BEGIN_EXAMPLE
+strings 0034_20100604_005123_Healy.all | egrep GGA | cut -d, -f3-6 > position.raw
+head -5 position.raw
+2615.32662,N,15924.40376,W
+2615.32959,N,15924.40381,W
+2615.33258,N,15924.40389,W
+2615.33558,N,15924.40399,W
+2615.33858,N,15924.40406,W
+2615.34155,N,15924.40406,W
+2615.34448,N,15924.40400,W
+2615.34739,N,15924.40393,W
+2615.35032,N,15924.40390,W
+2615.35324,N,15924.40389,W
+#+END_EXAMPLE
+
+The next task is to try to convert the position strings into decimal
+degrees longitude and degrees.  What you see here is evidence that we
+are starting to push the shell into tasks where it is not well
+suited.  This kind of task is much easier in '''python'''.
+
+First, let's start by trying to reconstruct the decimal latitude.  The
+first 2 characters in each line of "position.raw" are the degrees of
+latitude.  We can pick them off using '''cut''' but instead of
+separating fields with the "-d," as we did before, we can tell cut
+exactly which range of characters we want to include by giving it
+"-c1-2".  The means to return from position 1 to position 2.  Because
+position 1 is the beginning of the line, we can leave it off and cut
+will take that as "start from the beginning of the line."  
+
+#+BEGIN_EXAMPLE
+cut -c-2 position.raw > lat.deg
+
+head -5 lat.deg
+26
+26
+26
+26
+26
+#+END_EXAMPLE
+
+We can now grab the decimal minutes that are in positions 3-10 and
+store them in a file called "lat.min".
+
+#+BEGIN_EXAMPLE
+cut -c3-10 position.raw > lat.min
+
+head -5 lat.min_decimal
+15.32662
+15.32959
+15.33258
+15.33558
+15.33858
+#+END_EXAMPLE
+
+Now we have two files: "lat.deg" and "lat.min".  We need to combine
+these two files into a singe file with multiple columns so that we can
+do some math in a moment.  The '''paste''' command takes the a line
+for each file given and combines them all together, but separates them
+with a tab character.
+
+#+BEGIN_EXAMPLE
+paste lat.deg lat.min | head -5
+
+26	15.32662
+26	15.32959
+26	15.33258
+26	15.33558
+26	15.33858
+#+END_EXAMPLE
+
+We can now use a text processing lanuage called '''awk''' to do some
+math with these columns.  We must divide the second column by 60 to
+convert from minutes to degrees and add it together with the first
+column.  '''awk''' refers to each column with a "$" followed by a number.
+
+#+BEGIN_EXAMPLE
+paste lat.deg lat.min_decimal  | awk '{print $1 + $2/60.}' | head -5
+26.2554
+26.2555
+26.2555
+26.2556
+26.2556
+#+END_EXAMPLE
+
+We can now save that result to a "lat" file.
+
+#+BEGIN_EXAMPLE
+paste lat.deg lat.min | awk '{print $1 + $2/60.}' > lat
+#+END_EXAMPLE
+
+We can do the same to the longitude.  One twist with this dataset is
+that we are in the western hemisphere and need to change the sign on
+the longitude.  We will force the longitude to be negative.
+
+#+BEGIN_EXAMPLE
+cut -c14-16 position.raw > lon.deg
+cut -c17-24 position.raw > lon.min
+paste lon.deg lon.min | awk '{print -($1 + $2/60.) }' > lon
+
+head -5 lon
+-159.407
+-159.407
+-159.407
+-159.407
+-159.407
+#+END_EXAMPLE
+
+We now need to combine the longitude and latitude numbers and plot
+them with Gnuplot.  The results of the plot are not great as awk is
+not great at handling floating point numbers - giving us rounding
+errors and the ship was heading north for this time period.  I am
+going to use '''printf''' instead of print inside of the awk to ask
+for more precision.  Don't worry about the details, but it is asking
+awk to print 5 decimal places.  While '''awk''' is a complete
+programming language, we will cover how to do this kind of
+thing in python and encourage you to avoid '''awk''' if at all
+possible.
+
+#+BEGIN_EXAMPLE
+# This new awk line works... "trust me"
+paste lat.deg lat.min | awk '{ printf "%.5f\n",   $1 + $2/60.  }' > lat
+paste lon.deg lon.min | awk '{ printf "%.5f\n", -($1 + $2/60.) }' > lon
+
+head -5 lon
+-159.40673
+-159.40673
+-159.40673
+-159.40673
+-159.40673
+
+paste lon lat > position.xy
+
+head -5 position.xy
+-159.40673	26.25544
+-159.40673	26.25549
+-159.40673	26.25554
+-159.40673	26.25559
+-159.40673	26.25564
+
+gnuplot
+plot 'position.xy'
+quit
+#+END_EXAMPLE
+
+** A first use of Google Earth!
+
+Now for the fun part!  It's time to get this ship track on a globe.  I
+will not example the Google Earth KML format beyond telling you that
+if you put some text in front of your points, the right text after
+your points and have one point per line with "x,y", Google Earth will
+draw your ship track on the map.
+
+We now need to convert the tabs in the "position.xy" file to commas
+and glue everything together.  We can again use the '''tr''' command,
+but there are two twists.  First, the '''tr''' command does not take a
+file name.  It only reads from what you type into it or from another
+program via a pipe.  We will use '''cat''' to send the contents of the
+"position.xy" file into '''tr'''.  The next hurdle is how to specify
+the tab character.  The trick is to use single quotes around a special
+character combination.  The '\t' means one tab character.
+
+#+BEGIN_EXAMPLE
+cat position.xy | tr '\t' ',' > position.csv
+head -5 position.csv
+-159.40673,26.25544
+-159.40673,26.25549
+-159.40673,26.25554
+-159.40673,26.25559
+-159.40673,26.25564
+#+END_EXAMPLE
+
+Get the header and footer text for the KML line format:
+
+#+BEGIN_EXAMPLE
+curl -O http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/google-earth-line-start.kml
+curl -O http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/google-earth-line-end.kml
+#+END_EXAMPLE
+
+You can use cat to glue multiple files together end-to-end.
+
+#+BEGIN_EXAMPLE
+cat google-earth-line-start.kml position.csv google-earth-line-end.kml > position.kml
+#+END_EXAMPLE
+
+You might want to take a look at the "position.kml" file that you
+created using the '''less''' program.
+
+Now open the "position.kml" file in Google Earth.  If you are working
+on a Macintosh computer, you can use this command to open the file in
+Google Earth.
+
+#+BEGIN_EXAMPLE
+open position.kml
+#+END_EXAMPLE
 
 ** Variables and looping
-
-The for loop and counting
 
 FIX: write this section using a number of images from http://mgds.ldeo.columbia.edu/healy/reports/aloftcon/
 
@@ -743,6 +1291,8 @@ FIX: write
 - What types of checksums are there and how are they different?
   cryptographic hash (md5/sha), bytewise checksum, xor. 
 - Why is md5 the current standard for file checksums?
+
+* What did we cover in this chapter?
 
 * Additional resources
 
