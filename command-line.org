@@ -30,7 +30,7 @@ End:
 Today people are often uncomfortable working on the command line to
 get things done with computers or perhaps have never even used the
 command line.  Before windowing systems and mice were common, this was
-really the only way that people able to tell a computer what to do.
+really the only way that people were able to tell a computer what to do.
 The advent of the Graphical User Interface (GUI) made some tasks
 easier, but it also made many tasks harder.  If you need to rename
 hundreds of files, using a mouse is going to take you a long time or
@@ -39,7 +39,7 @@ the command line, using a "shell", you can write a quick command to
 rename large numbers of files easily.  In the process, you have gained
 something over the GUI method: an inherently easy way to document or
 repeat the task - the text command.  You can paste that command into a
-text file for documentation or you can make the file executable and
+text file for documentation.  You can even make the file executable and
 run it as a "script" in the future.  The shell will remember commands
 that you have run before and let you rerun them the same way you did
 before or help you edit the commands to run slightly altered versions.
@@ -49,19 +49,21 @@ before or help you edit the commands to run slightly altered versions.
 There are many flavors of shells with the most common being tcsh, sh
 bash, zsh, Windows/DOS command, and Windows PowerShell. The Microsoft
 Windows shells are too limited and are not portable to other operating
-systems. Unix systems started with C-shell (csh) and the Bourne shell
-(sh). Both of these shells were pretty limited in features. tcsh,
-bash, and zsh are improved versions of the old csh and sh shells. If
-you gain experience with csh and sh, you will find the syntax of sh to
-be more flexible and consistent than csh. sh provides basic functions
-that you can call that make writing scripts a bit easier.
-Additionally, sh is used on Unix type systems to start up the system
-and manage server type processes ("daemons", not demons) that work in
-the background to make the computer more functional. You will likely
-want to create or modify a daemon as you get comfortable with the
-Linux environment to do tasks such as logging data from serial ports.
-If you learn csh/tcsh, you will likely later have to learn at least
-some sh/bash.
+systems.  Unix systems started with C-shell (csh) and the Bourne shell
+(sh) in the 1970's and 1980's. Both of these shells were pretty
+limited in features. tcsh, bash, and zsh are improved versions of the
+old csh and sh shells. If you gain experience with csh and sh, you
+will find the syntax of sh to be more flexible and consistent than
+csh. sh provides basic functions that you can call that make writing
+scripts a bit easier.  Additionally, sh is used on Unix type systems
+to start up the system and manage server type processes ("daemons",
+not demons) that work in the background to make the computer more
+functional. You will likely want to create or modify a daemon as you
+get comfortable with the Linux environment to do tasks such as logging
+data from serial ports.  If you learn csh/tcsh, you will likely later
+have to learn at least some sh/bash.  You are better off to just learn
+sh/bash and avoid having to waste time learning two slightly different
+shells.
 
 The Bourne Again Shell (bash) has become the defacto standard rewrite
 of sh that provides a more usable experience than the limited sh. It
@@ -217,17 +219,17 @@ is given to the terminal.
 
 #+BEGIN_EXAMPLE
 echo ~
-/home/schwehr
+/home/kurt
 
 cd ~
 
 pwd
-/home/schwehr
+/home/kurt
 
 cd ~/example
 
 pwd
-/home/schwehr/example
+/home/kurt/example
 #+END_EXAMPLE
 
 bash keeps track of all the commands that you run.  This is helpful
@@ -375,9 +377,9 @@ touch 1 2 3
 
 ls -l
 total 0
--rw-r--r-- 1 schwehr schwehr 0 2010-10-15 09:39 1
--rw-r--r-- 1 schwehr schwehr 0 2010-10-15 09:39 2
--rw-r--r-- 1 schwehr schwehr 0 2010-10-15 09:39 3
+-rw-r--r-- 1 kurt kurt 0 2010-10-15 09:39 1
+-rw-r--r-- 1 kurt kurt 0 2010-10-15 09:39 2
+-rw-r--r-- 1 kurt kurt 0 2010-10-15 09:39 3
 #+END_EXAMPLE
 
 We can now try removing the files with the "rm" (remove) command.
@@ -690,11 +692,53 @@ way is pretty simple compared to some of the others.
 
 ** Inspecting the contents of binary files
 
+Often times, files are not ascii text, but non-human readable binary.
+Binary files are usually much smaller for the same data and are much
+faster to work with.  The drawback is that it is harder for shell
+programs to work with the data contained in a file.  Here, we will
+take a short look at what can sometimes be done without writing any
+software.  This is not as powerful as writing a program that can
+understand all the bytes in a file, but it is sometimes enough for a
+particular need.  We will start with a Simrad/Kongsberg EM122A
+multibeam sonar file from the USCGC Healy's checkout cruise.  (Data
+courtesy Dale Chayes / Jonathan Beaudoin).
+
+As this file is larger than the holes.csv file that we used before, I
+have compressed the file with the bzip2 command.  You will need to
+uncompress the file with bunzip2 before using it.
+
+#+BEGIN_EXAMPLE
+curl -o 0034_20100604_005123_Healy.all.bz2 http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/0034_20100604_005123_Healy.all.bz2
+
+# The -h option for ls gives a "human readable" file size.
+ls -lh 0034_20100604_005123_Healy.all.bz2 
+-rw-r--r--  1 kurt  staff   5.2M Oct 15 13:57 0034_20100604_005123_Healy.all.bz2
+
+bunzip2 0034_20100604_005123_Healy.all.bz2 
+
+ls -lh 0034_20100604_005123_Healy.all     
+-rw-r--r--  1 kurt  staff    11M Oct 15 13:57 0034_20100604_005123_Healy.all
+#+END_EXAMPLE
+
+FIX: write the rest of this section
 
 ** Variables and looping
 
+The for loop and counting
+
+FIX: write this section using a number of images from http://mgds.ldeo.columbia.edu/healy/reports/aloftcon/
+
+** Jobs control - running things in the background
+
+FIX: write about &, bg, fg, jobs, kill, ps
+
+** Making a bash script file that you can run
+
+FIX: write
 
 ** Checksums
+
+FIX: write
 
 - What types of checksums are there and how are they different?
   cryptographic hash (md5/sha), bytewise checksum, xor. 
