@@ -73,11 +73,30 @@ processes, etc.
 
 * Beginning bash
 
-** Connecting to your Linux environment
+You will now need to access a terminal running bash.  There are
+several different ways to accomplish this that depend on your computer
+setup.
+
+** Windows with cygwin
+
+If you have not installed Cygwin, please do so now or ask your system
+administrator to install Cygwin.
+
+Start menu -> 
+
+** Mac OSX
+
+Open /Applications/Utilities/Terminal
+
+** Linux
+
+Just open a terminal and you should be set.
+
+** Connecting to your a computer running Linux
 
 Hopefully, you are working directly on a laptop or desktop computer
 that is running linux and you are already logged into the computer.
-If you are on a Windows computer, you mush securely log into a
+If you are on a Windows computer, you must securely log into a
 "remote" computer running Linux
 
 *** Never use telnet, rsh, or ftp if you must type a password
@@ -577,7 +596,6 @@ jokes all the time.
 
 #+BEGIN_EXAMPLE
 ls -l holes.csv
-s -l holes.csv 
 -rw-r--r-- 1 kurt kurt 125783 2010-10-15 11:06 holes.csv
 
 less holes.csv
@@ -617,12 +635,11 @@ followed by the number of words, and finishing with the number of
 characters.  Notice that the number of characters is the same as the
 size of the file when you did a '''ls'''.
 
-Now we are going to use a program called '''cut''' to try to crag the
+Now we are going to use a program called '''cut''' to try to extract the
 "Program" column of the file.  You can see above in the comma
 separated value (CSV) formatted data that there is at least a "DSDP",
 which is the
-[[http://en.wikipedia.org/wiki/Deep_Sea_Drilling_Program][Deep Sea
-Drill Program] that ran from 1968 to 1983.  Cut can work a couple
+[[http://en.wikipedia.org/wiki/Deep_Sea_Drilling_Program][Deep Sea Drill Program]] that ran from 1968 to 1983.  Cut can work a couple
 different ways, but here we are going to ask it to work in "field
 mode" and tell it that commas (",") are the delimiter (or separator)
 between fields.  We do that with a "-d" and the comma character.  We
@@ -1275,6 +1292,41 @@ open position.kml
 ** Variables and looping
 
 FIX: write this section using a number of images from http://mgds.ldeo.columbia.edu/healy/reports/aloftcon/
+
+Like many other programming languages, bash has variables.  When you
+have a bash shell open, it already has a good number of variables that
+are already set.  Let's jump in and see some of the variables.  The
+'''printenv''' (print environment) command will show you all the
+variables.  The "environment" is the current workspace of variables
+for bash.
+
+#+BEGIN_EXAMPLE
+printenv
+
+MANPATH=/usr/share/man:/sw32/share/man:/usr/local/share/man
+TERM=xterm
+SHELL=/bin/bash
+USER=kurt
+PATH=/usr/bin:/bin:/usr/sbin:/sbin:/usr/local/bin:/usr/X11/bin:/home/kurt/bin
+LC_COLLATE=en_US.utf-8
+PWD=/home/kurt/examples
+EDITOR=emacs
+LANG=en_US.utf-8
+PS1=\n# 
+PS3=Pick a number:     
+PS2=   
+SHLVL=1
+HOME=/home/kurt
+#+END_EXAMPLE
+
+The convention is to name all settings variables to be all CAPITALS.
+Here, for example, '''PATH''' gives the locations that bash will
+search for programs that you are trying to run.  By setting the
+'''EDITOR''' variable to "emacs", any time a program wants to know which
+editor I prefer to use, it will go and run '''emacs'''.
+
+http://mgds.ldeo.columbia.edu/healy/reports/aloftcon/2010/20101009-1801.jpeg
+
 
 ** Jobs control - running things in the background
 
