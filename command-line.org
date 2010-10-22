@@ -71,6 +71,23 @@ gives us command completion (hit tab to finish a word if it can),
 histories and scrollback of previous command, the ability to control
 processes, etc.
 
+* Debugging stategies
+
+If you are typing in the commands you find here, you might
+occasionally make mistakes that prevent the command from giving you
+exactly what you see here for output.  Here are a couple things that
+can help you figure out what is going on.
+
+First, read aloud the command that you have typed and what is in the
+document. 
+
+Check for common characters to confuse.  It is easy to replace a "1"
+(number one) with an "l" or vice versa if the fonts you have in your
+terminal and web browser make those two characters.  Make sure you are
+using the right quote character (e.g. ", ', or ` are all different).
+
+Note that the pipe character, "|", is between  FIX
+
 * Beginning bash
 
 You will now need to access a terminal running bash.  There are
@@ -1324,6 +1341,13 @@ Here, for example, '''PATH''' gives the locations that bash will
 search for programs that you are trying to run.  By setting the
 '''EDITOR''' variable to "emacs", any time a program wants to know which
 editor I prefer to use, it will go and run '''emacs'''.
+
+You can set variables with a special syntax two different ways.  
+
+#+BEGIN_EXAMPLE
+EDITOR=emacs
+export EDITOR=emacs
+#+END_EXAMPLE
 
 http://mgds.ldeo.columbia.edu/healy/reports/aloftcon/2010/20101009-1801.jpeg
 
