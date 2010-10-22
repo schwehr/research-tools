@@ -229,7 +229,7 @@ you can close the terminal window and open a new window.  Later on,
 you will learn fancier techniques for controlling programs (also known
 as processes), but this will work for now.
 
-** Where am I and what is here?  (pwd and ls)
+* Where am I and what is here?  (pwd and ls)
 
 First, you need some basic command to know where you on the computer's
 storage disks and what files are there.  The first command that you
@@ -476,22 +476,25 @@ the name are things you can access from the bash command line.
 Entries with a "(2)" or "(3)" are things that are accessible from a
 full programming language such as C, perl, python, etc.
 
-* Managing Files
+# * Managing Files
 
-Dealing with large numbers of files can be really painful if you are
-not ready for it.  In this section, we will go over how to survive the
-process of managing huge numbers of files.  In your research, you will
-likely have to submit your data to an archive facility.  An example in
-the United States is that government funded multibeam sonar data is
-submitted to NGDC.  You will want to make the process easier and be
-able to verify that all files have made it into the archive.  The
-archiving service may have to rename your files to meet a standard
-that they have agreed upon, so you will have to learn how to properly
-verify your files.
+# Dealing with large numbers of files can be really painful if you are
+# not ready for it.  In this section, we will go over how to survive the
+# process of managing huge numbers of files.  In your research, you will
+# likely have to submit your data to an archive facility.  An example in
+# the United States is that government funded multibeam sonar data is
+# submitted to NGDC.  You will want to make the process easier and be
+# able to verify that all files have made it into the archive.  The
+# archiving service may have to rename your files to meet a standard
+# that they have agreed upon, so you will have to learn how to properly
+# verify your files.
 
-** Specifying groups of files (pattern matching)
+* Specifying groups of files (pattern matching)
 
-First let's get back to the example directory:
+#First let's get back to the example directory:
+
+It is time to jump into the example directory and start working with
+directory listings.
 
 #+BEGIN_EXAMPLE
 cd ~/example
@@ -600,7 +603,7 @@ ls /sbin/*[x-z]
 /sbin/fsck.minix  /sbin/getty  /sbin/iwspy  /sbin/mkfs.minix  /sbin/pam_tally
 #+END_EXAMPLE
 
-** Making commands work together (pipes)
+* Making commands work together (pipes)
 
 Bash command line programs are frequently designed to be chained
 together.  The output from one command can be passed to the next
@@ -818,7 +821,7 @@ egrep ',ODP' holes.csv  | wc -l
 There are lots of other ways that we could have solved this, but this
 way is pretty simple compared to some of the others.
 
-**  Writing results to a file and making a quick plot with Gnuplot
+*  Writing results to a file and making a quick plot with Gnuplot
 
 It is always important to get a graphical view of spatial data.  Later
 in this chapter, we will start using Google Earth and in a future
@@ -969,7 +972,7 @@ Gnuplot here:
 
 http://www.gnuplot.info/screenshots/
 
-** Inspecting the contents of binary files
+* Inspecting the contents of binary files
 
 Often times, files are not ascii text, but non-human readable binary.
 Binary files are usually much smaller for the same data and are much
@@ -1039,7 +1042,7 @@ weather-try1-georss.xml:        XML document text
 xy.dat:                         ASCII text
 #+END_EXAMPLE
 
-You can see that the 0034_20100604_005123_Healy.all EM122 multibeam file
+You can see that the 0034\_20100604\_005123\_Healy.all EM122 multibeam file
 came up just as "data", while "TN136HS.308" Hydrosweep file came up as
 "ASCII text".  Let's compare these two files using less.  Press "y"
 when it asks you if you want to "See it anyway?".  Then press "q" to quit.
@@ -1328,7 +1331,7 @@ plot 'position.xy'
 quit
 #+END_EXAMPLE
 
-** A first use of Google Earth!
+* A first use of Google Earth!
 
 Now for the fun part!  It's time to get this ship track on a globe.  I
 will not example the Google Earth KML format beyond telling you that
@@ -1379,7 +1382,7 @@ Google Earth.
 open position.kml
 #+END_EXAMPLE
 
-** Variables and looping
+* Variables and looping
 
 FIX: write this section using a number of images from http://mgds.ldeo.columbia.edu/healy/reports/aloftcon/
 
@@ -1422,18 +1425,19 @@ EDITOR=emacs
 export EDITOR=emacs
 #+END_EXAMPLE
 
+#+BEGIN_EXAMPLE
 http://mgds.ldeo.columbia.edu/healy/reports/aloftcon/2010/20101009-1801.jpeg
+#+END_EXAMPLE
 
-
-** Jobs control - running things in the background
+* Jobs control - running things in the background
 
 FIX: write about &, bg, fg, jobs, kill, ps
 
-** Making a bash script file that you can run
+* Making a bash script file that you can run
 
 FIX: write
 
-** Checksums
+* Checksums
 
 FIX: write
 
@@ -1448,3 +1452,8 @@ FIX: write
 - http://www.gnu.org/software/bash/manual/
 - http://tldp.org/LDP/abs/html/
 - http://www.digilife.be/quickreferences/QRC/Bash%20Quick%20Reference.pdf
+
+# * Acknowledgments
+#
+# Thanks to Tami Beduhn, Marcus Cole, and many others for feedback on
+# this chapter.
