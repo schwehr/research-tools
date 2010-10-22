@@ -82,39 +82,111 @@ First, read aloud the command that you have typed and what is in the
 document. 
 
 Check for common characters to confuse.  It is easy to replace a "1"
-(number one) with an "l" or vice versa if the fonts you have in your
+(number one) with an "l" ([[http://en.wikipedia.org/wiki/ICAO_spelling_alphabet][Lima]]) or vice versa if the fonts you have in your
 terminal and web browser make those two characters.  Make sure you are
 using the right quote character (e.g. ", ', or ` are all different).
+Another pair of characters that is sometime trouble are the 0 (zero)
+and O (Oscar).
 
-Note that the pipe character, "|", is between  FIX
+Note that the pipe character is a vertical bar: "|".  This character
+is sometimes two vertical dashes.  On US keyboards it is located
+between the delete and return/enter keys and is the shift of "\".
 
 * Beginning bash
 
 You will now need to access a terminal running bash.  There are
 several different ways to accomplish this that depend on your computer
-setup.
-
-** Windows with cygwin
-
-If you have not installed Cygwin, please do so now or ask your system
-administrator to install Cygwin.
-
-Start menu -> 
-
-** Mac OSX
-
-Open /Applications/Utilities/Terminal
+setup.  Depending on your situation, you may be able to choose one of
+these routes, your information technology (IT) team may provide you a
+solution, or your instructor might dictate a setup.
 
 ** Linux
 
+This is the most native environment for bash and has the best support
+for all the tools that will be covered in this chapter.  I recommend
+[[http://www.ubuntu.com/][Ubuntu]] or [[http://fedoraproject.org][Fedora]] versions of Linux (when I have a choice, I use
+Ubuntu).
+
+You can also use [[http://wiki.osgeo.org/wiki/Live_GIS_Disc][OSGeo Live]] or [[http://sites.google.com/site/poseidonlinux/details][Poseidon Linux]] for Linux distributions
+that are focused on science.
+
 Just open a terminal and you should be set.
+
+TODO: Describe running a virtual machine with either OSGeo Line or
+Poseidon Linux.
+
+In case you need something slightly different, here a list of about
+600 different types of Linux: [[http://lwn.net/Distributions/][The LWN.net Linux Distribution List]]
+
+** Windows with cygwin
+
+If you must work just with a Microsoft Windows environment, Cygwin is
+likely the best option for getting a Unix/Linux like command line and
+all the extra programs.  Cygwin has some rough edges, but it
+definitely gets the job done.
+
+If you have not installed Cygwin, please do so now or ask your system
+administrator to install Cygwin.  You will need to install these
+packages:
+
+#+BEGIN_EXAMPLE
+Start menu -> Cygwin -> Cygwin Bash Shell
+#+END_EXAMPLE
+
+TODO: how to properly start X11?
+
+** Mac OSX
+
+This assumes Mac OSX 10.6.  If you are using 10.5 or older, please
+update your computer.
+
+First, you will need to make sure that you have installed XCode from
+the DVDs that came with your Apple computer.  Then also install X11
+from the main DVD.  There is a supplemental programs installer that
+when run will give you the option for X11. 
+
+You will now need to [[http://www.finkproject.org/download/srcdist.php][install fink]].  I apologize that a chapter
+teaching you how to use the command line requires using the command
+line before you learn the skills.  The fink team is not able to
+produce a binary installer for fink at this time.
+
+Open the /Applications/Utilities/Terminal application.  In that
+window, you will need to run these commands.
+
+#+BEGIN_EXAMPLE
+# This URL might not work beyond 
+curl -O http://vislab-ccom.unh.edu/~schwehr/software/fink/fink-0.29.14.tar.gz
+tar -xf fink-0.29.14.tar.gz
+cd fink-0.29.14
+./bootstrap  # This will ask you a few questions - use the defaults
+/sw/bin/pathsetup
+fink selfupdate-rsync
+fink configure
+# Press enter for all questions to accept the default except...
+# Answer that you would like to activate the "unstable" tree.
+#+END_EXAMPLE
+
+Now you can install software through fink.  The software will compile
+from source which can takes hours.  It is good to run these overnight
+or in the background while you are doing other things.  When it asks
+you questions about the installation, it is generally okay to accept
+the default by pressing enter.
+
+#+BEGIN_EXAMPLE
+fink install gnuplot
+#+END_EXAMPLE
+
+Eventually, you will want to install a lot more software via fink, but
+gnuplot is all that is required for this chapter.
 
 ** Connecting to your a computer running Linux
 
 Hopefully, you are working directly on a laptop or desktop computer
 that is running linux and you are already logged into the computer.
-If you are on a Windows computer, you must securely log into a
-"remote" computer running Linux
+However, if you are on a Windows computer and can not install cygwin
+or a virtual machine, you must securely log into a "remote" computer
+running Linux.  You will use ssh to log in.  If you do not have an X11
+server on your Windows computer, then
 
 *** Never use telnet, rsh, or ftp if you must type a password
 
@@ -161,8 +233,9 @@ as processes), but this will work for now.
 
 First, you need some basic command to know where you on the computer's
 storage disks and what files are there.  The first command that you
-need to know tells you the current working directory: '''pwd'''.  This
-command writes where you are to the terminal.
+need to know tells you the working directory: '''pwd''' (print
+working directory).  This command writes where you are to the
+terminal.
 
 #+BEGIN_EXAMPLE
 pwd
@@ -224,7 +297,7 @@ the date and time that the files were last changed and who "ownes"
 each file.
 
 #+BEGIN_EXAMPLE
-ls -a -l
+ls -a -l # That is "l" as in Lima
 total 8
 drwxr-xr-x  2 kurt kurt 4096 2010-10-15 08:13 .
 drwxr-xr-x 42 kurt kurt 4096 2010-10-15 08:13 ..
@@ -269,9 +342,9 @@ pwd
 #+END_EXAMPLE
 
 Finally, if you are somewhere on the disk and want to get back to your
-home directory, the "~".  We can use the '''echo''' command to see
-what the "~" means and then give it a try.  '''echo''' prints what it
-is given to the terminal.
+home directory, the "~" points back to your home directory.  We can
+use the '''echo''' command to see what the "~" means and then give it
+a try.  '''echo''' prints what it is given to the terminal.
 
 #+BEGIN_EXAMPLE
 echo ~
@@ -322,7 +395,8 @@ free) command.  Here is an example from a Linux system.  Windows with
 cygwin will look pretty different.  You can also ask it to write out 
 the space on the device in a more "human-readable''' format with the
 "-h" option.  Note, you will see "non-disk" things on a linux
-computer, that
+computer, that I have hidden from you here.  Please ignore these
+extraneous entries. 
 
 #+BEGIN_EXAMPLE
 df 
@@ -334,7 +408,7 @@ Filesystem            Size  Used Avail Use% Mounted on
 /dev/sda1             227G   11G  204G   6% /
 #+END_EXAMPLE
 
-Here is an example from a Linux computer with two 2 terra byte drives
+Here is an example from a Linux computer with two 2 terabyte (TB) drives
 attached.
 #+BEGIN_EXAMPLE
 df -h
@@ -377,8 +451,8 @@ up and down arrow keys, the space bar, the '''b''' key, '''<''', and
 is '''q''' to quit out of the manual.
 
 You can also search for commands that might help you get a job done.
-This is known as "apropos" and you can ask for it with the "-k" option
-to man.
+This is known as "apropos".  For example "apropos editor" You can also
+ask for it with the "-k" option to man.
 
 #+BEGIN_EXAMPLE
 man -k sort
@@ -450,9 +524,6 @@ Now, let's create a bunch of files to give ourselves something to work with.
 touch 1 2 3 4 5 6 7 8 9 10 11 12 13 100
 #+END_EXAMPLE
 
-
-
-
 We can now start trying out some of the shells abilities to select
 groups of files.  This is know in shell terminology as pattern
 matching or "glob".  The complete bash manual on matching files is
@@ -479,15 +550,16 @@ ls *
 ls 1*
 1  10  100  11  12  13
 
-# anything ending with a "0"
+# anything ending with a "0" - This is the number zero
 ls *0
+10  100
 
 # anything starting with 1 and ending with a 0
 ls 1*0
 10  100
 #+END_EXAMPLE
 
-The "?" is more specific than the "*".  The "?" matches any
+The "?" is more specific than the "*".  The "?" matches any single
 character.  Give it a try.
 
 #+BEGIN_EXAMPLE
@@ -538,11 +610,6 @@ that makes the command line super powerful.  If your commands get too
 crazy, you will want to switch to a more powerful language than bash
 such as python.
 
-If we take a look at the list of these files, we will see that they
-are coming in an alphabetical type order, not a numeric order.  This
-is a good time to introduce the '''sort''' command to get things into
-a numerical order.  It's default is to sort the same way as ls, but we
-can ask it to sort the files numerically with the "-n" flag.
 #+BEGIN_EXAMPLE
 ls 
 1  10  100  11  12  13  2  3  4  5  6  7  8  9
@@ -570,7 +637,12 @@ is a good time to introduce the '''sort''' command to get things into
 a numerical order.  It's default is to sort the same way as ls, but we
 can ask it to sort the files numerically with the "-n" flag.
 
+The "|" below is a ''''pipe'''' that takes the output from '''ls''' that would
+have gone to the screen and passes the results to the next program in
+line.  You can chain as many programs together as you like.
+
 #+BEGIN_EXAMPLE
+# "pipe" the output of ls to sort
 ls | sort -n
 1
 2
@@ -590,7 +662,7 @@ ls | sort -n
 
 Now it is time to get away from the above made up example and use some
 real earth science data.  Let's go grab the global catalog of
-boreholes that says where the ocean drilling projects gone.  The
+boreholes that says where the three ocean drilling projects gone.  The
 command line utility '''curl''' lets you grab data from any ftp or
 http url.  The "-O" (capital letter O as in [[http://en.wikipedia.org/wiki/ICAO_spelling_alphabet][Oscar]]) tells curl to use
 the same filename as on the remote web server.
@@ -612,9 +684,6 @@ to be better than less.  Yes, computer programmers make these kinds of
 jokes all the time.
 
 #+BEGIN_EXAMPLE
-ls -l holes.csv
--rw-r--r-- 1 kurt kurt 125783 2010-10-15 11:06 holes.csv
-
 less holes.csv
 Expedition,Site,Hole,Program,Longitude,Latitude,Water Depth (m),Core Recovered (m)
 1,1,,DSDP,-92.1833,25.8583,2827,50
@@ -652,17 +721,17 @@ followed by the number of words, and finishing with the number of
 characters.  Notice that the number of characters is the same as the
 size of the file when you did a '''ls'''.
 
-Now we are going to use a program called '''cut''' to try to extract the
-"Program" column of the file.  You can see above in the comma
+Now we are going to use a program called '''cut''' to try to extract
+the "Program" column of the file.  You can see above in the comma
 separated value (CSV) formatted data that there is at least a "DSDP",
-which is the
-[[http://en.wikipedia.org/wiki/Deep_Sea_Drilling_Program][Deep Sea Drill Program]] that ran from 1968 to 1983.  Cut can work a couple
-different ways, but here we are going to ask it to work in "field
-mode" and tell it that commas (",") are the delimiter (or separator)
-between fields.  We do that with a "-d" and the comma character.  We
-then specify the number of the field we want.  Looking at the first
-line of the file, you can see that "Program" appears in the fourth
-position.
+which is the [[http://en.wikipedia.org/wiki/Deep_Sea_Drilling_Program][Deep Sea Drill Program]] that ran from 1968 to 1983.  Cut
+can work a couple different ways, but here we are going to ask it to
+work in "field mode" and tell it that commas (",") are the delimiter
+(or separator) between fields.  We do that with a "-d" and the comma
+character.  We then specify the number of the field we want.  Looking
+at the first line of the file, you can see that "Program" appears in
+the fourth position.
+
 #+BEGIN_EXAMPLE
 cut -d, -f4 holes.csv
 #+END_EXAMPLE
@@ -683,14 +752,15 @@ We can see now that there are 3 programs in there and that the CSV
 first line that tells us what the fields in there gets lumped in there
 with it.
 
-There is a search tool for text that can help us separate apart called
-'''egrep'''.  This command has a very powerful syntax for specifying
-patters called a "regular expression".  Don't worry about what that
-means right now, but I want to you at least see the term.  Right now
-we are going to use a very simple pattern that is just the exact text
-that we are searching for.  Here is searching for all the DSDP bore holes.
-We will give egrep the string that we are looking for followed by the
-file we want to search.
+There is a search tool for text that can help us separate apart lines
+of text called '''egrep'''.  This command has a very powerful syntax
+for specifying patters called a "regular expression".  Don't worry
+about what a regular expression is right now, but I want to you at
+least see the term.  Right now we are going to use a very simple
+pattern that is just the exact text that we are searching for.  Here
+is searching for all the DSDP bore holes.  We will give egrep the
+string that we are looking for followed by the file we want to search.
+
 #+BEGIN_EXAMPLE
 egrep DSDP holes.csv
 #+END_EXAMPLE
@@ -710,7 +780,7 @@ some keyboards and in the United States is between the return and
 delete keys to the right of the "p" key.
 
 #+BEGIN_EXAMPLE
-egrep DSDP holes.csv | wc -l
+egrep DSDP holes.csv | wc -l  # "l" as in Lima
 1116
 
 egrep ODP holes.csv | wc -l
@@ -720,11 +790,10 @@ egrep IODP holes.csv | wc -l
 153
 #+END_EXAMPLE
 
-We have a slight problem here in that things are not adding up.  The
-string ODP is found in both the ODP and IODP entries.  If we check
-things out, the do not add up.  Here I am using the "binary
-calculator" to do a little math.  I suspect you can just do this by
-hand, but it shows another pipe.
+We have a slight problem here in that the counts are not adding up.
+The string ODP is found in both the ODP and IODP entries.  Here I am
+using the "binary calculator" to do a little math.  I suspect you can
+just do this by hand, but the example shows another pipe.
 
 #+BEGIN_EXAMPLE
 # The 3 results from the word counts above
@@ -844,6 +913,9 @@ simpler example to see ">" in action.  Here, I also use the '''cat'''
 '''less''', but if a file is very long or you are not sure how long
 the file is, you are better off using '''less'''.
 
+Note: ">>" appends to a file if it already exists or create a new file
+when needed, whereas ">" will clobber a file in one already exists.
+
 #+BEGIN_EXAMPLE
 ls > listing
 
@@ -877,9 +949,13 @@ head xy.dat
 -68.2967 30.134
 #+END_EXAMPLE
 
-It is time to give Gnuplot a quick try.  This does not give you much
+It is time to give '''gnuplot''' a quick try.  This does not give you much
 of a sense of what Gnuplot can do, but we can at least look at the
-locations of the cores.
+locations of the cores.  
+
+Note for Cygwin users:  You must be running a shell through X11 to be
+able to plot with Gnuplot.  If you are on Linux or Mac, this should
+just work with a graph popping up on your screen.
 
 #+BEGIN_EXAMPLE
 gnuplot
@@ -1012,7 +1088,9 @@ ERGNAMPL
 The second file, TN136HS.308, while strange, is all numbers and
 readable codes.  This file contains just readable text.
 
-For 0034_20100604_005123_Healy.all, notice the "^B", "^@", "^A", and
+# NOTE: The _ and ^ characters are escaped to prevent sub and super script
+
+For 0034\_20100604\_005123\_Healy.all, notice the "\^B", "\^@", "\^A", and
 so forth.  These are '''less''' trying to give you a printable version
 of binary data.  However, it does look like there is some human
 readable [[http://en.wikipedia.org/wiki/ASCII][ASCII]] text in the file.  ASCII is now the most common
@@ -1109,7 +1187,7 @@ start to split out the position messages using '''cut'''.  First we
 will use '''egrep''' and '''cut''' to put all the "GGA" string's
 position text in a file called "position.raw."  Note that I
 will use head with a number of lines to return to shorten up the
-examples here with a "-5" for five lines.
+examples.  Here I specify "-5" for only five lines.
 
 #+BEGIN_EXAMPLE
 strings 0034_20100604_005123_Healy.all | egrep GGA | cut -d, -f3-6 > position.raw
@@ -1119,11 +1197,6 @@ head -5 position.raw
 2615.33258,N,15924.40389,W
 2615.33558,N,15924.40399,W
 2615.33858,N,15924.40406,W
-2615.34155,N,15924.40406,W
-2615.34448,N,15924.40400,W
-2615.34739,N,15924.40393,W
-2615.35032,N,15924.40390,W
-2615.35324,N,15924.40389,W
 #+END_EXAMPLE
 
 The next task is to try to convert the position strings into decimal
@@ -1167,8 +1240,8 @@ head -5 lat.min_decimal
 
 Now we have two files: "lat.deg" and "lat.min".  We need to combine
 these two files into a singe file with multiple columns so that we can
-do some math in a moment.  The '''paste''' command takes the a line
-for each file given and combines them all together, but separates them
+do some math in a moment.  The '''paste''' command takes a line
+from each file given and combines them all together, but separates them
 with a tab character.
 
 #+BEGIN_EXAMPLE
@@ -1221,13 +1294,13 @@ head -5 lon
 We now need to combine the longitude and latitude numbers and plot
 them with Gnuplot.  The results of the plot are not great as awk is
 not great at handling floating point numbers - giving us rounding
-errors and the ship was heading north for this time period.  I am
-going to use '''printf''' instead of print inside of the awk to ask
+errors and the ship was heading north for this time period.  Small
+changes in the latitude are not shown, giving a stair-step graph.  I
+am going to use '''printf''' instead of print inside of the awk to ask
 for more precision.  Don't worry about the details, but it is asking
 awk to print 5 decimal places.  While '''awk''' is a complete
-programming language, we will cover how to do this kind of
-thing in python and encourage you to avoid '''awk''' if at all
-possible.
+programming language, we will cover how to do this kind of thing in
+python and encourage you to avoid '''awk''' if at all possible.
 
 #+BEGIN_EXAMPLE
 # This new awk line works... "trust me"
