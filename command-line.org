@@ -1425,8 +1425,153 @@ EDITOR=emacs
 export EDITOR=emacs
 #+END_EXAMPLE
 
+There are some key tricks to understanding variables in bash.  First,
+you must have no spaces before or after the equal sign.  Bash is very
+picky about this.  The other part is where your variable is available.
+Without the '''export''', the variable is not available to other programs
+that are called from the command line.  For us, right now, the export
+is not important, but later on for things like the PATH variable that
+control where to look for programs, '''export''' is essential.
+
+To demonstrate variables, we will use the '''echo''' command which
+will just print out to the screen whatever we pass to it.  Give it a
+try.  The "$" character starts the use of a variable.
+
 #+BEGIN_EXAMPLE
-http://mgds.ldeo.columbia.edu/healy/reports/aloftcon/2010/20101009-1801.jpeg
+# Set a variable
+testing=123
+
+# Print the variable
+echo $testing
+123
+
+# Start a new bash shell inside the original one
+bash
+
+# See that "testing" is not set.  If there is no variable, bash gives
+# an empty string
+echo $testing
+
+# quit back to the main bash shell
+exit
+
+# Set testing to have a value that will be inherited
+export testing="hello world"
+
+bash
+
+# Now see that the exported variable went through
+echo $testing
+hello world
+#+END_EXAMPLE
+
+That's great, but how can we use variables?  One way is to count
+through a range.  We can use this to download one file for every hour
+of the day.  The US Coast Guard Cutter Healy uploads a picture every
+hour from the camera mounted over the bridge.  The files look
+typically like this.  Here I am using curl to pull down one image.
+
+#+BEGIN_EXAMPLE
+curl -O http://mgds.ldeo.columbia.edu/healy/reports/aloftcon/2010/20101009-1801.jpeg
+#+END_EXAMPLE
+
+We now need to figure out how to count from 0 to 23 to get the hours
+of the day.  The '''let''' command does simple math for variables.
+
+
+#+BEGIN_EXAMPLe
+hour=0
+echo $hour
+0
+
+let hour=$hour+1
+echo $hour
+1
+#+END_EXAMPLE
+
+We can now combine that ability to do simple math with a '''while''' loop.
+The while loop keeps
+
+#+BEGIN_EXAMPLE
+hour=1
+while [[ $hour -le 23 ]\]; do
+  echo $hour
+  let hour=$hour+1
+done 
+1
+2
+3
+4
+5
+...  # Trimmed to be a more reasonable length
+22
+23
+#+END_EXAMPLE
+
+One problem with the above is that we want to have the numbers
+written in in ## format.  For example "1" should bewritten as "01".
+The '''printf''' command can help us format a number.  The
+'''printf''' command is pretty complicated, but here the "%" and "d"
+says to present a decimal number and the "02" asks for 2 digit places
+padded on the left with 0's to make it 2 characters wide.  The "\n"
+asks for a new line such that we can read the output easier.
+
+#+BEGIN_EXAMPLE
+hour=2
+
+printf "%02d\n" $hour
+02
+#+END_EXAMPLE
+
+How can we get that 02 into our echo command?  We can use the "`"
+(back quote) character to put the text from some command that was run
+into another command's arguments.
+
+#+BEGIN_EXAMPLE
+hour=5
+
+echo Here it is with 2 digits: `printf "%02d" $hour`
+Here it is with 2 digits: 05
+#+END_EXAMPLE
+
+We can now combine the printf into the while loop.
+
+#+BEGIN_EXAMPLE
+hour=1
+while [[ $hour -le 23 ]\]; do
+  echo `printf "%02d" $hour`
+  let hour=$hour+1
+done 
+00
+01
+02
+..
+22
+23
+#EXAMPLE
+
+Now we can replace the URL for the image and place in the hours for
+the day.
+
+#+BEGIN_EXAMPLE
+hour=0
+while [[ $hour -le 23 ]\]; do
+  curl -O http://mgds.ldeo.columbia.edu/healy/reports/aloftcon/2010/20101009-`printf "%02d" $hour`01.jpeg
+  let hour=$hour+1
+done 
+#EXAMPLE
+
+We now have 24 
+
+#+BEGIN_EXAMPLE
+ls -1 2010*
+20101009-0001.jpeg
+20101009-0101.jpeg
+20101009-0201.jpeg
+20101009-0301.jpeg
+...
+20101009-2201.jpeg
+20101009-2301.jpeg
 #+END_EXAMPLE
 
 * Jobs control - running things in the background
