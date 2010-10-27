@@ -116,7 +116,6 @@ just works. The basic SQL types are as follows:
 | REAL    | A floating point number     |
 |         |     FIX: doc the rest       |
 
-
 We will start off by creating a database.  With SQLite, this is a lot
 easier than you might imagine.  All we have to do is start SQLite and
 give it the name of the database file.  Make sure not to use the

@@ -233,7 +233,7 @@ as processes), but this will work for now.
 
 First, you need some basic command to know where you on the computer's
 storage disks and what files are there.  The first command that you
-need to know tells you the working directory: '''pwd''' (print
+need to know tells you the working directory: *pwd* (print
 working directory).  This command writes where you are to the
 terminal.
 
@@ -241,14 +241,14 @@ terminal.
 pwd
 #+END_EXAMPLE
 
-You type '''pwd''', press enter/return and it will tell you where you
+You type *pwd*, press enter/return and it will tell you where you
 are.  
 
 #+BEGIN_EXAMPLE
 /home/kurt
 #+END_EXAMPLE
 
-The '''path''' that you see will be different than I show above, but
+The *path* that you see will be different than I show above, but
 hopefully, you get the idea.
 
 If you are accustomed to DOS or Microsoft windows, you have seen that
@@ -257,21 +257,21 @@ character.  With bash, directories are separated byt the "/"
 character.  It is definitely annoying that Microsoft decided to change
 the character, but we are now stuck with this difference.
 
-We can create a new directory with the '''mkdir''' (make directory)
+We can create a new directory with the *mkdir* (make directory)
 command.
 
 #+BEGIN_EXAMPLE
 mkdir example
 #+END_EXAMPLE
 
-Let's now move into that directory with the '''cd''' (change
+Let's now move into that directory with the *cd* (change
 directory) command.
 
 #+BEGIN_EXAMPLE
 cd example
 #+END_EXAMPLE
 
-We should take a look at what is in that directory with the '''ls'''
+We should take a look at what is in that directory with the *ls*
 (list directory contents) command.
 
 #+BEGIN_EXAMPLE
@@ -280,9 +280,9 @@ ls
 
 This will print out nothing.  There are no files in the directory.
 Now is a good time to learn about options to command line programs.
-You can ask the '''ls''' command to behave differently.  First let's
-try asking for '''all''' files with the "-a" option.  This means it
-will show any '''hidden''' files that have a name starting with a ".".
+You can ask the *ls* command to behave differently.  First let's
+try asking for *all* files with the "-a" option.  This means it
+will show any *hidden* files that have a name starting with a ".".
 These are refered to as "dot" files. 
 
 #+BEGIN_EXAMPLE
@@ -290,7 +290,7 @@ ls -a
 .  ..
 #+END_EXAMPLE
 
-You can pass multiple options to a command.  With the '''ls'''
+You can pass multiple options to a command.  With the *ls*
 command, we might also want to see the "long" output.  This will give
 us a lot more information than we want right now, but it will show you
 the date and time that the files were last changed and who "ownes"
@@ -343,8 +343,8 @@ pwd
 
 Finally, if you are somewhere on the disk and want to get back to your
 home directory, the "~" points back to your home directory.  We can
-use the '''echo''' command to see what the "~" means and then give it
-a try.  '''echo''' prints what it is given to the terminal.
+use the *echo* command to see what the "~" means and then give it
+a try.  *echo* prints what it is given to the terminal.
 
 #+BEGIN_EXAMPLE
 echo ~
@@ -390,10 +390,10 @@ previous commands and left/right to edit a command.  We will get into
 more advanced editing of commands later.
 
 We can also ask the shell to tell us which disks are "mounted" (aka
-"attached" or "installed") on the computer with the '''df''' (disk
+"attached" or "installed") on the computer with the *df* (disk
 free) command.  Here is an example from a Linux system.  Windows with
 cygwin will look pretty different.  You can also ask it to write out 
-the space on the device in a more "human-readable''' format with the
+the space on the device in a more "human-readable* format with the
 "-h" option.  Note, you will see "non-disk" things on a linux
 computer, that I have hidden from you here.  Please ignore these
 extraneous entries. 
@@ -445,10 +445,10 @@ DESCRIPTION
 #+END_EXAMPLE
 
 When you are in the man page, you are interacting with a "pager"
-program (it's actually a program called '''less''').  You have use the
-up and down arrow keys, the space bar, the '''b''' key, '''<''', and
-'''>''' to move up and down the manual.  A very important key to know
-is '''q''' to quit out of the manual.
+program (it's actually a program called *less*).  You have use the
+up and down arrow keys, the space bar, the *b* key, *<*, and
+*>* to move up and down the manual.  A very important key to know
+is *q* to quit out of the manual.
 
 You can also search for commands that might help you get a job done.
 This is known as "apropos".  For example "apropos editor" You can also
@@ -476,6 +476,16 @@ the name are things you can access from the bash command line.
 Entries with a "(2)" or "(3)" are things that are accessible from a
 full programming language such as C, perl, python, etc.
 
+On cygwin, sometimes you will have to look for a man page with a
+slightly different name than you would expect.  For example, later on,
+we will use *awk*.  In this case, there is not a man page for awk,
+so you will need to know that there is a "GNU" version of awk
+installed.
+
+#+BEGIN_EXAMPLE
+man gawk
+#+END_EXAMPLE
+
 # * Managing Files
 
 # Dealing with large numbers of files can be really painful if you are
@@ -500,7 +510,7 @@ directory listings.
 cd ~/example
 #+END_EXAMPLE
 
-Now we can use a command called '''touch''' to create some files.
+Now we can use a command called *touch* to create some files.
 touch is designed to update the last modified time, but if the file
 does not exist, it will create an empty file.  Here we will create
 three files.  Many commands can work on many files at the same time.
@@ -636,11 +646,11 @@ ls -1
 
 If we take a look at the list of these files, we will see that they
 are coming in an alphabetical type order, not a numeric order.  This
-is a good time to introduce the '''sort''' command to get things into
+is a good time to introduce the *sort* command to get things into
 a numerical order.  It's default is to sort the same way as ls, but we
 can ask it to sort the files numerically with the "-n" flag.
 
-The "|" below is a ''''pipe'''' that takes the output from '''ls''' that would
+The "|" below is a "*pipe*" that takes the output from *ls* that would
 have gone to the screen and passes the results to the next program in
 line.  You can chain as many programs together as you like.
 
@@ -666,7 +676,7 @@ ls | sort -n
 Now it is time to get away from the above made up example and use some
 real earth science data.  Let's go grab the global catalog of
 boreholes that says where the three ocean drilling projects gone.  The
-command line utility '''curl''' lets you grab data from any ftp or
+command line utility *curl* lets you grab data from any ftp or
 http url.  The "-O" (capital letter O as in [[http://en.wikipedia.org/wiki/ICAO_spelling_alphabet][Oscar]]) tells curl to use
 the same filename as on the remote web server.
 
@@ -679,10 +689,10 @@ ls -l holes.csv
 
 Before we start chaining together programs with pipes to work with
 this database, you should take a look at the file in a pager program.
-The current best program for this is called '''less'''.  The name is a
-little strange in that there was original a program called '''more'''
+The current best program for this is called *less*.  The name is a
+little strange in that there was original a program called *more*
 that was okay, but was replaced by something better and the author
-felt that '''less''' is more.  There is also a '''most''' that claims
+felt that *less* is more.  There is also a *most* that claims
 to be better than less.  Yes, computer programmers make these kinds of
 jokes all the time.
 
@@ -711,7 +721,7 @@ file and examine the contents.  When you are done, press "q".  You
 should now have sense of generally what is in the file.  We will now
 start digging into the contents of the file with command line programs.
 
-First, let's start by counting lines in the file with the '''wc'''
+First, let's start by counting lines in the file with the *wc*
 (word count, not water closet) command.
 
 #+BEGIN_EXAMPLE
@@ -722,9 +732,9 @@ wc holes.csv
 The first column on the left is the number of lines in the file,
 followed by the number of words, and finishing with the number of
 characters.  Notice that the number of characters is the same as the
-size of the file when you did a '''ls'''.
+size of the file when you did a *ls*.
 
-Now we are going to use a program called '''cut''' to try to extract
+Now we are going to use a program called *cut* to try to extract
 the "Program" column of the file.  You can see above in the comma
 separated value (CSV) formatted data that there is at least a "DSDP",
 which is the [[http://en.wikipedia.org/wiki/Deep_Sea_Drilling_Program][Deep Sea Drill Program]] that ran from 1968 to 1983.  Cut
@@ -741,7 +751,7 @@ cut -d, -f4 holes.csv
 
 When you run the above command, you will see 3047 lines whiz by on the
 screen.  That is not very helpful.  We only want to see how many
-unique entry types there are.  The '''uniq''' command removes
+unique entry types there are.  The *uniq* command removes
 duplicates in the lines of text that it receives.
 
 #+BEGIN_EXAMPLE
@@ -756,7 +766,7 @@ first line that tells us what the fields in there gets lumped in there
 with it.
 
 There is a search tool for text that can help us separate apart lines
-of text called '''egrep'''.  This command has a very powerful syntax
+of text called *egrep*.  This command has a very powerful syntax
 for specifying patters called a "regular expression".  Don't worry
 about what a regular expression is right now, but I want to you at
 least see the term.  Right now we are going to use a very simple
@@ -773,10 +783,10 @@ that contain the string DSDP.
 
 Next, let's see how many lines there are for each program.  We can
 pass the output of the grep to the word count program we used before.
-'''wc''' has an option to only print the number of lines, so we will
+*wc* has an option to only print the number of lines, so we will
 add "-l" to the command line.  
 
-The data gets passed from one program to another by a '''pipe'''.
+The data gets passed from one program to another by a *pipe*.
 What goes in one side, comes out the other.  A pipe is created by the
 vertical bar character: "|".  This might look like to vertical bars on
 some keyboards and in the United States is between the return and
@@ -843,10 +853,10 @@ we are asking for fields 5 through 6.  We could also have said
 cut -d, -f5-6 holes.csv
 #+END_EXAMPLE
 
-While working on preparing the commands, we can use the '''head'''
+While working on preparing the commands, we can use the *head*
 command to print just the first few lines of the results.  This keeps
 our last command from scrolling off the screen.  We could always use
-the up arrow or '''history''' to see the previous command, but it is
+the up arrow or *history* to see the previous command, but it is
 annoying to have several thousand lines that keep scrolling across the
 screen.
 
@@ -887,8 +897,8 @@ egrep -v Longitude holes.csv | cut -d, -f5-6 | head
 
 The output above is pretty close to being usable, but we have a ","
 characters between each longitude and latitude.  We can use the
-'''tr''' (translate) command to exchange the "," for a " " (space).
-Make sure to place the '''tr''' after the '''cut''' command or cut
+*tr* (translate) command to exchange the "," for a " " (space).
+Make sure to place the *tr* after the *cut* command or cut
 will not be able to tell the comma separated fields apart.
 
 #+BEGIN_EXAMPLE
@@ -910,11 +920,11 @@ and latitude lines saved to a file.  The ">" (great than character)
 "redirects" the output from the last program in the chain of pipes to
 a file that is named after the ">".  Be warned that ">" will overwrite
 a previous file with the same name if one existed.  First, try a
-simpler example to see ">" in action.  Here, I also use the '''cat'''
+simpler example to see ">" in action.  Here, I also use the *cat*
 (concatenate and print files) command to dump the contents of the
-"listing" file to the terminal.  '''cat''' is much simpler than
-'''less''', but if a file is very long or you are not sure how long
-the file is, you are better off using '''less'''.
+"listing" file to the terminal.  *cat* is much simpler than
+*less*, but if a file is very long or you are not sure how long
+the file is, you are better off using *less*.
 
 Note: ">>" appends to a file if it already exists or create a new file
 when needed, whereas ">" will clobber a file in one already exists.
@@ -933,8 +943,8 @@ listing
 #+END_EXAMPLE
 
 Now that you know how to redirect the output to a file, send the
-results of the chain of pipes consisting of '''egrep''', '''cut''',
-and '''tr''' to the file "xy.dat".
+results of the chain of pipes consisting of *egrep*, *cut*,
+and *tr* to the file "xy.dat".
 
 #+BEGIN_EXAMPLE
 egrep -v Longitude holes.csv | cut -d, -f5-6 | tr "," " " > xy.dat
@@ -952,7 +962,7 @@ head xy.dat
 -68.2967 30.134
 #+END_EXAMPLE
 
-It is time to give '''gnuplot''' a quick try.  This does not give you much
+It is time to give *gnuplot* a quick try.  This does not give you much
 of a sense of what Gnuplot can do, but we can at least look at the
 locations of the cores.  
 
@@ -1019,7 +1029,7 @@ curl -O http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/e
 
 Now we have a collection of different file types with some being
 binary and some being ascii.  You can now use the command line program
-called '''file''' to see if it can identify the type of each file.  It
+called *file* to see if it can identify the type of each file.  It
 does not look too deep into the contents of each file, so it sometimes
 gets things wrong, but it is a start.  One important note:  It does
 not use the extension after the "." to figure out file type.  People
@@ -1046,7 +1056,7 @@ You can see that the 0034\_20100604\_005123\_Healy.all EM122 multibeam file
 came up just as "data", while "TN136HS.308" Hydrosweep file came up as
 "ASCII text".  Let's compare these two files using less.  Press "y"
 when it asks you if you want to "See it anyway?".  Then press "q" to quit.
-Using '''cat''' with binary data will likely really mess up your
+Using *cat* with binary data will likely really mess up your
 terminal window.  The window might interpret some of the strange
 characters going by as special control characters.
 
@@ -1094,7 +1104,7 @@ readable codes.  This file contains just readable text.
 # NOTE: The _ and ^ characters are escaped to prevent sub and super script
 
 For 0034\_20100604\_005123\_Healy.all, notice the "\^B", "\^@", "\^A", and
-so forth.  These are '''less''' trying to give you a printable version
+so forth.  These are *less* trying to give you a printable version
 of binary data.  However, it does look like there is some human
 readable [[http://en.wikipedia.org/wiki/ASCII][ASCII]] text in the file.  ASCII is now the most common
 character set for text on the command line.  You might be familar with
@@ -1125,7 +1135,7 @@ DESCRIPTION
 #+END_EXAMPLE
 
 Thankfully, there is a program on the command line called
-'''strings''' that tries to find all the human readable text in a
+*strings* that tries to find all the human readable text in a
 binary file.  It finds all sequences of printable characters that are
 4 characters or longer.  Give it a try.
 
@@ -1152,7 +1162,7 @@ GINGGA,005124.508,2615.32662,N,15924.40376,W,2,07,1.0,3.83,M,,,2,0260*07
 &54<
 #+END_EXAMPLE
 
-Sometimes we get unlucky and '''strings''' finds data that by chance
+Sometimes we get unlucky and *strings* finds data that by chance
 happens to have 4 or more characters in a row.  However, we are seeing
 important parts of the multibeam file that we can read without writing
 software that understands the binary format of Kongsberg multibeam
@@ -1160,8 +1170,8 @@ files.  The string starting with "WLZ" is the setup parameters for the
 multibeam and the ship.  We will ignore that part.  The 3rd line from
 the bottom contains the string "GGA".  This is an ASCII [[http://en.wikipedia.org/wiki/NMEA_0183][NMEA 0183]]
 string from the ships Global Position System (GPS) containing the
-position of the ship at that time.  We can combine '''strings''' with
-an '''egrep''' to see some of the position information in the sonar
+position of the ship at that time.  We can combine *strings* with
+an *egrep* to see some of the position information in the sonar
 log file.
 
 #+BEGIN_EXAMPLE
@@ -1186,8 +1196,8 @@ $--GGA,hhmmss.ss,llll.ll,a,yyyyy.yy,a,x,xx,x.x,x.x,M,x.x,M,x.x,xxxx*hh
 #+END_EXAMPLE
 
 The "llll.ll" is the latidude and "yyyyy.yy" is the longitude.  We can
-start to split out the position messages using '''cut'''.  First we
-will use '''egrep''' and '''cut''' to put all the "GGA" string's
+start to split out the position messages using *cut*.  First we
+will use *egrep* and *cut* to put all the "GGA" string's
 position text in a file called "position.raw."  Note that I
 will use head with a number of lines to return to shorten up the
 examples.  Here I specify "-5" for only five lines.
@@ -1205,11 +1215,11 @@ head -5 position.raw
 The next task is to try to convert the position strings into decimal
 degrees longitude and degrees.  What you see here is evidence that we
 are starting to push the shell into tasks where it is not well
-suited.  This kind of task is much easier in '''python'''.
+suited.  This kind of task is much easier in *python*.
 
 First, let's start by trying to reconstruct the decimal latitude.  The
 first 2 characters in each line of "position.raw" are the degrees of
-latitude.  We can pick them off using '''cut''' but instead of
+latitude.  We can pick them off using *cut* but instead of
 separating fields with the "-d," as we did before, we can tell cut
 exactly which range of characters we want to include by giving it
 "-c1-2".  The means to return from position 1 to position 2.  Because
@@ -1233,7 +1243,7 @@ store them in a file called "lat.min".
 #+BEGIN_EXAMPLE
 cut -c3-10 position.raw > lat.min
 
-head -5 lat.min_decimal
+head -5 lat.min
 15.32662
 15.32959
 15.33258
@@ -1243,7 +1253,7 @@ head -5 lat.min_decimal
 
 Now we have two files: "lat.deg" and "lat.min".  We need to combine
 these two files into a singe file with multiple columns so that we can
-do some math in a moment.  The '''paste''' command takes a line
+do some math in a moment.  The *paste* command takes a line
 from each file given and combines them all together, but separates them
 with a tab character.
 
@@ -1257,13 +1267,40 @@ paste lat.deg lat.min | head -5
 26	15.33858
 #+END_EXAMPLE
 
-We can now use a text processing lanuage called '''awk''' to do some
+We can now use a text processing lanuage called *awk* to do some
 math with these columns.  We must divide the second column by 60 to
 convert from minutes to degrees and add it together with the first
-column.  '''awk''' refers to each column with a "$" followed by a number.
+column.  *awk* refers to each column with a "$" followed by a number.
+
+Let's start with a very simple awk line.  We can use *echo* to
+create one line to test with and then we want to 
 
 #+BEGIN_EXAMPLE
-paste lat.deg lat.min_decimal  | awk '{print $1 + $2/60.}' | head -5
+echo alice bob
+alice bob
+
+echo alice bob | awk '{print $2,$1}'
+bob alice
+#+END_EXAMPLE
+
+Now try to do the actual command.
+
+#+BEGIN_EXAMPLE
+head -5 lat.deg
+26
+26
+26
+26
+26
+
+head -5 lat.min
+2554
+2555
+2555
+2556
+2556
+
+paste lat.deg lat.min | awk '{print $1 + $2/60.}' | head -5
 26.2554
 26.2555
 26.2555
@@ -1299,11 +1336,11 @@ them with Gnuplot.  The results of the plot are not great as awk is
 not great at handling floating point numbers - giving us rounding
 errors and the ship was heading north for this time period.  Small
 changes in the latitude are not shown, giving a stair-step graph.  I
-am going to use '''printf''' instead of print inside of the awk to ask
+am going to use *printf* instead of print inside of the awk to ask
 for more precision.  Don't worry about the details, but it is asking
-awk to print 5 decimal places.  While '''awk''' is a complete
+awk to print 5 decimal places.  While *awk* is a complete
 programming language, we will cover how to do this kind of thing in
-python and encourage you to avoid '''awk''' if at all possible.
+python and encourage you to avoid *awk* if at all possible.
 
 #+BEGIN_EXAMPLE
 # This new awk line works... "trust me"
@@ -1340,11 +1377,11 @@ your points and have one point per line with "x,y", Google Earth will
 draw your ship track on the map.
 
 We now need to convert the tabs in the "position.xy" file to commas
-and glue everything together.  We can again use the '''tr''' command,
-but there are two twists.  First, the '''tr''' command does not take a
+and glue everything together.  We can again use the *tr* command,
+but there are two twists.  First, the *tr* command does not take a
 file name.  It only reads from what you type into it or from another
-program via a pipe.  We will use '''cat''' to send the contents of the
-"position.xy" file into '''tr'''.  The next hurdle is how to specify
+program via a pipe.  We will use *cat* to send the contents of the
+"position.xy" file into *tr*.  The next hurdle is how to specify
 the tab character.  The trick is to use single quotes around a special
 character combination.  The '\t' means one tab character.
 
@@ -1372,7 +1409,7 @@ cat google-earth-line-start.kml position.csv google-earth-line-end.kml > positio
 #+END_EXAMPLE
 
 You might want to take a look at the "position.kml" file that you
-created using the '''less''' program.
+created using the *less* program.
 
 Now open the "position.kml" file in Google Earth.  If you are working
 on a Macintosh computer, you can use this command to open the file in
@@ -1389,7 +1426,7 @@ FIX: write this section using a number of images from http://mgds.ldeo.columbia.
 Like many other programming languages, bash has variables.  When you
 have a bash shell open, it already has a good number of variables that
 are already set.  Let's jump in and see some of the variables.  The
-'''printenv''' (print environment) command will show you all the
+*printenv* (print environment) command will show you all the
 variables.  The "environment" is the current workspace of variables
 for bash.
 
@@ -1413,10 +1450,10 @@ HOME=/home/kurt
 #+END_EXAMPLE
 
 The convention is to name all settings variables to be all CAPITALS.
-Here, for example, '''PATH''' gives the locations that bash will
+Here, for example, *PATH* gives the locations that bash will
 search for programs that you are trying to run.  By setting the
-'''EDITOR''' variable to "emacs", any time a program wants to know which
-editor I prefer to use, it will go and run '''emacs'''.
+*EDITOR* variable to "emacs", any time a program wants to know which
+editor I prefer to use, it will go and run *emacs*.
 
 You can set variables with a special syntax two different ways.  
 
@@ -1428,12 +1465,12 @@ export EDITOR=emacs
 There are some key tricks to understanding variables in bash.  First,
 you must have no spaces before or after the equal sign.  Bash is very
 picky about this.  The other part is where your variable is available.
-Without the '''export''', the variable is not available to other programs
+Without the *export*, the variable is not available to other programs
 that are called from the command line.  For us, right now, the export
 is not important, but later on for things like the PATH variable that
-control where to look for programs, '''export''' is essential.
+control where to look for programs, *export* is essential.
 
-To demonstrate variables, we will use the '''echo''' command which
+To demonstrate variables, we will use the *echo* command which
 will just print out to the screen whatever we pass to it.  Give it a
 try.  The "$" character starts the use of a variable.
 
@@ -1476,7 +1513,7 @@ curl -O http://mgds.ldeo.columbia.edu/healy/reports/aloftcon/2010/20101009-1801.
 #+END_EXAMPLE
 
 We now need to figure out how to count from 0 to 23 to get the hours
-of the day.  The '''let''' command does simple math for variables.
+of the day.  The *let* command does simple math for variables.
 
 
 #+BEGIN_EXAMPLe
@@ -1489,7 +1526,7 @@ echo $hour
 1
 #+END_EXAMPLE
 
-We can now combine that ability to do simple math with a '''while''' loop.
+We can now combine that ability to do simple math with a *while* loop.
 The while loop keeps
 
 #+BEGIN_EXAMPLE
@@ -1510,8 +1547,8 @@ done
 
 One problem with the above is that we want to have the numbers
 written in in ## format.  For example "1" should bewritten as "01".
-The '''printf''' command can help us format a number.  The
-'''printf''' command is pretty complicated, but here the "%" and "d"
+The *printf* command can help us format a number.  The
+*printf* command is pretty complicated, but here the "%" and "d"
 says to present a decimal number and the "02" asks for 2 digit places
 padded on the left with 0's to make it 2 characters wide.  The "\n"
 asks for a new line such that we can read the output easier.
