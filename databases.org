@@ -122,9 +122,9 @@ give it the name of the database file.  Make sure not to use the
 "sqlite" command (without the 3), as you will be using a much older
 version of SQLite.
 
-#+BEGIN_SRC sh
+#+BEGIN_EXAMPLE
 sqlite3 holes.db3
-#+END_SRC sh
+#+END_EXAMPLE
 
 SQLite will respond with its initialization and leave you at a
 prompt.  It is waiting for you to get started!
@@ -139,7 +139,7 @@ sqlite>
 Now we need to create the table for our holes.  Just paste this text
 directly into your sqlite
 
-#+BEGIN_SRC sql
+#+BEGIN_EXAMPLE
 CREATE TABLE IF NOT EXISTS holes (
        -- Two dashes are a comment to the end of a line
        id INTEGER PRIMARY KEY, -- every table should have a primary key
@@ -150,7 +150,7 @@ CREATE TABLE IF NOT EXISTS holes (
        water_depth REAL, -- in meters. It is helpful to comment the units!
        total_pen REAL -- in meters
 );
-#+END_SRC
+#+END_EXAMPLE
 
 FIX: Write a walk through of what just happened.
 
@@ -194,10 +194,10 @@ Let's start with just one line:
 
 The *INSERT* command puts data in the table.
 
-#+BEGIN_SRC sql
+#+BEGIN_EXAMPLE
 INSERT INTO holes (leg, site, hole, lon, lat, arrived, water_depth, total_pen)
        VALUES (100,  625, 'A', -87.1600, 28.8317, '1985-01-12 10:10', 889, 234.9);
-#+END_SRC sql
+#+END_EXAMPLE
 
 ** Getting the data back
 
@@ -227,7 +227,7 @@ A SQLite driver comes with python starting with version 2.5 of
 python.  If you are using Python 2.4 or older, you need to update
 your computer.
 
-#+BEGIN_SRC python
+#+BEGIN_EXAMPLE
 python
 import sqlite3
 cx = sqlite3.connect('holes2.db3')
@@ -246,7 +246,8 @@ cx.execute('''CREATE TABLE IF NOT EXISTS holes (
  ''')
 cx.execute('''INSERT INTO holes (leg, site, hole, lon, lat, arrived, water_depth, total_pen)
        VALUES (100,  625, 'A', -87.1600, 28.8317, '1985-01-12 10:10', 889, 234.9);''')
-#+END_SRC python
+#+END_EXAMPLE
+
 Now we need to fetch the data back from the database.  The *SELECT*
 call will return a "cursor".  
 
