@@ -31,7 +31,7 @@ Today people are often uncomfortable working on the command line to
 get things done with computers or perhaps have never even used the
 command line.  Before windowing systems and mice were common, this was
 really the only way that people were able to tell a computer what to do.
-The advent of the Graphical User Interface (GUI) made some tasks
+The advent of the [[http://en.wikipedia.org/wiki/Graphical_user_interface][Graphical User Interface]] (GUI) made some tasks
 easier, but it also made many tasks harder.  If you need to rename
 hundreds of files, using a mouse is going to take you a long time or
 you are going to have to find and learn a small utility program.  With
@@ -1423,6 +1423,11 @@ open position.kml
 
 FIX: write this section using a number of images from http://mgds.ldeo.columbia.edu/healy/reports/aloftcon/
 
+This section moves pretty fast and introduces a number of concepts
+that are somewhat complicated.   Do not expect to get them right
+away.  Give it a couple of reads and watch out for small typos in what
+you do.
+
 Like many other programming languages, bash has variables.  When you
 have a bash shell open, it already has a good number of variables that
 are already set.  Let's jump in and see some of the variables.  The
@@ -1515,7 +1520,6 @@ curl -O http://mgds.ldeo.columbia.edu/healy/reports/aloftcon/2010/20101009-1801.
 We now need to figure out how to count from 0 to 23 to get the hours
 of the day.  The *let* command does simple math for variables.
 
-
 #+BEGIN_EXAMPLe
 hour=0
 echo $hour
@@ -1585,7 +1589,7 @@ done
 ..
 22
 23
-#EXAMPLE
+#+END_EXAMPLE
 
 Now we can replace the URL for the image and place in the hours for
 the day.
@@ -1596,9 +1600,9 @@ while [[ $hour -le 23 ]\]; do
   curl -O http://mgds.ldeo.columbia.edu/healy/reports/aloftcon/2010/20101009-`printf "%02d" $hour`01.jpeg
   let hour=$hour+1
 done 
-#EXAMPLE
+#+END_EXAMPLE
 
-We now have 24 
+We now have 24 images in the directory.
 
 #+BEGIN_EXAMPLE
 ls -1 2010*
@@ -1609,6 +1613,64 @@ ls -1 2010*
 ...
 20101009-2201.jpeg
 20101009-2301.jpeg
+#+END_EXAMPLE
+
+*Windows*: FIX: how do we open images on windows?
+
+*Linux* or *Mac*: You can use the ImageMagick *display* command:
+
+#+BEGIN_EXAMPLE
+display 20101009-1801.jpeg
+#+END_EXAMPLE
+
+*Mac*, you can easily view an image from the command line with
+the open command (this works for many other types of files too):
+
+#+BEGIN_EXAMPLE
+open 20101009-1801.jpeg
+# An image from the Healy at sea leaving Dutch Harbor, AK
+
+open .
+# The directory of images should appear in the Finder
+#+END_EXAMPLE
+
+We now have a slight issue.  Some programs do not recognize [[http://en.wikipedia.org/wiki/JPEG][JPEG]]
+compressed images unless the file extension at the end is ".jpg", but
+the images here have ".jpeg".  We can use bash to quickly rename all
+the variables in the directory.  This might seem like no big deal with
+a GUI, but if you have to rename hundreds of images, it will take you
+quite a while.  Once you get comfortable with the bash syntax, you
+will be renaming files with ease.
+
+First we need to figure out how to strip off the ".jpeg" from the file
+name.  If we have a file name in a "file" variable, we can use the
+special *%%* syntax to remove the end of a string.  Up until now, we have just
+used the "*$*" character to start variables: 
+
+#+BEGIN_EXAMPLE
+file=20101009-1801.jpeg
+
+echo $file
+20101009-1801.jpeg
+#+BEGIN_EXAMPLE
+
+However, bash allows variables to be inside of "curly braces": "*${}*"
+
+#+BEGIN_EXAMPLE
+echo ${file}
+20101009-1801.jpeg
+#+BEGIN_EXAMPLE
+
+That's more verbose and not interesting by itself, but with the *%%*
+to remove the end of a string it becomes much more powerful.
+
+#+BEGIN_EXAMPLE
+echo ${file%%.jpeg}
+20101009-1801
+
+# If there is no match, the %% and string just does nothing.
+echo ${file%%.junk}
+20101009-1801.jpeg
 #+END_EXAMPLE
 
 * Jobs control - running things in the background
