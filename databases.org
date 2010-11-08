@@ -34,9 +34,10 @@ that focus on databases.
 
 Outlined only
 
- *** Trying to work with column based data can get tiring
- *** SQL provides a useful language for querying data
- *** Allows uniform access to things like R, Python, and QGIS
+- Trying to work with column based data can get tiring
+- SQL provides a useful language for querying data
+- Allows uniform access to things like R, Python, QGIS, ArcGIS,
+  Matlab, etc
 
 ** Which database software to use
 
@@ -78,7 +79,7 @@ run for you.
 
 database@iodp.tamu.edu
 
-Explain where I got the data, what it means, why I chose it, and where
+FIX/TODO: Explain where I got the data, what it means, why I chose it, and where
 how to get a copy.
 
 * Getting started with SQLite

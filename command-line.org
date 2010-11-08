@@ -1535,7 +1535,7 @@ The while loop keeps
 
 #+BEGIN_EXAMPLE
 hour=1
-while [[ $hour -le 23 ]\]; do
+while [[ $hour -le 23 ]]; do
   echo $hour
   let hour=$hour+1
 done 
@@ -1579,7 +1579,7 @@ We can now combine the printf into the while loop.
 
 #+BEGIN_EXAMPLE
 hour=1
-while [[ $hour -le 23 ]\]; do
+while [[ $hour -le 23 ]]; do
   echo `printf "%02d" $hour`
   let hour=$hour+1
 done 
@@ -1596,7 +1596,7 @@ the day.
 
 #+BEGIN_EXAMPLE
 hour=0
-while [[ $hour -le 23 ]\]; do
+while [[ $hour -le 23 ]]; do
   curl -O http://mgds.ldeo.columbia.edu/healy/reports/aloftcon/2010/20101009-`printf "%02d" $hour`01.jpeg
   let hour=$hour+1
 done 
@@ -1652,14 +1652,14 @@ file=20101009-1801.jpeg
 
 echo $file
 20101009-1801.jpeg
-#+BEGIN_EXAMPLE
+#+END_EXAMPLE
 
 However, bash allows variables to be inside of "curly braces": "*${}*"
 
 #+BEGIN_EXAMPLE
 echo ${file}
 20101009-1801.jpeg
-#+BEGIN_EXAMPLE
+#+END_EXAMPLE
 
 That's more verbose and not interesting by itself, but with the *%%*
 to remove the end of a string it becomes much more powerful.
