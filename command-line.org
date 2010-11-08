@@ -1673,6 +1673,177 @@ echo ${file%%.junk}
 20101009-1801.jpeg
 #+END_EXAMPLE
 
+We can now construct the example mv command.  We need to append the
+new extension on the base name.  By putting an *echo* in
+front of the command, nothing will actually happen.  In bash, we use
+the *mv* (move) command to do renames.  
+
+#+BEGIN_EXAMPLE
+echo mv $file ${file%%.jpeg}.jpg
+
+# The output:
+mv 20101009-1801.jpeg 20101009-1801.jpg
+#+END_EXAMPLE
+
+The printed *mv* command looks like it is doing the correct thing.
+The "file" after the *for* is the variable that will contain each
+instance of what is contained in the list after the *in*.
+
+#+BEGIN_EXAMPLE
+for file in 1 2 three alice bob; do
+  echo $file
+done
+
+# Prints:
+1
+2
+three
+alice
+bob
+#+END_EXAMPLE
+
+We now need to construct the for loop around it to handle all of the
+files.  With an *ls* command we can list the files: *ls \*.jpeg*.  We
+can put that list before the semi-colon.  This will print all the jpeg
+files in the current directory.  While it is more complicated than the
+*ls* it gets us towards our mass renaming of files.
+
+#+BEGIN_EXAMPLE
+for file in *.jpeg; do
+    echo $file
+done
+#+END_EXAMPLE
+
+Now we can put in the *mv* command after the *echo*.
+
+#+BEGIN_EXAMPLE
+for file in *.jpeg; do
+    echo mv $file ${file%%.jpeg}.jpg
+done
+
+# The output:
+mv 20101009-0001.jpeg 20101009-0001.jpg
+mv 20101009-0101.jpeg 20101009-0101.jpg
+mv 20101009-0201.jpeg 20101009-0201.jpg
+mv 20101009-0301.jpeg 20101009-0301.jpg
+...
+#+END_EXAMPLE
+
+Remove the *echo* and you have the command that will do the actual work.
+
+#+BEGIN_EXAMPLE
+# How many of each do we have?
+ls *.jpeg | wc -l
+      24
+
+ls *.jpg | wc -l
+ls: *.jpg: No such file or directory
+       0
+
+# Silently rename all the jpeg files to jpg
+for file in *.jpeg; do
+    mv $file ${file%%.jpeg}.jpg
+done
+
+# Note that we now have no jpeg files and they are now all jpg
+ls *.jpeg | wc -l
+ls: *.jpeg: No such file or directory
+       0
+
+# schwehr@CatboxIII.local 65 $ cd && ls *.jpg | wc -l
+      24
+#+END_EXAMPLE
+
+* Checksums
+
+Renaming of files does not change the contents of the file.  Smart
+software will look into files to verify that a file is indeed the type
+that it wants, but unfortunetely not all software is smart.  You may
+have need to determining if two files are the same.  If both files are
+on your computer, there are two command that can tell you if files are
+the same or different.  *diff* (difference) is meant for text and
+*cmp* (compare) is designed for binary files, but both can work with
+either to some extent.
+
+#+BEGIN_EXAMPLE
+cp 20101009-1401.jpg 20101009-1401.jpeg
+
+# No output when the files are the same
+cmp 20101009-1401.jpg 20101009-1401.jpeg
+
+cmp 20101009-1401.jpg 20101009-1301.jpg
+20101009-1401.jpg 20101009-1301.jpg differ: char 205, line 1
+
+# No output when the files are the same
+diff 20101009-1401.jpg 20101009-1401.jpeg
+
+diff 20101009-1401.jpg 20101009-1301.jpg
+Binary files 20101009-1401.jpg and 20101009-1301.jpg differ
+#+END_EXAMPLE
+
+That's helpful, but often you need to compare a file on your computer
+with a file on a server.  In that case, if the provider of the data
+also puts a *checksum* up, you are in business.  With a small number,
+you can check to see if the file you have matches that on the remote
+server.  A checksum is a calculation based on the contents of the
+file.  It does *not* depend on the file name!  There are many types of
+checksum and all are not created equal.  Here are typical ones that
+you may run into.  
+
+The weaker checksums are calculated in a way such that it is easier
+for two different files to have the same checksum.  Random corruption
+of the file does have a reasonable chance to give the same checksum.
+
+- XOR (Exclusive OR) of bits.  This is the weakest.
+- Byte sum.  Better than XOR, but still very risky.
+
+Cryptographically designed algorithms work hard to make sure that
+small changes or corruptions in a file have a very tiny chance of
+producing the same checksum.
+
+- CRC32.  This was the standard for checksums in the 1980's and 90's.
+- MD5.  This was the standard for using in 2000's and is still in
+  common use.
+- SHA.  The SHA algorithm is stronger than md5 and is currently the
+  gold standard for common use.  There are 5 different levels of SHA
+  (1, 224, 256, 384, 512) in common use.  The higher the number, the
+  stronger the check, but the more time to calculate and the string it
+  returns starts to get very long.
+
+We are going to ignore the weak checksums and try out calculating each
+of the checksum types for a file.
+
+#+BEGIN_EXAMPLE
+crc32 20101009-1401.jpg
+9d1feaed
+
+md5 20101009-1401.jpg
+MD5 (20101009-1401.jpg) = dd1452aa1074ee19f50e13139d0cec84
+
+md5sum 20101009-1401.jpg
+dd1452aa1074ee19f50e13139d0cec84  20101009-1401.jpg
+
+
+shasum 20101009-1401.jpg
+63f3e12bfd9527da36759748a3ae4148a4be397e  20101009-1401.jpg
+
+shasum -a 1 20101009-1401.jpg
+63f3e12bfd9527da36759748a3ae4148a4be397e  20101009-1401.jpg
+
+shasum -a 224 20101009-1401.jpg
+fc93690fab4b18fb485122f43d82b5d88b0791f3aa758b38063ef059  20101009-1401.jpg
+
+shasum -a 256 20101009-1401.jpg
+118ae7bf4761231930efccd958ab84b809180549f90ddb0f5178becb08d9d352  20101009-1401.jpg
+
+shasum -a 384 20101009-1401.jpg
+73b4921412da4f8c756bf01dfd07097a648d751b53cd57d6ad8073389f3da3695c30cb95b10fc1fff97128c3cf5b1ee6  20101009-1401.jpg
+
+shasum -a 512 20101009-1401.jpg
+7a0a81fbba64f6b0d287a2fdad6c00ea6ade2498356564e1f23984887f0ce4577461c5a48691c5a261a278c0635ffec3fe32da1e6df121121d647f626e735d3e  20101009-1401.jpg
+
+#+END_EXAMPLE
+
 * Jobs control - running things in the background
 
 FIX: write about &, bg, fg, jobs, kill, ps
@@ -1681,9 +1852,6 @@ FIX: write about &, bg, fg, jobs, kill, ps
 
 FIX: write
 
-* Checksums
-
-FIX: write
 
 - What types of checksums are there and how are they different?
   cryptographic hash (md5/sha), bytewise checksum, xor. 
