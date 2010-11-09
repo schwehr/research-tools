@@ -1820,9 +1820,9 @@ crc32 20101009-1401.jpg
 md5 20101009-1401.jpg
 MD5 (20101009-1401.jpg) = dd1452aa1074ee19f50e13139d0cec84
 
+# There are two different commands that calculate the MD5 sum.
 md5sum 20101009-1401.jpg
 dd1452aa1074ee19f50e13139d0cec84  20101009-1401.jpg
-
 
 shasum 20101009-1401.jpg
 63f3e12bfd9527da36759748a3ae4148a4be397e  20101009-1401.jpg
@@ -1841,8 +1841,14 @@ shasum -a 384 20101009-1401.jpg
 
 shasum -a 512 20101009-1401.jpg
 7a0a81fbba64f6b0d287a2fdad6c00ea6ade2498356564e1f23984887f0ce4577461c5a48691c5a261a278c0635ffec3fe32da1e6df121121d647f626e735d3e  20101009-1401.jpg
-
 #+END_EXAMPLE
+
+The key thing to note above is that the stronger the checksum, the
+more characters it has.  Using a SHA of 512 is really not fun for a
+human.  But imagine comparing two files that are more than 1G.  It
+might take a long time to transfer the file, but the checksum is a
+quick check.
+
 
 * Jobs control - running things in the background
 
