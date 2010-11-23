@@ -69,14 +69,40 @@ This chapter assumes that you have installed Python 2.7 from
 [[http://www.python.org/download/][python.org]] and IPython 0.10 from [[http://ipython.scipy.org/moin/Download][ipython.scipy.org]] in addition to
 [[http://earth.google.com][Google Earth]].  
 
+*** Windows
+
 If you are on Windows, you will might want to use the Scintilla [[http://www.scintilla.org/ScintillaDownload.html][SciTE]]
 text editor that will color your code. However, I usually use emacs
-for all my code and documents. 
+for all my code and documents.  Windows users will need to install
+pyreadline in addition to python and ipython:
+
+https://launchpad.net/pyreadline/+download
+
+
+*** Mac
 
 On the Mac, you should probably install [[http://finkproject.org][Fink]], which gives you many of
 the programs available on Linux. I also find the Smultron text editor
 a nice tool to have for editing text if you are not comfortable with
 Emacs.  XCode is powerful, but it is pretty limited in its flexibility.
+
+*** Linux
+
+Just make sure you are using a recent Linux distribution.  CentOS,
+RedHat, or Debian will be so out of date that you will pull out your
+hair.  I prefer Ubuntu to FedoraCore, but both of these two are pretty
+good about being current.
+
+** Python3 / Python3000
+
+There is a newer version of python around.  Anything a version number
+of 3 or greater will act somewhat differently than python 2.7.  Do not
+worry that what you are learning might not be useful with python 3.
+Most of the hard work of switching went to the people who work in *C*
+behind the scenes to build python and the core modules.  There is a
+program that will convert your code to python 3 for you.  At the time
+I am writing the first version on this chapter (2010), not enough of the
+extra addon libraries have been converted to python 3.
 
 ** Goals for this chapter
 
@@ -86,6 +112,52 @@ parsing data files and turn them into Google Earth visualizations. In
 later chapters, we will attack the fancier features of python that
 help you to reuse your code and/or write larger programs without being
 overwhelmed.
+
+** Alternative introductions and guides to python
+
+*** Free
+
+Books and web pages available to free.  I suggest you find a way to
+support the author(s) if you find a particular book or web page to be
+the best one for you.  If they offer a book (especially if it is an
+environmentally friendly ebook), buy a copy.
+
+Books:
+
+- [[http://diveintopython.org/][Dive Into Python]] by Mark Pilgrim, 2004
+- [[http://www.greenteapress.com/thinkpython/html/index.html][Think Python: How to Think Like a Computer Scientist]] by Allen
+  Downey, 2008
+
+Classes:
+
+- [[http://www.gis.usu.edu/~chrisg/python/2009/][Geoprocessing with Python using Open Source GIS]] by Chris Garrard,
+  2009.
+- [[http://mahi.ucsd.edu/class233/lectures/][Lectures]] for [[http://mahi.ucsd.edu/class233/][Intro to Computing at SIO]] by Lisa
+  Tauxe, 2010. (Lisa Co-chaired my PhD)
+- [[http://www.wag.caltech.edu/home/rpm/python_course/][Python Short Course]] by Richard Muller, 2000.  Getting a bit old.
+
+Web tutorials and references:
+
+- [[http://python.org/doc/][Python.org Documentation]] - The definitive source for documentation
+- [[http://ipython.scipy.org/moin/Documentation][iPython Documentation]] - For all the details of iPython
+- [[http://www.doughellmann.com/PyMOTW/][Python Module of the Week (PyMOTW)]] by Doug Hellmann
+- [[http://google-styleguide.googlecode.com/svn/trunk/pyguide.html][Google Python Style Guide]]
+- [[http://python.net/~goodger/projects/pycon/2007/idiomatic/handout.html][Code Like a Pythonista: Idiomatic Python]] by David Goodger, 2008
+
+iTunesU, YouTube, and other videos:
+
+- [[http://itunes.apple.com/WebObjects/MZStore.woa/wa/viewPodcast?id=341597455][Introductionto Computer Science and Programming]] by Eric Grimson and
+  John Guttag, 2009.  (MIT)
+- [[http://showmedo.com/videotutorials/python][ShowMeDo Python]]
+
+*** For pay only
+
+I have not necessarily read any of these!
+
+- [[http://www.lulu.com/product/paperback/scientific-scripting-with-python/5957511][Scientific Scripting with Python]] by Drew McCormack, 2009.  This book
+  is through Lulu, so the author is self publishing.  Support a great
+  concept, where the author gets most of the proceeds.
+- [[http://heim.ifi.uio.no/~hpl/scripting/][Python Scripting for Computational Science]] by Hans Petter Langtangen, 2008.
 
 * Trying out python
 
@@ -328,3 +400,128 @@ TypeError                                 Traceback (most recent call last)
 TypeError: unsupported operand type(s) for +: 'int' and 'str'
 #+END_EXAMPLE
 
+** for loops
+
+** files
+
+* Working with actual data Part 1 - Lines
+
+** Download the data
+
+Get the ship track for the USCG Ice Breaker Polar Sea (MMSI
+367878000).
+
+http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/polarsea.xy
+
+** What do we have?
+
+#+BEGIN_EXAMPLE
+-157.031186667,71.3501116667
+-157.031095,71.35013
+-157.031036667,71.35023
+-157.03103,71.3502316667
+-157.031018333,71.350235
+-157.031008333,71.3502383333
+...
+#+END_EXAMPLE
+
+This is comma separated longitude and latitude (x,y) positions of the
+ship from Nov 2008 off of Barrow Alaska courtesy Bryan Thomas of the
+Barrow Alaska Science Consortium ([[http://www.arcticscience.org/][BASC]]).
+
+** Making a quick Google Earth visualization
+
+We can use python to make a quick Google Earth visualization of the
+data.  Google Earth expects lines to come as a series of points as
+"x,y" with white space between each point.  Our input file is pretty
+close to this format, so we can just pass through the contents.  In
+the next section, we will do something more complicated.  The steps
+will be:
+
+1. Open a file to write to
+1. Write the KML header and the start of the line
+1. Write the points for the ship track
+1. Write the footer / closing KML
+1. Close the file to make sure it is all on the disk
+
+#+BEGIN_SRC python
+# Open the file for writing
+kml = file('polarsea.kml','w')
+
+# Write the header
+kml.write('''<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://earth.google.com/kml/2.1">
+<Document>
+	<Folder>
+		<Placemark>
+			<LineString>
+				<coordinates>
+''')
+
+# Copy the positions from the data file into the KML file
+for line in file('polarsea.xy'):
+   kml.write(line)
+
+# Write the closing for the KML
+kml.write('''
+				</coordinates>
+			</LineString>
+		</Placemark>
+	</Folder>
+</Document>
+</kml>
+''')
+
+# Close the file so that we know it has been written
+kml.close()
+#+END_SRC
+
+Now open the KML file by double clicking on the file.
+
+[[file:figures/googleearth-polarsea.png]]
+
+* Working with actual data Part 2 - Ocean Drilling "Holes"
+
+** Download the data
+
+If you want to try a more advance method to get the data for this
+section, skip to the next section.  The sure fire way to get the data
+is to open up Firefox or Chrome and go to this URL:
+
+http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/
+
+In that directory, you will find "*holes.csv*".  Save it to your
+desktop.
+
+http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/holes.csv
+
+** Downloading the data without a web browser
+
+If you want a more challenging way to get the data, python has tools
+for dealing with web data directly.  Start up ipython and try this
+out.
+
+#+BEGIN_SRC python
+cd Desktop
+import urllib2
+webpage = urllib2.urlopen('http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/holes.csv')
+holes_csv_data = webpage.read()
+holes_csv = open('holes.csv', 'w')
+holes_csv.write(holes_csv_data)
+del holes_csv
+#+END_SRC
+
+You should now have a file "holes.csv" on your desktop.
+
+** What have we downloaded?
+
+#+BEGIN_EXAMPLE
+Expedition,Site,Hole,Program,Longitude,Latitude,Water Depth (m),Core Recovered (m)
+1,1,,DSDP,-92.1833,25.8583,2827,50
+1,2,,DSDP,-92.0587,23.0455,3572,13
+1,3,,DSDP,-92.0433,23.03,3747,47
+1,4,,DSDP,-73.792,24.478,5319,15
+1,4,A,DSDP,-73.792,24.478,5319,5.8
+1,5,,DSDP,-73.641,24.7265,5354,6.4
+...
+#+END_EXAMPLE
