@@ -1,0 +1,330 @@
+#+BEGIN_COMMENT
+Local Variables:
+mode: org
+mode: flyspell
+mode: auto-fill
+End:
+#+END_COMMENT
+
+#+STARTUP: showall
+
+#+TITLE:     Chapter XXX: Python - utility knife that will last a lifetime - introduction
+#+AUTHOR:    Kurt Schwehr
+#+EMAIL:     schwehr@ccom.unh.edu>
+#+DATE:      $Date: $
+#+DESCRIPTION: Marine Research Data Manipulation and Practices - Python
+#+TEXT:      $Id: kurt-2010.org 13030 2010-01-14 13:33:15Z schwehr $
+#+KEYWORDS: 
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:nil toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   TeX:nil LaTeX:nil skip:t d:nil todo:t pri:nil tags:not-in-toc
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+LINK_HOME: http://schwehr.org
+
+* Introduction
+
+** Why learn about python?
+
+Python is a great combination langage that fills the gap between shell
+scripting and heavy duty low level programming for speed. It is able
+to handle simple jobs easily, but can grow to enormous projects
+without missing a step. It includes graphical user interfaces,
+networking/web frameworks, scientific data processing, databases, and
+tools to untangle annoying binary formats in a style that is good for
+both the common computer user and the computer scientist. The language
+supports the programmer by providing access to C and C++ libraries,
+interpreted shells (ipython), documentation and unit testing, and
+introspection (python can look at itself).
+
+There are thousands of add on packages (currently more than 12,000) to
+help get you along the way to accomplishing your goals that led you to
+use python. There is an archive where people can register their
+contributions called [[http://pypi.python.org/pypi][PyPI]].
+
+Python can do just about everything that Bash, C/C++, and Matlab can
+while being easier to use and, unlike Matlab, you don't have to buy
+it.
+
+** Why not to use python?
+
+Remember that every tool (hopefully) has its sweets spot(s).  That
+also means that there really is not one best programming language in
+the world.  Additionally, some people may find that Python's style is
+not a good fit for them.  The mandatory indenting of text in python
+often is uncomfortable for many long time C or Perl programmers.  I
+personally was really frustrated with that particular feature for
+about 2 weeks back in the mid 1990's, but have loved it ever since.
+
+** Installing python
+
+Hopefully you already have the basics of python and the IPython
+interpreter installed.  We are going to start with those and avoid
+having to start off installing extra packages.  IPython is just like
+python, but adds features that are more typical of working with the
+bash shell (covered in chapter XXX).
+
+This chapter assumes that you have installed Python 2.7 from
+[[http://www.python.org/download/][python.org]] and IPython 0.10 from [[http://ipython.scipy.org/moin/Download][ipython.scipy.org]] in addition to
+[[http://earth.google.com][Google Earth]].  
+
+If you are on Windows, you will might want to use the Scintilla [[http://www.scintilla.org/ScintillaDownload.html][SciTE]]
+text editor that will color your code. However, I usually use emacs
+for all my code and documents. 
+
+On the Mac, you should probably install [[http://finkproject.org][Fink]], which gives you many of
+the programs available on Linux. I also find the Smultron text editor
+a nice tool to have for editing text if you are not comfortable with
+Emacs.  XCode is powerful, but it is pretty limited in its flexibility.
+
+** Goals for this chapter
+
+In this chapter, I will try to acquaint you with the very basics of
+working with python. We will try to actually get some work done
+parsing data files and turn them into Google Earth visualizations. In
+later chapters, we will attack the fancier features of python that
+help you to reuse your code and/or write larger programs without being
+overwhelmed.
+
+* Trying out python
+
+Time to fire up python and get started!  The first time you run it, it
+will setup your IPython environment.  Don't worry about what it is
+doing right now, but don't be surprised when the startup prints less
+text the next time you run ipython.
+
+** Running ipython
+
+*** Windows
+
+On windows, Start -> All Programs -> IPython -> *IPython*.
+
+*** Mac and Linux
+
+Open a terminal and type "*ipython*"
+
+** Moving about in ipython
+
+IPython tries to be like a bash shell that I covered in a previous
+chapter.  It provides ways to move around the directories (often
+called Folders) and manipulate files.  
+
+#+BEGIN_EXAMPLE
+ipython
+Python 2.7 (r27:82500, Oct 22 2010, 09:13:09) 
+Type "copyright", "credits" or "license" for more information.
+
+IPython 0.10 -- An enhanced Interactive Python.
+?         -> Introduction and overview of IPython's features.
+%quickref -> Quick reference.
+help      -> Python's own help system.
+object?   -> Details about 'object'. ?object also works, ?? prints more.
+
+In [1]: pwd
+Out[1]: '/Users/schwehr/'
+
+In [2]: ls
+Access/     Library/   Public/	 objects/ 
+Desktop/    Movies/    Sites/	 org-7.3/
+Documents/  Music/     bin/	 projects/
+Downloads/  Pictures/  example/
+#+END_EXAMPLE
+
+** A little math
+
+IPython keeps around the value of the most recent result from any math
+or function calls.  Let's try some simple math.  Comments follow the
+"#" character (often called pound, hash, or number sign).
+
+#+BEGIN_EXAMPLE
+# Addition with the +
+In [1]: 2+5
+Out[1]: 7
+
+# The "_" is the result of the last operation or the number "7"
+In [2]: _ * 10
+Out[2]: 70
+
+# Two "*" characters switches the multiplication to power.  This is 2
+# to the 8th power
+In [3]: 2**8
+Out[3]: 256
+
+# The percent is the remainder operation, which is often called "mod"
+# It only works for integer numbers
+In [4]: 2001 % 1000
+Out[4]: 1
+
+# Dividing an integer by an integer results in an integer
+In [5]: 2001 / 1000
+Out[5]: 2
+
+# If either number is a floating point number, the result is a
+# floating point
+In [6]: 2001 / 1000.
+Out[6]: 2.001
+#+END_EXAMPLE
+
+More powerful math is hidden inside of a "module".  Modules wrap like
+functionality together.  You have to tell python to load a module so
+that you can use it.  This is accomplished with the "import" command.
+
+The contents of modules is accessed with the period (".").
+Once you have loaded a module, you can press the tab key after the
+module name followed by a period to list the contents of a
+module.
+
+Windows users, you will find that the tab key does not work for you.
+The Microsoft design does not support the library that allows this
+feature to work on Mac and Linux computers.  You can get these
+features through the Unix add-on called Cygwin, but that does not
+always work well.
+
+#+BEGIN_EXAMPLE
+In [1]: import math
+
+In [2]: math.
+math.__class__         math.asin              math.gamma
+math.__delattr__       math.asinh             math.hypot
+math.__dict__          math.atan              math.isinf
+math.__doc__           math.atan2             math.isnan
+math.__file__          math.atanh             math.ldexp
+math.__format__        math.ceil              math.lgamma
+math.__getattribute__  math.copysign          math.log
+math.__hash__          math.cos               math.log10
+math.__init__          math.cosh              math.log1p
+math.__name__          math.degrees           math.modf
+math.__new__           math.e                 math.pi
+math.__package__       math.erf               math.pow
+math.__reduce__        math.erfc              math.radians
+math.__reduce_ex__     math.exp               math.sin
+math.__repr__          math.expm1             math.sinh
+math.__setattr__       math.fabs              math.sqrt
+math.__sizeof__        math.factorial         math.tan
+math.__str__           math.floor             math.tanh
+math.__subclasshook__  math.fmod              math.trunc
+math.acos              math.frexp             
+math.acosh             math.fsum
+
+In [3]: math.pi
+Out[3]: 3.141592653589793
+
+In [4]: math.sin(math.pi)
+Out[4]: 1.2246467991473532e-16
+# The results here are as close to zero as floating point can get here
+#+END_EXAMPLE
+
+** Strings are good too
+
+Strings go between quotes.  Strings are objects that we can do a lot
+of things to.  We can ask a string to perform operations and do things
+that are similar to math.  However, the meaning of the operators in
+math can have somewhat different behavior.  Let's try a few things
+with strings to see how they work.  Strings are really important for
+writing out the results of computations.  Python can begin and end
+strings with matching single or double quotes (").  Here I will stick
+with the single 
+
+#+BEGIN_EXAMPLE
+In [1]: 'hello world'
+Out[1]: 'hello world'
+
+In [2]: 'hello' + ' world'
+Out[2]: 'hello world'
+
+# How long is the string?
+In [3]: len('hello world')
+Out[3]: 11
+
+In [4]: 'hello world'.capitalize()
+Out[4]: 'Hello world'
+
+In [5]: 'hello world'.upper()
+Out[5]: 'HELLO WORLD'
+
+In [6]: 'hello world'.split()
+Out[6]: ['hello', 'world']
+
+In [7]: "hello world".split()[0]
+Out[7]: 'hello'
+#+END_EXAMPLE
+
+The last example above shows some of the power of strings in python
+that help us parse text that we get from the world.  The "*split*"
+method asks the string to break into groups anywhere that there is
+white space (the space character or tabs).  Python returns a list of
+strings denoted by the square brackets ("[ ]").
+
+We can also tell split that we would like it to split on different
+characters. Here we ask it to break into groups separated by the
+period character:
+
+#+BEGIN_EXAMPLE
+In [8]: 'Hello world.  This is the end.'.split('.')
+Out[8]: ['Hello world', '  This is the end', '']
+#+END_EXAMPLE
+
+We can combine strings, numbers and other objects in python with the
+"+" character, but we have to convert the other characters into
+strings.  We can do that with the "*str*" function.
+
+#+BEGIN_EXAMPLE
+In [9]: 'Hello ' + str(42) + ' world'
+Out[9]: 'Hello 42 world'
+#+END_EXAMPLE
+
+** Variables and asking python about types
+
+#+BEGIN_EXAMPLE
+In [10]: a = 1
+
+In [11]: b = 'two'
+
+In [12]: c = math.pi
+
+In [13]: type 1
+-------> type(1)
+Out[14]: <type 'int'>
+
+In [15]: type b
+-------> type(b)
+Out[15]: <type 'str'>
+
+In [16]: type c
+-------> type(c)
+Out[17]: <type 'float'>
+#+END_EXAMPLE
+
+** A few more types
+
+#+BEGIN_EXAMPLE
+In [16]: import datetime
+
+In [17]: datetime.datetime.now()
+Out[17]: datetime.datetime(2010, 11, 22, 21, 34, 29, 582950)
+
+In [18]: datetime.datetime.utcnow()
+Out[18]: datetime.datetime(2010, 11, 23, 2, 34, 34, 572829)
+
+In [19]: datetime.datetime.utcnow() - datetime.datetime.now()
+Out[19]: datetime.timedelta(0, 17999, 999991)
+
+In [20]: import time
+
+In [21]: time.time()
+Out[21]: 1290479721.297017
+#+END_EXAMPLE
+
+** Python errors
+
+#+BEGIN_EXAMPLE
+In [15]: 1 + "two"
+---------------------------------------------------------------------------
+TypeError                                 Traceback (most recent call last)
+
+/Users/schwehr/<ipython console> in <module>()
+
+TypeError: unsupported operand type(s) for +: 'int' and 'str'
+#+END_EXAMPLE
+
