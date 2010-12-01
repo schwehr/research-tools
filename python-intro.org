@@ -31,12 +31,13 @@ Python is a great combination langage that fills the gap between shell
 scripting and heavy duty low level programming for speed. It is able
 to handle simple jobs easily, but can grow to enormous projects
 without missing a step. It includes graphical user interfaces,
-networking/web frameworks, scientific data processing, databases, and
-tools to untangle annoying binary formats in a style that is good for
-both the common computer user and the computer scientist. The language
-supports the programmer by providing access to C and C++ libraries,
-interpreted shells (ipython), documentation and unit testing, and
-introspection (python can look at itself).
+networking/web frameworks, scientific data processing, geographic
+information systems, databases, and tools to untangle annoying binary
+formats in a style that is good for both the common computer user and
+the computer scientist. The language supports the programmer by
+providing access to C and C++ libraries, interpreted shells (ipython),
+documentation and unit testing, and introspection (python can look at
+itself).
 
 There are thousands of add on packages (currently more than 12,000) to
 help get you along the way to accomplishing your goals that led you to
@@ -46,6 +47,9 @@ contributions called [[http://pypi.python.org/pypi][PyPI]].
 Python can do just about everything that Bash, C/C++, and Matlab can
 while being easier to use and, unlike Matlab, you don't have to buy
 it.
+
+Additionally, python is built into QGIS, ArcGIS, and many other tools.
+If you learn python, you will be better able to use these.
 
 ** Why not to use python?
 
@@ -444,6 +448,10 @@ will be:
 1. Write the footer / closing KML
 1. Close the file to make sure it is all on the disk
 
+Here I will use the triple quote (*'''*) to specify strings that span
+multiple lines.  Do not worry about the KML format or what exactly is
+XML.  These topics will be covered in another chapter.
+
 #+BEGIN_SRC python
 # Open the file for writing
 kml = file('polarsea.kml','w')
@@ -515,6 +523,10 @@ You should now have a file "holes.csv" on your desktop.
 
 ** What have we downloaded?
 
+This file is in the traditional comma separated values (CSV) format.
+There is a python module designed to handle CVS files, but here we
+will take care of parsing (aka decoding) the file ourselves.
+
 #+BEGIN_EXAMPLE
 Expedition,Site,Hole,Program,Longitude,Latitude,Water Depth (m),Core Recovered (m)
 1,1,,DSDP,-92.1833,25.8583,2827,50
@@ -525,3 +537,146 @@ Expedition,Site,Hole,Program,Longitude,Latitude,Water Depth (m),Core Recovered (
 1,5,,DSDP,-73.641,24.7265,5354,6.4
 ...
 #+END_EXAMPLE
+
+** First step - parsing
+
+We need to be able to pull out all of the fields in this file to be
+able to use it.  Unlike our previous data file, we will need to
+pull it apart to get what we need.  Fire up ipython and let's give it
+a whack on the head.  
+
+The file is small enough that we can read in all the lines into a
+list.  Lists are often referred to as arrays or 1D matrices.  Elements
+in a list are accessed by number with square brackets.  The first item
+or element in the list is at position *0*.
+
+#+BEGIN_SRC python
+holes_file = open('holes.csv')
+
+lines = holes_file.readlines()
+
+len(lines)
+# Len (aka length) tells us that we have 2969 lines
+
+# Look at the first line
+lines[0]
+# You will get back the line that contains the field names
+# 'Expedition,Site,Hole,Program,Longitude,Latitude,Water Depth (m),Core Recovered (m)\n'
+
+# That first line does not have any data, so take a look at the 2nd
+# line, which is element 1 (not 2).
+lines[1]
+# '1,1,,DSDP,-92.1833,25.8583,2827,50\n'
+#+END_SRC
+
+Now we will look at how to pull apart a line into the pieces that we
+need.  The split method on strings will break it into pieces.  By
+passing in a ',' to split, we can ask it to separate "things" by the
+comma in between each column.
+
+#+BEGIN_SRC python
+lines[1].split(',')
+# ['1', '1', '', 'DSDP', '-92.1833', '25.8583', '2827', '50\n']
+
+# view the longitude
+fields[4]
+# '-92.1833'
+
+
+# Save this in a variable
+fields = lines[1].split(',')
+
+# We can now create variables with each field we need
+x = fields[4]
+y = fields[5]
+
+# We can put together several fields to create a name for this entry
+name =  fields[0] + '-' + fields[1] + '-' + fields[2] + '-' + fields[3]
+#+END_SRC
+
+Take a look at the results of our variables that we have ready.
+
+#+BEGIN_SRC python
+x,y
+# ('-92.1833', '25.8583')
+
+name
+# '1-1--DSDP'
+#+END_SRC
+
+We can now make a single simple placemark in Google Earth.  I've made
+the KML line simpler than it should be to make this easier to
+understand, but it should still work.
+
+#+BEGIN_SRC python
+kml = open('placemark.kml','w')
+
+kml.write('''<?xml version="1.0" encoding="UTF-8"?>
+<kml>
+<Document>
+	<Placemark>
+		<name>''')
+
+kml.write(name)
+
+kml.write('''</name>
+		<Point>
+			<coordinates>''')
+
+kml.write(x + ',' + y)
+
+kml.write('''</coordinates>
+		</Point>
+	</Placemark>
+</Document>
+</kml>''')
+
+kml.close()
+#+END_SRC
+
+Now open the KML file by double clicking on it.
+
+[[file:figures/googleearth-placemark.png]]
+
+That worked well for one placemark, but we have almost 3000 placemarks
+that we would like to put on the globe.  It's time for a for loop over
+all the lines in the file.  We can put one placemark after the other
+in the KML file and Google Earth will show all of them.
+
+The formatting in a KML is just for humans (unlike in python), so I
+will write the KML in a more compact format without indentation.
+
+#+BEGIN_SRC python
+lines = open('holes.csv').readlines()
+
+kml = open('holes.kml','w')
+
+kml.write('''<?xml version="1.0" encoding="UTF-8"?>
+<kml>
+<Document>
+''')
+
+# We will use a subset of lines to skip the first line
+for a_line in lines[1:]:
+    fields = a_line.split(',')
+    x = fields[4]
+    y = fields[5]
+    name =  fields[0] + '-' + fields[1] + '-' + fields[2] + '-' + fields[3]
+    #
+    # You can comment the next line if you do not want to watch it working
+    print name, x, y
+    #
+    kml.write('<Placemark><name>')
+    kml.write(name)
+    kml.write('</name><Point><coordinates>')
+    kml.write(x + ',' + y)
+    kml.write('</coordinates></Point></Placemark>')
+    kml.write('\n') # This is a new line
+
+# Finish the KML
+kml.write('''
+</Document>
+</kml>''')
+
+kml.close()
+#+END_SRC
