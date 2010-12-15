@@ -1,0 +1,449 @@
+#+BEGIN_COMMENT
+Local Variables:
+mode: org
+mode: flyspell
+mode: auto-fill
+End:
+#+END_COMMENT
+
+#+STARTUP: showall
+
+#+TITLE:     Chapter XXX: Python - utility knife that will last a lifetime - introduction
+#+AUTHOR:    Kurt Schwehr
+#+EMAIL:     schwehr@ccom.unh.edu>
+#+DATE:      $Date: $
+#+DESCRIPTION: Marine Research Data Manipulation and Practices - Python
+#+TEXT:      $Id: kurt-2010.org 13030 2010-01-14 13:33:15Z schwehr $
+#+KEYWORDS: 
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:nil toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   TeX:nil LaTeX:nil skip:t d:nil todo:t pri:nil tags:not-in-toc
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+LINK_HOME: http://schwehr.org
+
+* Introduction
+
+** Why learn about binary files?
+
+Binary storage of data inside files is commonly used used over ASCII
+to pack data much more densely and provide much faster access.
+Converting ASCII to internal binary representations of data that the
+computer uses takes a lot of time.  Additionally, it can be faster
+than more general packaging schemes such as Netcdf and HDF5 by being
+simpler.
+
+There are many critical data sets available as binary data.  However,
+there are often things that are wrong with the binary format that
+prevent you from using it in the rest of your research and data
+processing work.  Being able to read binary data is an essential skill
+for people in the field you will encounter large numbers of binary
+formats.  Being able to read these will give you valuable insight into
+how these systems work.  For example, if you get a new version of the
+software on a multibeam sonar and your analysis tools start having
+trouble, your ability to decode the binary messages from the sonar may
+save you from down time or even help you to avoid collect bad data
+that would otherwise assume is fine if you did not look inside the
+messages yourself.
+
+** A warning about binary data
+
+If you find yourself creating a new binary format for your work,
+please stop.  There are too many formats in the world and formats like
+HDF5 and SQLite3 provide very powerful containers that preexisting libraries
+understand and these formats are self describing in that you can ask them
+what they store.  It is difficult to create a good binary file format
+and you will likely make many mistakes that would be avoided.
+Providing clear documentation of binary file formats is extremely easy
+to get wrong.
+
+As we work through several existing binary formats, I will attempt to
+point out what is right and wrong (in my opinion) in the design of
+that particular format.
+
+** What does it mean to be binary data?
+
+FIX: write
+
+* SBET - "simple" inertial navigation messages
+
+An SBET file is log file coming from an Applanix POSPac inertial navigation
+system.  These devices work at a very high frequency to merge GPS,
+compass, gyroscopic, accelerometer, and other data that come in at a
+variety of time intervals.  It will report its best estimate of what
+your air, sea, undersea, or ground vehicle is doing in terms of
+motion.  This is the critical data that allows you to combine
+individual sonar pings or laser ranges to create a properly a
+georeferenced model of the environment.
+
+I have taken a sample file from a research cruise in Alaska on the
+NOAA survey ship Fairweather.  To simplify the example I have only
+kept every 1/10000th data message.  The original file had 22 million
+reports and the new file has 166 reports.  When learning, smaller
+examples are easier to work with!  I will not show you how I did this,
+but once you have worked through this chapter, you should be able to
+write a python program to subsample the data exactly as I have.
+
+** Read the documentation
+
+Applanix provides documentation for the POSPac SBET files.  It is
+essential to look at the documentation (if it is available) before
+starting to parse the data.  The documentation might not be perfect,
+but it can save you tons of time (and likely frustration).
+
+FIX: reference the actual documentation
+
+FIX: table of the format.
+
+** Initial look at an SBET file
+
+Before digging in to the details of parsing with python, let's use the
+command line and emacs to inspect what we have.  First take a look at
+the file sizes.  I am not going to provide the original file, but I
+have included it here so you can see how it differs from the small
+sample.sbet file.
+
+#+BEGIN_EXAMPLE
+ls -l *.sbet
+-rw-r--r--  1 schwehr  staff  225820248 Dec 12 09:02 original.sbet
+-rw-r--r--  1 schwehr  staff      22712 Dec 14 12:44 sample.sbet
+#+END_EXAMPLE
+
+It is often good to use the unix *file* command to see if it knows
+about a particular file type.  Here we discover that *file* is not
+much help, but it does tell us that this is binary "data".
+
+#+BEGIN_EXAMPLE
+file *.sbet
+original.sbet: data
+sample.sbet:   data
+#+END_EXAMPLE
+
+We can try to see if there is any embedded text later in the data, as
+file only checks a bit of the beginning of the file.  The unix
+*strings* command will scan through a file and find sections that have
+4 or more printable characters in a row.  To avoid too much random
+junk that just happens to match the character codes of ASCII, we will
+ask *string* to return only matches of 6 or more characters
+much j
+
+Octal dump also has a mode where it will print out the special meaning
+of any bytes that might have special meaning.  These are things like
+new lines (nl), start message (stx), end message (etx), and so forth.
+Unfortunately, there is nothing obvious about the format.  The output
+here is not helpful.
+
+#+BEGIN_EXAMPLE
+od -a sample.sbet  | head
+0000000    ##  g   ####t   #   q dc4   A   ### H soh   # nak   ### ####?
+0000020    G   ####f   Q   ##  z eot   ##  n   ### ##  ##dle   #   )   @
+0000040    K   ##  #  9a   *   ### $   @   R   #  90  83   |   ####### ?
+0000060    ###yn   ##  ##  ### f   ##  ? esc   u   # etx bel  88   e   #
+0000100    #  vt   #   '   ######  #   ?   #   ### #   2   8  90   #   #
+0000120    z   ##  = can   #####   ##  #   ### R   ### $   #   e   ### #
+0000140    #####   ### #   #   ##  ##  # stx   <   w   u  83   #####   ?
+0000160    ### B   #####   ###### 95   ?   m   #  83   4   /   #  9d   ?
+0000200   si   { etb   D   ##  ### {   #   ###ff  99 etx  84   r dc4   A
+0000220  dc3  95   #   ### e   ### ####?   #######c3 stx   #   z eot   ##
+#+END_EXAMPLE
+
+Better yet, Octal Dump has a mode that will try to treat the file as
+uniform binary data (for example, a series of 4 byte integers).
+Since we know that our SBET file will contain a series of 17 doubles
+(8 bytes each) in a row, let's try out a sample file that contains the
+numbers 0 through 16,
+
+#+BEGIN_EXAMPLE
+od -t fD s1.bin 
+0000000     0.000000000000000e+00    1.000000000000000e+00
+0000020     2.000000000000000e+00    3.000000000000000e+00
+0000040     4.000000000000000e+00    5.000000000000000e+00
+0000060     6.000000000000000e+00    7.000000000000000e+00
+0000100     8.000000000000000e+00    9.000000000000000e+00
+0000120     1.000000000000000e+01    1.100000000000000e+01
+0000140     1.200000000000000e+01    1.300000000000000e+01
+0000160     1.400000000000000e+01    1.500000000000000e+01
+0000200     1.600000000000000e+01                         
+0000210
+#+END_EXAMPLE
+
+It might look weird to you, but 1.40e+01 is actually the number 14.0.
+We can now try to same thing on our sbet.  Each datagram has 17 fields
+of 8 byte doubles for a total of 168 bytes.  If we want to view the
+first two datagrams, we can ask *od* to print out just up to a certain
+byte count with the "-n" option.  Two datagrams will be be 272 bytes.
+
+#+BEGIN_EXAMPLE
+od -N 272 -t fD  sample.sbet 
+0000000     3.349590048233234e+05    1.054952263850787e+00
+0000020    -2.559965741819528e+00    1.282630055734282e+01
+0000040     1.043782504645391e+01    9.982283181789831e-01
+0000060     1.828280453666403e-01   -2.628339481204234e-03
+0000100     1.141660305793682e-01   -9.985686530029529e-02
+0000120    -4.015467392667414e-01   -8.249097558096672e-01
+0000140    -3.413483211034812e-01    7.018300645653144e-02
+0000160     2.132017683362876e-02    2.900003202460815e-02
+0000200    -6.807197876212325e-03    3.350090035135288e+05
+0000220     1.055028809795947e+00   -2.559907928689193e+00
+0000240     1.272997378104385e+01    1.042404852578803e+01
+0000260     1.287703038920362e+00    2.491409993943237e-01
+0000300     6.418474606643030e-03    1.040782092443994e-01
+0000320    -1.198332534114335e-01   -4.021915714645197e-01
+0000340     8.870342742214299e-02    7.607961433375590e-02
+0000360    -1.743265137730372e+00    1.903246157839654e-02
+0000400     7.630558594581809e-02    3.111229241529141e-03
+0000420
+#+END_EXAMPLE
+
+If we look at the first number from both datagrams, which is supposed
+to be a measure of time, we can see that the numbers are
+3.349590048233234e+05 and 3.350090035135288e+05.  It's hard to see,
+but it looks like time is moving slightly forward.  This means we are
+on the right track.
+
+It's time to switch from the terminal to python!
+
+** Opening a file and reading the data in python
+
+There are several ways to open a file and access the data.  Let's
+start with the simplest method.  If you try this on a multi-gigabyte
+file, it will take a really long time, but in the case of a small test
+file, this is a great way to get started.  Later, I will show you how
+to read the file a bit at a time and finally, I will show you a fancy
+method called mmap that can has the potential to greatly speed up your
+program.
+
+First, open the file.  This will return a file object back to you that
+you can use to read or manipulate the contents of the file.
+
+FIX: link to python file object documentation
+
+FIX: this does not work in python3!
+
+#+BEGIN_SRC python
+sbet_file = open('sample.sbet')
+#+END_SRC
+
+There are many things you can do with a file, but in our case, we want
+to pull the entire file into a variable.
+
+#+BEGIN_SRC python
+sbet_data = sbet_file.read()
+
+type(sbet_data)
+# Out: <type 'str'>
+
+len(sbet_data)
+# 22712
+#+END_SRC
+
+** Decoding values with python's struct module
+
+We now have 22712 bytes in a string.  We can start using the python
+*struct* module to begin decoding the file.  Struct is designed just
+for our needs - going between python and binary data.  We specify
+letter codes and python does the hard work of figuring out how to
+decode the bytes from the type.  However, If we specify a type
+different than what is actually in the data, python will happily
+decode the data and give us back meaningless junk.  Pack goes from
+python to binary and unpack goes from binary to python variable types.
+
+FIX: put in table of types
+
+Let's give it a try on the time field.  'd' is for doubles and we want
+one double that takes up the first 8 bytes of the data.  struct is
+designed to decode a whole bunch of values at the same time, so it
+returns the results in a tuple (unchangeable list).  Note that you
+must pass in exactly the right number of bytes to unpack for the
+format codes that you give it, so we will pull a sub-array of the
+sbet_data array with "[0:8]".
+
+#+BEGIN_SRC python
+struct.unpack('d',sbet_data[0:8])
+# (334959.0048233234,)
+
+struct.unpack('d',sbet_data[0:8])[0]
+# 334959.0048233234
+#+END_SRC
+
+The next two fields are the latitude and longitude in radians.  Let's
+first grab the second two values at the same time.  Being the 2nd
+double, the latitude will start at position 8.  We then at 16 bytes on
+to the 8 to get the stopping position of the longitude.
+
+#+BEGIN_SRC python
+struct.unpack('dd',sbet_data[8:24])
+(1.0549522638507869, -2.559965741819528)
+#+END_SRC
+
+Reading latitude and longitude in radians is no fun.  The math module
+has, among many other things, functions to convert between degrees and
+radians.  Also, if you know how many values will be returned from a
+function call, you can specify that many variables before the equal
+sign and python will put the results into each variable in order.
+
+#+BEGIN_SRC python
+lat_rad, lon_rad = struct.unpack('dd',sbet_data[8:24])
+math.degrees(lat_rad)
+# 60.444312306421736
+
+In [36]: math.degrees(lon_rad)
+# -146.6752327043359
+#+END_SRC
+
+You can now go look at a map for 60.4N and 146.7W to see the area
+where the Fairweather was located when collecting this data.
+
+Since we have 17 variables, it can be annoying to do either 17
+struct.unpack calls or write out 17 "d" characters in a string, so
+struct allows you to put a number before the d to specify the number
+of values you would like to decode.  Here is the sample latitude and
+longitude example, but using "2d" rather than "dd".
+
+#+BEGIN_SRC python
+struct.unpack('2d',sbet_data[8:24])
+(1.0549522638507869, -2.559965741819528)
+#+END_SRC
+
+We can now try decoding all 17 variables.  This is not so much fun.
+
+#+BEGIN_SRC python
+struct.unpack('17d',sbet_data[0:8*17])
+Out[38]: 
+(334959.0048233234,
+ 1.0549522638507869,
+ -2.559965741819528,
+ 12.826300557342815,
+ 10.437825046453915,
+ 0.998228318178983,
+ 0.18282804536664027,
+ -0.0026283394812042344,
+ 0.11416603057936824,
+ -0.09985686530029529,
+ -0.40154673926674145,
+ -0.8249097558096672,
+ -0.3413483211034812,
+ 0.07018300645653144,
+ 0.021320176833628756,
+ 0.029000032024608147,
+ -0.006807197876212325)
+#+END_SRC
+
+We can use the field names separated by commas to fill in all the
+variable.  The "\" character allows you to continue a line of code on
+to the next line.
+
+#+BEGIN_SRC python
+time, latitude, longitude, altitude, \
+    x_vel, y_vel, z_vel, \
+    roll, pitch, platform_heading, wander_angle, \
+    x_acceleration, y_acceleration, z_acceleration, \
+    x_angular_rate, y_angular_rate, z_angular = struct.unpack('ddddddddddddddddd',data[0:17*8])
+#+END_SRC
+
+It is really hard to follow what is going on in that last python call
+to unpack.   Rather than list out each field name, we can have python
+create a dictionary with named entries for each of our values.
+
+#+BEGIN_SRC python
+field_names = ('time', 'latitude', 'longitude', 'altitude', \
+          'x_vel', 'y_vel', 'z_vel', \
+          'roll', 'pitch', 'platform_heading', 'wander_angle', \
+          'x_acceleration', 'y_acceleration', 'z_acceleration', \
+          'x_angular_rate', 'y_angular_rate', 'z_angular')
+
+values = struct.unpack('17d',sbet_data[0:8*17])
+
+# Crazy stuff happens here!
+dict(  zip(field_names, values) )
+#+END_SRC
+
+The last command needs some explanation.  First here is what it
+returns:
+
+#+BEGIN_SRC python
+{'altitude': 12.826300557342815,
+ 'latitude': 1.0549522638507869,
+ 'longitude': -2.559965741819528,
+ 'pitch': 0.11416603057936824,
+ 'platform_heading': -0.09985686530029529,
+ 'roll': -0.0026283394812042344,
+ 'time': 334959.0048233234,
+ 'wander_angle': -0.40154673926674145,
+ 'x_acceleration': -0.8249097558096672,
+ 'x_angular_rate': 0.021320176833628756,
+ 'x_vel': 10.437825046453915,
+ 'y_acceleration': -0.3413483211034812,
+ 'y_angular_rate': 0.029000032024608147,
+ 'y_vel': 0.998228318178983,
+ 'z_acceleration': 0.07018300645653144,
+ 'z_angular': -0.006807197876212325,
+ 'z_vel': 0.18282804536664027}
+#+END_SRC
+
+That is a python dictionary with each field stored by name.  You might
+ask how the heck that works!  First the call to zip combines the list
+of field names and the list of values into paired entries.  They have
+to be in *exactly* the same order.  Here is an example with the first
+4 entries in each:
+
+#+BEGIN_SRC python
+zip(field_names[:4], values[:4])
+
+# Results in:
+[('time', 334959.0048233234),
+ ('latitude', 1.0549522638507869),
+ ('longitude', -2.559965741819528),
+ ('altitude', 12.826300557342815)]
+#+END_SRC
+
+The python dictionary can be created by a sequence of key and value
+pairs (often referred to as k,v).  You now have a dictionary that you
+can work with or pass around.  You can do conversions and store them
+back into the dictionary and only have to pass around one "thing".
+
+#+BEGIN_SRC python
+sbet_values = dict(zip (field_names, values))
+
+# convert radians to degrees and put it in a new dictionary key
+sbet_values['lat_deg'] = math.degrees(sbet_values['latitude'])
+
+sbet_values['lat_deg']
+# 60.444312306421736
+#+END_SRC
+
+** Creating a function that reads an SBET record
+
+Now that we have the basics of decoding a datagram down, we should
+turn it into a function so that we can reuse it in the future.  Create
+a new file called sbet.py in your favorite text editor (in emacs: C-x
+C-f sbet.py).  We are going to work on our function by using ipython
+to test it.
+
+#+BEGIN_SRC sh
+ipython
+#+END_SRC
+
+Now start off by creating a file with a "stub" function that does not
+do anything real.  "stubs" are things that are placeholders that do
+not do much if anything.
+
+#+BEGIN_SRC python
+# Decode Applanix POSPac SBET IMU binary files
+
+def decode():
+    print "hello from decode"
+#+END_SRC
+
+A python file can work exactly like the modules you have been using so
+far.  Try importing it and kick the tires.
+
+#+BEGIN_SRC python
+import sbet
+sbet.decode()
+# hello from decode
+#+END_SRC
+
+You now have a working module.  It doesn't do much yet, but we will
+get there quickly.
