@@ -8,7 +8,7 @@ End:
 
 #+STARTUP: showall
 
-#+TITLE:     Chapter XXX: Python - utility knife that will last a lifetime - introduction
+#+TITLE:     Chapter XXX: Python - parsing binary data files
 #+AUTHOR:    Kurt Schwehr
 #+EMAIL:     schwehr@ccom.unh.edu>
 #+DATE:      $Date: $
@@ -103,6 +103,16 @@ command line and emacs to inspect what we have.  First take a look at
 the file sizes.  I am not going to provide the original file, but I
 have included it here so you can see how it differs from the small
 sample.sbet file.
+
+To download the file, you can save it from a web browser or pull it
+down in the terminal using *curl* or *wget*.
+
+#+BEGIN_SRC sh
+curl -O http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/sample.sbet
+#+END_SRC
+
+You will just have the sample.sbet, but here I am showing you both the
+original and the smaller "sample.sbet":
 
 #+BEGIN_EXAMPLE
 ls -l *.sbet
@@ -415,6 +425,8 @@ sbet_values['lat_deg']
 
 ** Creating a function that reads an SBET record
 
+*** A stub function
+
 Now that we have the basics of decoding a datagram down, we should
 turn it into a function so that we can reuse it in the future.  Create
 a new file called sbet.py in your favorite text editor (in emacs: C-x
@@ -436,8 +448,24 @@ def decode():
     print "hello from decode"
 #+END_SRC
 
+The above python code creates one function that is started by the
+"def" for define function.  "decode" is the function name.  All
+functions have an "argument list" that is in the "()".  These are the
+variables that you will pass into the function.  By having nothing in
+the parentheses, you are saying that the decode function does not let
+you pass anything to it.
+
+As we say in the previous chapters, block or groups of code are
+separated by indentation.  Any change of the indentation either stops
+or starts a block.  By indenting 4 spaces, I start a new function.
+You can use any indentation, but 4 is the convention in the python
+community.
+
 A python file can work exactly like the modules you have been using so
-far.  Try importing it and kick the tires.
+far.  Try importing it and kick the tires.  With *import* it is
+important to notice that you leave off the ".py".  In our case here,
+be sure to start ipython in the same directory as you are putting the
+sbet.py and sample.sbet files.
 
 #+BEGIN_SRC python
 import sbet
@@ -446,4 +474,96 @@ sbet.decode()
 #+END_SRC
 
 You now have a working module.  It doesn't do much yet, but we will
-get there quickly.
+get there quickly.  As you make changes to the python file, if you
+rerun the "sbet.decode()", you will find that nothing changes.  You
+need to reload the python file into ipython with the *reload*
+command.  Change the file to match what I have here:
+
+#+BEGIN_SRC python
+# Decode Applanix POSPac SBET IMU binary files
+
+# You will see this when you load or reload this file, this line will print
+print "load or reload happening"
+
+def decode():
+    print "hello from decode"
+    print 7*6
+#+END_SRC
+
+The new first print line is not inside a function.  It is there to
+show you that anything not inside a function (or later a you will see
+a class), will get run immediately.  This is helpful here - we can see
+if the reload actually happened.  Try a reload in ipython.  Once you
+have reloaded the sbet.py module, you can now use the new version of
+the decode function.
+
+#+BEGIN_SRC python
+reload(sbet)
+# load or reload happening
+
+sbet.decode()
+# hello from decode
+# 42
+#+END_SRC
+
+*** Getting data ready to parse
+
+Parsing means to pull apart some data or text into pieces that we can
+use locally.  Think of writing a program to find all the words in a
+text document.  The "parser" has to take the text and break into
+chunks separated by white space (new lines, space characters, or tabs)
+or punctuation.  But before you can parse data, you need to load the
+data.  We will use the simplest approach as described above.  There
+are faster ways, but it is usually better to get a working program
+first before you try to make it go fast (call "optimizing").
+
+We will put our controlling code into a function called "main".
+Functions in a module (aka python file) can come in any order, but I
+put my main functions at the bottom of the file.  This is just my
+personal style.
+
+Here is the program with the new main function that uses the open and
+read calls discussed previously.
+
+#+BEGIN_SRC python
+# Decode Applanix POSPac SBET IMU binary files
+
+# You will see this when you load or reload this file, this line will print
+print "load or reload happening"
+
+def decode():
+    print "hello from decode"
+    print 7*6
+
+def main():
+    print 'Starting main'
+    sbet_file = open('sample.sbet')
+    sbet_data = sbet_file.read()
+    print 'Finishing main'
+#+END_SRC
+
+It still doesn't do anything useful, but we are getting closer!  Give
+it a try to make sure it works.  You can see the prints at the
+beginning and ending of the main function.
+
+#+BEGIN_SRC python
+reload(sbet)
+# load or reload happening
+
+In [12]: sbet.main()
+# Starting main
+# Finishing main
+#+END_SRC
+
+Now we need to pass in the data that we loaded in main to the decode
+function.  We must add an argument to the decode function.  The name
+of this argument has nothing to do with the name of what we pass in.
+What ever is passed in first will get assigned to the first argument
+inside the function.  So here, the contents of the sbet_data variable
+will get assigned to the "data" variable inside the decode function.
+
+
+
+
+
+
