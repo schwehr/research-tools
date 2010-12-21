@@ -562,8 +562,319 @@ What ever is passed in first will get assigned to the first argument
 inside the function.  So here, the contents of the sbet_data variable
 will get assigned to the "data" variable inside the decode function.
 
+#+BEGIN_SRC python
+# Add data argument to decode
+def decode(data):
+    'Decipher a SBET datagram from binary'
+    print "hello from decode"
+    print 'Data length:', len(data)
 
+def main():
+    print 'Starting main'
+    sbet_file = open('sample.sbet')
+    sbet_data = sbet_file.read()
+    print 'Read this many bytes:',len(sbet_data)
 
+    decode(sbet_data)  # Pass in the sbet_data variable to decode
+    
+    print 'Finishing main'
+#+END_SRC
 
+It is also time to start doing a bit of documentation.  Python has a
+mechanism called "doc strings".  If there is a string as the first
+line of a file, function, class, or class method, then python
+considers that string as the documentation for the class.  In the
+above example, I have added a string right after the definition of the
+*decode* function.  There are two ways to ask for help from ipython:
+the help command and appending a ? after something:
 
+#+BEGIN_SRC python
+help(sbet.decode)
+# Help on function decode in module sbet:
+# 
+# decode(data)
+#     Decipher a SBET datagram from binary
 
+sbet.decode?
+# Type:           function
+# Base Class:     <type 'function'>
+# String Form:    <function decode at 0x11f09f0>
+# Namespace:      Interactive
+# File:           /Users/schwehr/Desktop/sbet/sbet.py
+# Definition:     sbet.decode(data)
+# Docstring:
+#     Decipher a SBET datagram from binary
+#+END_SRC 
+
+So we have documentation, but a function that doesn't do anything.  I
+know you are getting impatient with me, so let's actually decode the
+first datagram in the SBET file.  Here is the new "decode" function
+that actually does a little bit of decoding and prints the time,
+latitude/longitude in degrees.
+
+#+BEGIN_SRC python
+def decode(data):
+    "Decipher a SBET datagram from binary"
+    print "Start decoding datagram"
+    values = struct.unpack('17d',data[0:8*17])
+
+    time = values[0]
+
+    latitude = values[1]
+    lat_deg = math.degrees(latitude)
+
+    longitude = values[2]
+    lon_deg = math.degrees(longitude)
+
+    print 'results:', time, lat_deg, lon_deg
+#+END_SRC
+
+Since the decode function uses unpack from the struct library and
+degrees from the math library, we need to add an import statement to
+the top of the file.  You might wonder why if we have done an import
+of math in ipython, why do we need it in the file?  imports only work
+in the context of the local module or python interactive session.
+Each module is independent and needs to tell python which modules it
+needs.
+
+#+BEGIN_SRC python
+# Decode Applanix POSPac SBET IMU binary files
+
+# The import must come before the decode function.
+# In python, the convention is to put imports at the top of the file
+# We can import several modules in one line by separating them with commas
+import math, struct
+
+# You will see this when you load or reload this file, this line will print
+print "load or reload happening"
+#+END_SRC
+
+We should now be able to reload the sbet module and try it out
+decoding actual data:
+
+#+BEGIN_SRC python
+reload(sbet)
+# load or reload happening
+
+sbet.main()
+# Starting main
+# Read this many bytes: 22712
+# Start decoding datagram
+# results: 334959.004823 60.4443123064 -146.675232704
+# Finishing main
+#+END_SRC
+
+This is pretty exciting!  We now have a file that we can use to redo
+a decoding.  It's not very flexible, but it works.  We need to work to
+improve it to be more useful.
+
+The first thing to do to make it more useful is to allow it to run
+from the command line.  We can almost do that already, but not as
+easily as we would like.  First quit ipython and get back to the
+*bash* terminal prompt.  We can tell python to run a file:
+
+#+BEGIN_SRC sh
+python sbet.py
+# load or reload happening
+#+END_SRC
+
+We need to add some special code that detects if the python is being
+run as a main program.  There is a special trick in python to detect
+this case using the *__name__* variable.  Add this line to your
+sbet.py file:
+
+#+BEGIN_SRC python
+print '__name__', __name__
+#+END_SRC
+
+If you import the module from ipython, __name__ will be set to the
+name of the module: in this case "sbet".  Run ipython and import sbet.
+
+#+BEGIN_SRC python
+import sbet
+# load or reload happening
+# __name__ sbet
+#+END_SRC
+
+If you exit ipython to bash, and use python to run the sbet script,
+you will see that __name__ has changed to __main__.
+
+#+BEGIN_SRC sh
+python sbet.py
+load or reload happening
+__name__ __main__
+#+END_SRC
+
+Using this, we can add a check at the bottom of sbet.py to see if it
+is being run as a script.  If so, we can right away start up the
+process of getting the script going.  If sbet.py is imported, the code
+will not run, which is what we want because it will be some other
+code's job to use the functions in the sbet module.
+
+#+BEGIN_SRC python
+if __name__=='__main__':
+    print 'starting to run script...'
+    main()
+    print 'script done!'
+#+END_SRC
+
+Then if we run the script using python from the bash prompt, it will
+actually call the main() function and get things going.
+
+#+BEGIN_SRC sh
+cd && python sbet.py
+# load or reload happening
+# __name__ __main__
+
+# starting to run script...
+# Starting main
+# Read this many bytes: 22712
+# Start decoding datagram
+# results: 334959.004823 60.4443123064 -146.675232704
+# Finishing main
+# script done!
+#+END_SRC
+
+It can be really annoying to have to remember to type python before
+the script all the time.  You don't want to be required to tell other
+people which language the script uses any time they want to run it.
+There is a special mechanism that bash uses to see how it should run a
+script file: it checks the first line.  If that line starts with a
+*#!* ("pound bag"), then bash will use the program listed after to run
+the rest of the file.  The trouble is that we don't know exactly where
+python is installed on the computer.  It might be in /bin, /usr/bin,
+or elsewhere.  Plus the person might have changed their path to point
+to a different version of python that works better for them.  We want
+to honor that choice.  There is a unix command called *env* that is
+supposed to always be located in the same place.  It looks at the path
+and finds the python interpreter.  This is the recommended way to
+create a python script.  Add this line to the very beginning of your
+sbet.py file.
+
+#+BEGIN_SRC python
+#!/usr/bin/env python
+#+END_SRC
+
+One more thing to fix.  You have to tell the computer that the file is
+"executable".  Otherwise it will not think that it can run the file.
+The *chmod* command will let you set the permissions on the sbet.py
+file.  After chmod is run, not the extra "x" characters for executable
+on the left side of the return from the *ls* command.
+
+#+BEGIN_SRC sh
+ls -l sbet.py
+# -rw-r--r--  1 schwehr  staff  883 Dec 20 17:26 sbet.py
+
+chmod +x sbet.py
+
+ls -l sbet.py
+# -rwxr-xr-x  1 schwehr  staff  883 Dec 20 17:26 sbet.py
+#+END_SRC
+
+Now you can run your sbet.py script without knowing that it is python
+inside.
+
+#+BEGIN_SRC sh
+./sbet.py
+
+# load or reload happening
+# __name__ __main__
+# starting to run script...
+# Starting main
+# Read this many bytes: 22712
+# Start decoding datagram
+# results: 334959.004823 60.4443123064 -146.675232704
+# Finishing main
+# script done!
+#+END_SRC
+
+Before we go any farther, let's clean up the file and give it a look
+over.  I have deleted extra print statements.
+
+#+BEGIN_SRC python
+#!/usr/bin/env python
+
+# Decode Applanix POSPac SBET IMU binary files
+
+import math, struct
+
+def decode(data):
+    "Decipher a SBET datagram from binary"
+    values = struct.unpack('17d',data[0:8*17])
+
+    time = values[0]
+
+    latitude = values[1]
+    lat_deg = math.degrees(latitude)
+
+    longitude = values[2]
+    lon_deg = math.degrees(longitude)
+
+    print 'results:', time, lat_deg, lon_deg
+
+def main():
+    sbet_file = open('sample.sbet')
+    sbet_data = sbet_file.read()
+
+    decode(sbet_data)
+    
+if __name__=='__main__':
+    main()
+#+END_SRC
+
+Now let's change the decode function to get all of the fields as we
+did before.  I am going to use the *dict* and *zip* method before, but
+if you are writing your own decoder for something else, you can
+certainly decode each field individually.  Add the field_names to your
+file before the decode function and change decode to look like this:
+
+#+BEGIN_SRC python
+field_names = ('time', 'latitude', 'longitude', 'altitude', \
+          'x_vel', 'y_vel', 'z_vel', \
+          'roll', 'pitch', 'platform_heading', 'wander_angle', \
+          'x_acceleration', 'y_acceleration', 'z_acceleration', \
+          'x_angular_rate', 'y_angular_rate', 'z_angular')
+
+def decode(data):
+    "Decipher a SBET datagram from binary"
+    values = struct.unpack('17d',data[0:8*17])
+
+    # Create a dictionary for all the values
+    sbet_values = dict(zip (field_names, values))
+
+    sbet_values['lat_deg'] = math.degrees(sbet_values['latitude'])
+    sbet_values['lon_deg'] = math.degrees(sbet_values['longitude'])
+
+    print 'results:'
+    for key in sbet_values:
+        print '    ', key, sbet_values[key]
+#+END_SRC
+
+I have change the printing of the result at the end to be easier to
+read.  If we just print a dictionary, it will be a big mush.  However,
+looping over a dictionary with a for loop will return the keys of the
+dictionary one by one.  Try running the resulting program.
+
+#+BEGIN_SRC sh
+./sbet.py 
+# results:
+#      x_acceleration -0.82490975581
+#      x_angular_rate 0.0213201768336
+#      platform_heading -0.0998568653003
+#      y_angular_rate 0.0290000320246
+#      pitch 0.114166030579
+#      altitude 12.8263005573
+#      z_vel 0.182828045367
+#      lat_deg 60.4443123064
+#      longitude -2.55996574182
+#      roll -0.0026283394812
+#      y_vel 0.998228318179
+#      y_acceleration -0.341348321103
+#      time 334959.004823
+#      latitude 1.05495226385
+#      lon_deg -146.675232704
+#      z_acceleration 0.0701830064565
+#      z_angular -0.00680719787621
+#      x_vel 10.4378250465
+#      wander_angle -0.401546739267
+#+END_SRC
