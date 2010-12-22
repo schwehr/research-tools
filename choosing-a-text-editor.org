@@ -1,0 +1,134 @@
+#+BEGIN_COMMENT
+Local Variables:
+mode: org
+mode: flyspell
+mode: auto-fill
+End:
+#+END_COMMENT
+
+#+STARTUP: showall
+
+#+TITLE:     Chapter XXX: Picking a text editor / programming environment to learn.
+#+AUTHOR:    Kurt Schwehr
+#+EMAIL:     schwehr@ccom.unh.edu>
+#+DATE:      $Date: $
+#+DESCRIPTION: Marine Research Data Manipulation and Practices - Databases
+#+TEXT:      $Id: kurt-2010.org 13030 2010-01-14 13:33:15Z schwehr $
+#+KEYWORDS: 
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:nil toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   TeX:t LaTeX:nil skip:t d:nil todo:t pri:nil tags:not-in-toc
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+LINK_HOME: http://schwehr.org
+
+* Introduction
+
+One of the main things that you will be doing with this book is to
+read, write and edit text files.  These might be code, documentation
+and data.  You can get away with choosing almost any tool for editing
+code, but I encourage you to follow my lead and pick an editor that
+will work with you for many years to come.  You will invariably be
+forced to use other tools for editing from time to time, but if you
+primarily work with a powerful editor that can grow with you, your
+productivity will be higher.  
+
+Back in the olden days, there was the great debate between people who
+used the vi and emacs editors.  In the end, both can get the job done
+and both are still around today.  There are now thousands of editors
+in use.  Editors might seem simple, but a good editor will work with
+you get your job done.  Most editors get the job done without being
+overly helpful.  Some editors are a part of Integrated Development
+Environments (IDEs) and some can become IDEs.
+
+Here are a few things to consider when picking an editor/IDE:
+
+- Is it cross platform (Linux/Mac OSX/Windows)?
+- How likely is the editor to be around for years to come?
+- What range of languages can it support? (LaTex, C/C++, python, bash, etc)
+- How much does it cost?
+- How extensible is the editor? (Note: you can pay people to add
+  features to some editors if you are not up to it yourself)
+- Does the editor support working with version control software,
+  compilers, editors, and terminal shells?
+- Does it provide ways to merge differences between files?
+- Is this a comfortable environment to write text in? (e.g. you do not
+  need MS Word to write a book)
+- Can the editor work efficiently with many files at the same time?
+
+** On to the text editors - The cross platform editors
+
+*** GNU Emacs
+
+I personally use emacs, which is extremely extensible with many add on
+programs.  It was one of the first integrated development environments
+(IDE) for programming that included syntax highlighting of source
+code, compilation, and debugging.  Emacs can send email, play tetris,
+provide an outlining system with "org-mode", and thousands of other
+features.  People write additions to the editor with the programming
+language LISP.  Emacs started in the 1970's and became GNU Emacs in
+1984.  Some people complain that the keyboard shortcuts of emacs are
+overly difficult.  Today, most tasks can be done with the menus and
+you can pick up the shortcuts over time.  Some of the emacs shortcuts
+for moving the cursor around can be found in terminal shells
+(e.g. bash), web browsers and other software.
+
+Quick list of features:
+
+- The "Grand Unified Debugger" (GUD) for debugging source code
+- Integrated terminal shell
+- org-mode for 
+- Integrated support for V
+
+See Also:
+
+- http://en.wikipedia.org/wiki/Emacs
+- http://www.gnu.org/software/emacs/
+- Mac OSX port http://aquamacs.org/
+
+*** vi / vim
+
+vi was one of the early full screen editors started in 1976.  It works
+by switch between command mode and editing mode.  If are interested in
+using vi, you should learn the more modern IVimproved (vim) editor.
+
+- http://en.wikipedia.org/wiki/Vi
+- http://www.vim.org/
+- http://code.google.com/p/macvim/
+
+*** kate
+
+Kate is a text editor developed on the Linux desktop system called
+KDE.  Kate is a reasonably powerful editor and it can be used on Mac
+OSX and Windows in addition to its native Linux environment.
+
+*** Scite (free / open source)
+
+This is a very light weight and simple text editor that will get you
+editing code quickly.  It does syntax highlighting for a number of
+languages.
+
+- http://www.scintilla.org/SciTEDownload.html
+
+** Platform specific editors - Windows
+
+*** Notepad++
+
+- http://notepad-plus-plus.org
+
+*** UltraEdit (Commercial / Closed)
+
+- http://www.ultraedit.com/
+
+** Platform specific editors - Mac OSX
+
+*** BBEdit / TextWrangler (Commercial / Closed)
+
+*** textmate (Commercial / Closed)
+
+- http://en.wikipedia.org/wiki/Textmate
+
+*** Smultron
+
+*** XCode

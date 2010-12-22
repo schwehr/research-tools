@@ -140,7 +140,7 @@ sqlite>
 Now we need to create the table for our holes.  Just paste this text
 directly into your sqlite
 
-#+BEGIN_EXAMPLE
+#+BEGIN_SRC sql
 CREATE TABLE IF NOT EXISTS holes (
        -- Two dashes are a comment to the end of a line
        id INTEGER PRIMARY KEY, -- every table should have a primary key
@@ -151,7 +151,7 @@ CREATE TABLE IF NOT EXISTS holes (
        water_depth REAL, -- in meters. It is helpful to comment the units!
        total_pen REAL -- in meters
 );
-#+END_EXAMPLE
+#+END_SRC
 
 FIX: Write a walk through of what just happened.
 
@@ -253,10 +253,13 @@ Now we need to fetch the data back from the database.  The *SELECT*
 call will return a "cursor".  
 
 FIX: explain cursors
-#+BEGIN_SRC
+
+
+#+BEGIN_SRC python
 cu = cx.execute('SELECT * FROM holes;')
 print cu.fetchone()
 #+END_SRC
+
 The print should return the first line from the database.
 
 #+BEGIN_EXAMPLE
