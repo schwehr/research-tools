@@ -1296,7 +1296,7 @@ datagram's index number.
 
 #+BEGIN_SRC python
     def get_offset(self, datagram_index):
-        return datagram_number * datagram_size
+        return datagram_index * datagram_size
 
     def get_datagram(self, datagram_index):
         offset = self.get_offset(datagram_index)
@@ -1305,6 +1305,115 @@ datagram's index number.
 #+END_SRC
 
 Using what we have, we can recreate printing out a summary of the ship
-navigation.
+navigation in main.
 
+#+BEGIN_SRC python
+def main():
+    sbet = Sbet('sample.sbet')
 
+    print 'Datagram Number, Time, x, y'
+
+    for index in range(sbet.num_datagrams):
+        datagram = sbet.get_datagram(index)
+        print index, datagram['time'],datagram['lon_deg'], datagram['lat_deg']
+#+END_SRC
+
+The results of this look just like before, but the python code is
+getting cleaner.
+
+#+BEGIN_SRC sh
+./sbet2.py 
+# len_data: 22712
+# Datagram Number, Time, x, y
+# 0 334959.004823 -146.675232704 60.4443123064
+# 1 335009.003514 -146.671920256 60.448698066
+# 2 335059.002204 -146.667715067 60.4528836831
+# 3 335109.000894 -146.663165536 60.4570416942
+# 4 335158.999585 -146.659085911 60.4612950577
+# 5 335208.998275 -146.654515522 60.4654683305
+# 6 335258.996965 -146.650207253 60.4696697568
+# 7 335308.995656 -146.645977489 60.473902636
+# ...
+#+END_SRC
+
+** Adding iteration / looping to the Class
+
+*See also*: Dive into Python's [[http://diveintopython3.org/iterators.html][Classes & Iterators]]
+
+Python has a convention for making looping or "iteration" to be built
+into classes.  This tries to simplify your overall code.  For example,
+for loops should not have to keep track of the datagram index.  Python
+does this for classes when you add two special methods: *\_\_iter\_\_*
+and *next*.  Note: In python 2, it is just "next", python 3 uses
+\_\_next\_\_.
+
+\_\_iter\_\_ is the call that starts the iteration.  We in this
+function, we need to record where we are in the data - starting at
+position 0.  We then return the self back to the caller (e.g. the for
+loop).  There are times when you want the iteration to be handled
+outside the class.
+
+Then in the *next* method, we have to check to see if we have reached
+the end.  Python has a concept called *exceptions* that are useful for
+unusual events.  Here the *raise* throws an exception of type
+StopIteration.  This triggers the looping to end.
+
+#+BEGIN_SRC python
+    def __iter__(self):
+        'start iteration'
+        self.iter_position = 0
+        return self
+
+    def next(self):
+        'Take the next step in the iteration'
+        if self.iter_position >= self.num_datagrams:
+           raise StopIteration
+
+        values = self.get_datagram(self.iter_position)
+        
+        self.iter_position += 1
+
+        return values
+#+END_SRC
+
+Now we need to simplify our main function.  The sbet object now can be
+iterated by a for loop.  Each time through the for loop, the values
+that were returned in the *next* method get put into the datagram
+variable.
+
+#+BEGIN_SRC python        
+def main():
+    print 'Datagram Number, Time, x, y'
+
+    sbet = Sbet('sample.sbet')
+    for datagram in sbet:
+        print datagram['time'],datagram['lon_deg'], datagram['lat_deg']
+#+END_SRC
+
+That's definitely simpler, but we have lost the count of the
+datagram.  *enumerate* is a special function that takes an iteratable
+object and returns each element with a count before it.  We can then 
+just loop through the sbet and not worry about which datagram we are at.
+
+#+BEGIN_SRC python
+    sbet = Sbet('sample.sbet')
+    for index, datagram in enumerate(sbet):
+        print index, datagram['time'], datagram['lon_deg'], datagram['lat_deg']
+#+END_SRC
+
+It runs just like before:
+
+#+BEGIN_SRC python
+./sbet2.py | head
+# Datagram Number, Time, x, y
+# 0 334959.004823 -146.675232704 60.4443123064
+# 1 335009.003514 -146.671920256 60.448698066
+# 2 335059.002204 -146.667715067 60.4528836831
+# 3 335109.000894 -146.663165536 60.4570416942
+# 4 335158.999585 -146.659085911 60.4612950577
+# 5 335208.998275 -146.654515522 60.4654683305
+# 6 335258.996965 -146.650207253 60.4696697568
+# 7 335308.995656 -146.645977489 60.473902636
+# 8 335358.994346 -146.641281066 60.4779957167
+# ...
+#+END_SRC
