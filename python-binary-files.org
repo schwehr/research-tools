@@ -10,7 +10,7 @@ End:
 
 #+TITLE:     Chapter XXX: Python - parsing binary data files
 #+AUTHOR:    Kurt Schwehr
-#+EMAIL:     schwehr@ccom.unh.edu>
+#+EMAIL:     schwehr@ccom.unh.edu
 #+DATE:      $Date: $
 #+DESCRIPTION: Marine Research Data Manipulation and Practices - Python
 #+TEXT:      $Id: kurt-2010.org 13030 2010-01-14 13:33:15Z schwehr $
@@ -1417,3 +1417,339 @@ It runs just like before:
 # 8 335358.994346 -146.641281066 60.4779957167
 # ...
 #+END_SRC
+
+** Adding Google Earth KML export
+
+[[./figures/googleearth-sbet.png]]
+
+It's time to add a first try at a Google Earth KML export.
+
+First, here is an example of a line with three points in [[http://code.google.com/apis/kml/documentation/][KML]]. KML is a
+form of the Extensible Markup Language ([[http://en.wikipedia.org/wiki/XML][XML]]).  The key to XML is that
+everything in the file starts with a beginning tag (e.g. "<tag>") and
+finishes with a matching end tag (e.g. "</tag>").  You will see a
+large number of angle brackets in XML files.  Do not worry too much
+about the details of XML and KML.  The key thing to observe is that
+there is a "<coordinates> </coordinates>" block that contains
+longitude and latitude pairs (e.g. x,y).  Be careful that you don't do
+y,x (aka lat, lon).
+
+#+BEGIN_SRC xml
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://earth.google.com/kml/2.1">
+<Document>
+  <name>sbet ship track</name>
+  <Placemark>
+    <name>sbet line</name>
+    <LineString>
+      <coordinates>
+        -146.675232704,60.4443123064
+        -146.671920256,60.448698066
+        -146.667715067,60.4528836831
+      </coordinates>
+    </LineString>
+  </Placemark>
+</Document>
+</kml>
+#+END_SRC
+
+If you save that KML into a file called "test.kml" and open it in
+Google Earth, you will see that the program will fly to Alaska and
+show you a very short line.
+
+We now want to write KML will all of the points in an SBET from our
+Sbet python class.  We do this by splitting the task into three
+sections.  First we add the KML from the beginning line to the
+"<coordinates>" tag.  Next, we will add all of the x,y points for the
+sbet datagrams one line at a time.  Finally, we will add the text for
+"</coordinates>" to the final "</kml>".
+
+Let's add a new "kml" method to our Sbet class.  
+#+BEGIN_SRC python
+    def kml(self):
+        out_str = ''
+        return out_str
+#+END_SRC
+
+The design of our kml function is that it will return a string with
+the KML in it.  In python, the "+=" operator appends a string on to an
+existing string (aside: it creates a new longer string and assigns it
+to the old variable name).  Also the triple quote ( *'''* ) allows for
+strings that span multiple lines.  We can now write the header.
+
+#+BEGIN_SRC python
+    def kml(self):
+        out_str = ''
+        out_str += '''<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://earth.google.com/kml/2.1">
+<Document>
+  <name>sbet ship track</name>
+  <Placemark>
+    <name></name>
+    <LineString>
+      <coordinates>
+'''
+        return out_str
+#+END_SRC
+
+The *out\_str* ( "output string" ) variable will now return the first
+part of the KML.  We can now use a for loop iterator like we did
+before to get all the coordinates.  After we add the for loop, we can
+also add the footer to finish the KML.
+
+#+BEGIN_SRC python
+    def kml(self):
+        out_str = ''
+        out_str += '''<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://earth.google.com/kml/2.1">
+<Document>
+  <name>sbet ship track</name>
+  <Placemark>
+    <name></name>
+    <LineString>
+      <coordinates>
+'''
+
+        for datagram in self:
+            out_str += str(datagram['lon_deg']) + ',' + str(datagram['lat_deg']) + '\n'
+
+        out_str += '''      </coordinates>
+    </LineString>
+  </Placemark>
+</Document>
+</kml>'''
+
+        return out_str
+#+END_SRC
+
+That gives a compete KML generation method, but it won't go anywhere
+until we use it.  Let's change the main() function to get the KML
+string and write it to a file.
+
+#+BEGIN_SRC python
+def main():
+
+    sbet = Sbet('sample.sbet')
+
+    # Open a new file called "sample.kml"
+    # If the file exists it will be overwritten
+    out = open('sample.kml','w')
+
+    out.write(sbet.kml())
+#+END_SRC
+
+If you run sbet2.py, you should now see a sample.kml file.  On the
+mac, you can use the open command to view the new KML file with the
+ship track.
+
+#+BEGIN_SRC sh
+./sbet.py
+
+ls -l sample*
+# -rw-r--r--  1 schwehr  staff   5203 Dec 23 17:34 sample.kml
+# -rw-r--r--  1 schwehr  staff  22712 Dec 14 09:44 sample.sbet
+
+open sample.kml
+#+END_SRC
+
+** Going faster with partial reads (read(num\_bytes), seek, tell)
+
+Our sample file is small, but if we were working on a typical SBET
+file, it would be hundreds of megabytes or bigger.  Reading all that
+data into memory at one time is not very efficient.
+
+FIX: write an example with read and demonstrate seek and tell.
+
+** Going faster with mmap
+
+Most people will try to switch their code to using partial *read*s
+combined with *seek* and *tell* commands to step through the file.
+The problem is that, there is a lot of copying of data going on when
+the data is read in.
+
+Now: *REMOVE* your code that does partial reads.  You can save it
+somewhere, but we will not use it.
+
+Modern operating systems have a special concept called a "memory map"
+or "mmap".  This style of loading data lets the operating system work
+with python rather than have python copy everything into local
+storage.  The operating system can load and unload the data behind the
+scenes as needed and the data in the file magically appears in the
+programs memory.  Only data that is needed is paged into RAM from the
+disk.  *mmap* is weird to use, but you can hide it in the class.
+
+One word of caution!  If you are using a *32-bit* operating system, you
+may run into troubles with reading files bigger than 2 GB and you will
+definitely have problems with files bigger than 4 GB.  This comes from
+a limitation of being able to address that much memory at one time.
+The best solution to get around the problem is to upgrade to a 64-bit
+operating system (and make sure you are using a 64-bit version of
+python).  If that is not possible, you will need to break your file
+into 2GB or smaller files.
+
+*See also*: http://docs.python.org/library/mmap.html
+
+#+BEGIN_EXAMPLE
+mmap.mmap(fileno, length[, tagname[, access[, offset]]])
+#+END_EXAMPLE
+
+We have to use a "fileno", which is a number that identifies our open
+file and the length of the file.  We also want to specify the access
+control and tell mmap that we want to open the file as "read-only".
+That way we can't accidentally modify the file.  Our new initializer
+looks like this:
+
+#+BEGIN_SRC python
+    def __init__(self, filename):
+
+        sbet_file = open(filename)
+        
+        sbet_size = os.path.getsize(filename)
+        self.data = mmap.mmap(sbet_file.fileno(), sbet_size, access=mmap.ACCESS_READ)
+
+        assert(len(self.data)%datagram_size == 0)
+
+        self.num_datagrams = len(self.data) / datagram_size
+#+END_SRC
+
+Python makes it easy to switch between either style at run time, so I
+have made the mmap style of loading the data be the default with the
+argument *use\_mmap* that defaults to True.
+
+#+BEGIN_SRC python
+    def __init__(self, filename, use_mmap=True):
+
+        sbet_file = open(filename)
+        
+        if use_mmap:
+            sbet_size = os.path.getsize(filename)
+            self.data = mmap.mmap(sbet_file.fileno(), sbet_size, access=mmap.ACCESS_READ)
+        else:
+            self.data = sbet_file.read()
+
+        assert(len(self.data)%datagram_size == 0)
+
+        self.num_datagrams = len(self.data) / datagram_size
+#+END_SRC
+
+** Checkpoint - what does the whole file look like here?
+
+FIX: insert a python file that matches all that was done above.
+
+** Another improvement - a better iterator
+
+Before we add more features to the class, we need to improve the
+iterator.  The trouble with our current design is that there can only
+be one iterator at a time.  Each iterator should be independent so
+that programmers do not have to worry about stepping on their own tows
+if they need to loop over all or part of the file.  The way to do this
+is to pull the iterator out of the Sbet class and have a separate
+iterator class that handles looping over the datagrams in an Sbet
+object.
+
+At this point, I am going to start over in a new file called sbet3.py.
+Here is the whole file rewritten to have a separate iterator class.
+
+#+BEGIN_SRC python
+#!/usr/bin/env python
+
+import math, struct
+import os, mmap
+
+datagram_size = 136
+
+field_names = ('time', 'latitude', 'longitude', 'altitude', \
+          'x_vel', 'y_vel', 'z_vel', \
+          'roll', 'pitch', 'platform_heading', 'wander_angle', \
+          'x_acceleration', 'y_acceleration', 'z_acceleration', \
+          'x_angular_rate', 'y_angular_rate', 'z_angular')
+
+class Sbet(object):
+    def __init__(self, filename, use_mmap=True):
+
+        sbet_file = open(filename)
+        
+        if use_mmap:
+            sbet_size = os.path.getsize(filename)
+            self.data = mmap.mmap(sbet_file.fileno(), sbet_size, access=mmap.ACCESS_READ)
+        else:
+            self.data = sbet_file.read()
+
+        # Make sure the file is sane
+        assert(len(self.data)%datagram_size == 0)
+
+        self.num_datagrams = len(self.data) / datagram_size
+
+    def decode(self, offset=0):
+        'Return a dictionary for an SBet datagram starting at offset'
+
+        subset = self.data[ offset : offset+ datagram_size ]
+        values = struct.unpack('17d', subset)
+
+        sbet_values = dict(zip (field_names, values))
+
+        sbet_values['lat_deg'] = math.degrees(sbet_values['latitude'])
+        sbet_values['lon_deg'] = math.degrees(sbet_values['longitude'])
+
+        return sbet_values
+
+    def get_offset(self, datagram_index):
+        return datagram_index * datagram_size
+
+    def get_datagram(self, datagram_index):
+        offset = self.get_offset(datagram_index)
+        values = self.decode(offset)
+        return values
+
+    def __iter__(self):
+        return SbetIterator(self)
+
+class SbetIterator(object):
+    'Independent iterator class for Sbet files'
+    def __init__(self,sbet):
+        self.sbet = sbet
+        self.iter_position = 0
+        
+    def __iter__(self):
+        return self
+
+    def next(self):
+        if self.iter_position >= self.sbet.num_datagrams:
+            raise StopIteration
+
+        values = self.sbet.get_datagram(self.iter_position)
+        self.iter_position += 1
+        return values
+
+def main():
+    print 'Datagram Number, Time, x, y'
+
+    sbet = Sbet('sample.sbet')
+    for index, datagram in enumerate( Sbet('sample.sbet') ):
+        print index, datagram['time'], datagram['lon_deg'], datagram['lat_deg']
+
+if __name__ == '__main__':
+    main()
+#+END_SRC
+
+FIX: walk through how the SbetIterator class works
+ - keep a reference to the sbet object
+ - set the datagram index ( "iter\_position" ) to the beginning of the
+   file
+ - Loop through the file in \_\_next\_\_ and throw the exception
+   "StopIteration" when it gets to the end of the file
+
+** Creating a summary method
+
+** What should \_\_str\_\_, \_\_unicode\_\_, and \_\_repr\_\_ return for a SBET file?
+
+** Adding CSV export
+
+** Adding database export
+
+* Plotting sbet parameters
+
+
+
+
+

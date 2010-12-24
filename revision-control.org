@@ -25,6 +25,7 @@ End:
 
 * Introduction
 
+FIX: this chapter totally not started!
 
 ** Why revision control
 
