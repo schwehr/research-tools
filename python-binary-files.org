@@ -68,14 +68,15 @@ FIX: write
 
 * SBET - "simple" inertial navigation messages
 
-An SBET file is log file coming from an Applanix POSPac inertial navigation
-system.  These devices work at a very high frequency to merge GPS,
-compass, gyroscopic, accelerometer, and other data that come in at a
-variety of time intervals.  It will report its best estimate of what
-your air, sea, undersea, or ground vehicle is doing in terms of
-motion.  This is the critical data that allows you to combine
-individual sonar pings or laser ranges to create a properly a
-georeferenced model of the environment.
+A Smoothed Best Estimate of Trajectory (SBET) file is log file coming
+from an Applanix POSPac inertial navigation system.  These devices
+work at a very high frequency to merge GPS, compass, gyroscopic,
+accelerometer, and other data that come in at a variety of time
+intervals.  It will report its best estimate of what your air, sea,
+undersea, or ground vehicle is doing in terms of motion.  This is the
+critical data that allows you to combine individual sonar pings or
+laser ranges to create a properly a georeferenced model of the
+environment.
 
 I have taken a sample file from a research cruise in Alaska on the
 NOAA survey ship Fairweather.  To simplify the example I have only
@@ -92,9 +93,30 @@ essential to look at the documentation (if it is available) before
 starting to parse the data.  The documentation might not be perfect,
 but it can save you tons of time (and likely frustration).
 
-FIX: reference the actual documentation
+Based on Table 4 of [[ftp://ftp.optech.ca/imaging/LYNX/Programs/PosPacLand_V5/POSPac%20Land%205.0%20Service%20Pack%203/Manuals/POSPac%20Quick%20Start%20Guide.pdf][PosPac Quick Start Guide.pdf]] in 3.0 POSPac Land
+Output Data Files Post-Processed Solution File:
 
-FIX: table of the format.
+#+ATTR_HTML: border="1" rules="all" frame="all"
+| Data                | Units          | Type   |
+|---------------------+----------------+--------|
+| time                | seconds        | double |
+| latitude            | radians        | double |
+| longitude           | radians        | double |
+| altitude            | meters         | double |
+| x velocity          | meters/second  | double |
+| y velocity          | meters/second  | double |
+| z velocity          | meters/second  | double |
+| roll                | radians        | double |
+| pitch               | radians        | double |
+| platform heading    | radians        | double |
+| wander angle        | radians        | double |
+| x body acceleration | meters/second^2 | double |
+| y body acceleration | meters/second^2 | double |
+| z body acceleration | meters/second^2 | double |
+| x body angular rate | radians/second | double |
+| y body angular rate | radians/second | double |
+| z body angular rate | radians/second | double |
+
 
 ** Initial look at an SBET file
 
@@ -1749,7 +1771,35 @@ FIX: walk through how the SbetIterator class works
 
 * Plotting sbet parameters
 
+* Evaluating the SBET format
 
+Now that you have experience with the SBET format, it is time to take
+a look at the good and bad of the format.  Please don't take this as
+critical of Applanix.  The goal here is to help you see the trade offs
+when designing a format and to think about the big picture.
 
+FIX: write
 
+** Good before bad
+
+- Simple!
+  - Same datagram size throughout
+  - Values are all the same type
+
+** Could be better
+
+If an SBET file is taken out of context of the rest of the survey
+data, it can be pretty confusing.
+
+- No magic file definition at the beginning of the file
+- No embedded metadata
+  - No year month day in the file
+  - No format version number
+  - Projection, ellipsoid and vertical datum?
+  - Ship and/or operator(s)?
+  - Which hardware did this come from?
+- Public documentation issues
+  - Byte order not specified
+  - What does seconds mean?  Seconds since midnight?
+- No overall or per sample/datagram quality metric
 
