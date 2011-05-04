@@ -1,3 +1,10 @@
 * Misc notes to incorp.
 
 - http://www.unols.org/committees/rvtec/doc_depot/doc_depot.html
+- Discussion of date formats and why you might choose different ones.
+  Why does the US format of Month day, year really suck?  Sorting
+  wants year first.  ISO format.  SQL format.
+- Discussion of the pain that is timezones and why to stay away from
+  them if at all possible
+
+
