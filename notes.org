@@ -1,3 +1,5 @@
+#+STARTUP: showall
+
 * Misc notes to incorporate.
 
 - http://www.unols.org/committees/rvtec/doc_depot/doc_depot.html
@@ -6,10 +8,8 @@
   wants year first.  ISO format.  SQL format.
 - Discussion of the pain that is time zones and why to stay away from
   them if at all possible
+- Creating a book from Wikipedia ala what Monica has done
 
-
-
-Research Tools
 It is all about the process of going to see and the products that have to be done right at the end of the cruise with an emphasis on the cruise report.  Get the students started with several example cruise reports.  Also start with the NOAA survey guidelines and IHO.
 I need to get a new laptop so that I can get going on the virtual machine development
 
@@ -102,3 +102,33 @@ Other assignments
 - installing / updating software in the vm.  General vm tutorial
 - marking HTML kml from python.  Do we have python 2.7
 - logging and note taking.  Converting to kml
+
+
+** Opinions
+
+#+BEGIN_VERSE 
+After a chat with Rachel this morning it occurred to me that, whereas there
+is general consensus that the Research Tools curriculum needs to be
+re-vamped, HOW this should be done will differ in the view of different
+folks cycling through the CCOM/JHC program (NOAA, GEBCO, MS/PhD-track UNH
+grad students).  Non-thesis students, who are pressed for time, may be more
+motivated to learn a straightforward tool that will still get the job done.
+Thesis-option students (and/or those for whom research skills are
+career-relevant) may be more motivated to learn to use open-source tools,
+which are typically not as easy to pick up as Matlab or Excel.  Ideally the
+Research Tools class would be a big tent that would cater to both needs -
+but is this possible?  My thought is that if you can make the open-source
+tools easy to learn, easy to use, and directly relevant to the task at hand
+(processing hydrographic data), then everyone wins.  But more on that when I
+get back to you with my actual feedback.
+
+My opinion (for what it's worth) is that Research Tools shouldn't only prime
+us for completing a year of coursework/labs, but should also lay down the
+foundation of a skill set we'll bring to our post-CCOM careers.  So it might
+be good to ping some other recent grads from the other camps (NOAA, GEBCO,
+etc.) and see what their thoughts are now (what tools have worked, what
+haven't).  Folks from my cohort have been out of the CCOM program for a
+couple of years and now have some perspective to weigh in from - Nick
+Forfinski, Lynn Morgan and Nathan Wardwell come to mind, just to name a few.
+I'm sure they'd be happy to pipe in.
+#+END_VERSE 
