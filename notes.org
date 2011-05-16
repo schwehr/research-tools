@@ -2,6 +2,7 @@
 
 * Misc notes to incorporate.
 
+- http://www.iho-ohi.net/iho_pubs/IHO_Download.htm S-44, S-52, S-57, etc
 - http://www.unols.org/committees/rvtec/doc_depot/doc_depot.html
 - Discussion of date formats and why you might choose different ones.
   Why does the US format of Month day, year really suck?  Sorting
@@ -132,3 +133,13 @@ couple of years and now have some perspective to weigh in from - Nick
 Forfinski, Lynn Morgan and Nathan Wardwell come to mind, just to name a few.
 I'm sure they'd be happy to pipe in.
 #+END_VERSE 
+
+** Cruise reports
+
+- http://aquaticcommons.org/2150/  SBNMS Nancy Foster: 
+  - http://aquaticcommons.org/2150/1/NCCOS_TM_87.pdf
+  - http://nbi.noaa.gov/products/others/SBNMSCruiseReport_TechMemo87.pdf
+- nancy foster 2004 http://graysreef.noaa.gov/science/publications/pdfs/h-05.pdf
+- nancy foster 2009 hydrography em1002
+  - http://ccma.nos.noaa.gov/products/biogeography/usvi_nps/pdf/NF-09-01_DAPR.pdf
+- 2010 http://ccma.nos.noaa.gov/products/biogeography/usvi_nps/pdf/nf-10-03-usvi-dapr.pdf
