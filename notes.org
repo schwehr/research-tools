@@ -1,10 +1,104 @@
-* Misc notes to incorp.
+* Misc notes to incorporate.
 
 - http://www.unols.org/committees/rvtec/doc_depot/doc_depot.html
 - Discussion of date formats and why you might choose different ones.
   Why does the US format of Month day, year really suck?  Sorting
   wants year first.  ISO format.  SQL format.
-- Discussion of the pain that is timezones and why to stay away from
+- Discussion of the pain that is time zones and why to stay away from
   them if at all possible
 
 
+
+Research Tools
+It is all about the process of going to see and the products that have to be done right at the end of the cruise with an emphasis on the cruise report.  Get the students started with several example cruise reports.  Also start with the NOAA survey guidelines and IHO.
+I need to get a new laptop so that I can get going on the virtual machine development
+
+Talk to the teacher of the data analysis class!!!
+
+Making computers work for you during your research and professional research.  When it comes to  how you work
+
+Backup - defense in depth
+- Corp backup
+- svn/git/hg services
+- flash drives
+- cd/DVD 
+- off site flood fire theft
+- being able to walk up to a computer and get work done
+- drop box and lack of security of the cloud
+- the danger of closed file formats
+- failure modes
+
+Archiving formats. Zip, gzip, compress, etc
+
+Citing Wikipedia, making a wikibook, creating your reference library for at sea/searching
+Google scholar + alerts
+Creating / editing wikipedia pages and internal CCOM wiki page
+Securely logging into cisunix and a security conscious student. KeypassX. 
+The QGIS lab from lfinitity 
+OSM on the isle of shoals and ocean charts?
+
+Jitsy/skype. Create video tutorials on topics.  Upload only if you are comfortable
+
+Sqlite is on more devices than ms office!  Every android or iPhone 
+
+Pros and cons of cloud services. Privacy, bankruptcy, government/Corp snooping, what if no Internet?
+
+Licensing your material. And working on small projects as a class.  Can we build towards a large library of python?  Ask the students to add to a contrib library and I will work on merging/cleaning
+
+If at the end of this course, you are working exactly as I taught you, then I have failed.  The goal is to put you through a work flow and thought process that is probably different than what you are accustomed to.  I presume that you will learn MS Windows and MS Office on your own.  I will push you to use the command line and some tools that have been around a lot longer than any or the commercial tools. Along with the Open Source tools, I will try to point out commercial tools that are available in the same or similar space.  I will attempt to show you the power of open research and collaboration.
+
+Tornado research with fluorescent dye  dr Rhines spelling?  Severe storm research. Amazing visual images.
+
+Create an email account just for the course?  Definitely need a discussion group and IRC channel that is visible inside CCOM's network and the guest network.
+
+Outlining, note taking, communication technologies, collaboration/wiki/bug tracking tools, 
+
+when it comes to data, you should not be held hostage.  You need to be able to write, parse, share, and understand data on your terms.  I will attempt to talk about what you can do for yourself, but also how your money spent is a vote for what you want in the long run.  If you make RFPs with clauses that protect you, you are voting for long term success.  E.g. The DOD open source guideline... I must read them and see if DOC and others have open source guidelines.  Open Source and Open Data lead to innovation and economic development. 
+
+Can I address patents, copyright and IP issues?
+
+Short term gain, long term pain versus short term pain, long term gain.
+
+ISPR process from Exxon Valdez ? Between that and Costco Busan
+
+I want you during this course to be exposed to many topics without being overly constrained by the topics.  Things such as tide, patch tests, sensor calibration, uncertainty, etc will come up and I want to to become familiar with the terms and I will attempt to provide key references. Other courses will have to provide the instruction about the theory.  I will reference these courses at UNH and other places with Open Course Ware (OCW) so that you can follow up on the topics.  
+
+And example is with satellite positioning and time.  We will parse, plot and use NMEA data from the US Global Position System, but we will not get into the details of calculating HDOP VDOP, etc. If you take XXX, you will cover this in the virtual GPS assignment.  Math for mapping will walk you through the math background.  Spatial Statistics will have to be you source for analyzing GPS based measurements from the environment.
+
+For regular statistical analysis, look to ESCI ???? That teaches R for statistics.
+
+At the end of the course, here are some things you should be able to answer
+
+Which formats support time and spatial recording... Jpg, png, tiff, ppm, etc
+
+Try to pre-record the classes as a screen cast
+Should I do iTunesU?
+Checklists for common tasks
+Readings... The GIS upenn videos
+Start working on the vm.  How do you make them smaller?
+
+What iOS/droids apps could help.
+
+Assignments
+
+First couple must be doable without any accounts.  Also, try to make the assignments workable from anywhere (outside UNH and without UNH accounts) or have an alternative route to the assignment.
+
+Try to have an assignment for every class and make it due in the next class.  How much time to allow?  Longer when Thursday to Tuesday. Make a script to generate org mode planning
+
+Start with something simple.  Ideas include 
+- Firefox plugins
+- open source licensing
+- trying Emacs
+- editing Wikipedia
+- writing about what they hope to get out of their program
+- a number of small readings
+
+Other assignments
+- python script using date math to create an org mode calendar
+- starting on JabRef.  Find references on a topic and make an HTML export.  Tag and make groups.
+- Zotero.  Moving refs to JabRef
+- parse BibTex?  That is actually hard
+- plot with gnu plot?
+- installing / updating software in the vm.  General vm tutorial
+- marking HTML kml from python.  Do we have python 2.7
+- logging and note taking.  Converting to kml
