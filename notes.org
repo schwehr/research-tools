@@ -2,6 +2,8 @@
 
 * Misc notes to incorporate.
 
+- From Glen - 1999 http://www.python.org/doc/essays/ppt/hp-training/sld001.htm
+- From Glen http://www.whoi.edu/committees/WHIT/Archive/python.pdf
 - http://www.iho-ohi.net/iho_pubs/IHO_Download.htm S-44, S-52, S-57, etc
 - http://www.unols.org/committees/rvtec/doc_depot/doc_depot.html
 - Discussion of date formats and why you might choose different ones.
