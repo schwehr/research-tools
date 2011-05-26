@@ -136,7 +136,7 @@ Forfinski, Lynn Morgan and Nathan Wardwell come to mind, just to name a few.
 I'm sure they'd be happy to pipe in.
 #+END_VERSE 
 
-** Cruise reports
+** Cruise reports / NOAA Descriptive Reports (DR's)
 
 - http://aquaticcommons.org/2150/  SBNMS Nancy Foster: 
   - http://aquaticcommons.org/2150/1/NCCOS_TM_87.pdf
@@ -145,6 +145,8 @@ I'm sure they'd be happy to pipe in.
 - nancy foster 2009 hydrography em1002
   - http://ccma.nos.noaa.gov/products/biogeography/usvi_nps/pdf/NF-09-01_DAPR.pdf
 - 2010 http://ccma.nos.noaa.gov/products/biogeography/usvi_nps/pdf/nf-10-03-usvi-dapr.pdf
+- Glen Rice knows this one: http://surveys.ngdc.noaa.gov/mgg/NOS/coast/H12001-H14000/H12072/DR/H12072.pdf
+
 
 ** Writing tools of today
 Here are my experiences with modern writing tools. I am frustrated with the mindless use of MS Word by the masses.  Even I fall back to this lowest common denominator tool when tired.  It is a garbage dump of features created by faceless engineers at MS.  It only plays nice with a small world of tools and is totally unsuitable for many tasks (even if millions of users try these tasks every day).
