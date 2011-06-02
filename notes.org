@@ -158,3 +158,27 @@ A tail of caution...
 Open Office?  Is it better or is it just an open source duplicate with all the same problems as MS Office?
 
 AsciiDoc is weird
+
+** more random stuff
+
+
+- Idrive youshareit etc for sharing and backup Backup 
+- Longterm reproducibility virtual box on floss
+- Can you rerun what you did to the data in the future? Archiving
+  whole virtual machines
+- Remote desktops and security 
+- Open source dropbox equiv for access anywhere
+- KeypassX best practices
+- Whole security chapter. Eg mailing lists
+- Making and reading ebooks?  Can we ebook from org mode?
+- Wiki discussion for data logging systems. Dds seismic ???
+- Checklisting and test hw sw and systems
+  - Floatplan mob. Work. Demob.  
+  - how to work in testing and maintainance?  Deadlines in the checklist
+  - linking crit info?
+  - example of template and finished
+- archive/backup processing delivery
+- Gtd
+- Not always checking email
+- Rss feeds and how to not let it take too much time 
+- Nathan Wardwell's email and code for geodetic surface 
