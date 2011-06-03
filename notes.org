@@ -149,18 +149,28 @@ I'm sure they'd be happy to pipe in.
 
 
 ** Writing tools of today
-Here are my experiences with modern writing tools. I am frustrated with the mindless use of MS Word by the masses.  Even I fall back to this lowest common denominator tool when tired.  It is a garbage dump of features created by faceless engineers at MS.  It only plays nice with a small world of tools and is totally unsuitable for many tasks (even if millions of users try these tasks every day).
 
-What should you think about when choosing a writing tool?  Which path do you want to take?  Short term gain, long term pain.  Or are you willing to invest in all of our futures and take the short term pain, long term gain?
+Here are my experiences with modern writing tools. I am frustrated
+with the mindless use of MS Word by the masses.  Even I fall back to
+this lowest common denominator tool when tired.  It is a garbage dump
+of features created by faceless engineers at MS.  It only plays nice
+with a small world of tools and is totally unsuitable for many tasks
+(even if millions of users try these tasks every day).
+
+What should you think about when choosing a writing tool?  Which path
+do you want to take?  Short term gain, long term pain.  Or are you
+willing to invest in all of our futures and take the short term pain,
+long term gain?
 
 A tail of caution...
 
-Open Office?  Is it better or is it just an open source duplicate with all the same problems as MS Office?
+Open Office?  Is it better or is it just an open source duplicate with
+all the same problems as MS Office?
 
 AsciiDoc is weird
 
-** more random stuff
 
+** more random stuff
 
 - Idrive youshareit etc for sharing and backup Backup 
 - Longterm reproducibility virtual box on floss
@@ -182,3 +192,6 @@ AsciiDoc is weird
 - Not always checking email
 - Rss feeds and how to not let it take too much time 
 - Nathan Wardwell's email and code for geodetic surface 
+- JonnyB suggested the students write validators for data and metadata
+  as part of their assignments.
+
