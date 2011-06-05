@@ -1,0 +1,159 @@
+#+BEGIN_COMMENT
+Local Variables:
+mode: flyspell
+mode: auto-fill
+End:
+#+END_COMMENT
+
+#mode: org
+
+
+#+STARTUP: showall
+
+#+TITLE:     Chapter XXX: Backup strategies and cloud storage
+#+AUTHOR:    Kurt Schwehr
+#+EMAIL:     schwehr@ccom.unh.edu>
+#+DATE:      $Date: $
+#+DESCRIPTION: Marine Research Data Manipulation and Practices - Safety first
+#+TEXT:      $Id: kurt-2010.org 13030 2010-01-14 13:33:15Z schwehr $
+#+KEYWORDS: 
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:nil toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   TeX:t LaTeX:nil skip:t d:nil todo:t pri:nil tags:not-in-toc
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+LINK_HOME: http://schwehr.org
+
+* Introduction
+
+Keeping your data safe is super critical.  Your job is important and
+the raw data and what you create is supper important.  If what you are
+doing is not worth saving, why are you doing it?  (Yes, there are
+definitely cases where you don't want to save data and what you are
+doing is important.)
+
+When it comes to the cloud, it is both a huge win and a massive
+liability.  What if the web service goes away?  You have no recourse.
+What if your account gets destroyed?  What if your data gets exposed
+because of their lack of security?  What if a government wants access
+to the content.  And worse for marine scientists... what if you are at sea?
+
+There are huge numbers of competing services, but these should get you
+started thinking about what is possible.
+
+* Backup strategies
+
+* Cloud storage
+
+** Risks
+
+** Benefits
+
+** Options
+
+- [[http://dropbox.com][DropBox]]  ... oops!  http://lwn.net/Articles/439265/
+- http://mydisk.se
+- Microsoft SkyDrive - http://explore.live.com/windows-live-skydrive-get-started
+- https://spideroak.com/
+- https://lwn.net/Articles/442841/ DVCS-Autosync
+- http://sparkleshare.org/
+- http://lwn.net/Articles/407556/ CloudUSB
+
+* Version control
+
+- http://code.google.com
+
+- http://github.com
+- http://gitorious.com
+
+- http://bitbucket.com
+
+
+* Email
+
+- https://mail.google.com/  (gmail)
+- 
+
+* Bookmarks
+
+- http://delicious.com
+- https://www.google.com/bookmarks/
+- http://zotero.org - typically for papers, but can be used for web pages
+
+* Documents
+
+- http://docs.google.com
+- Microsoft Sharepoint 
+
+* Videos
+
+- http://youtube.com
+- http://vimeo.com
+
+* Photos
+
+- http://flickr.com
+- http://
+
+* Web Sites
+
+At UNH, you can have a CS Unix web site.
+
+- http://sites.google.com
+- yahoo...
+- and and and
+
+* News Feeds
+
+- http://www.google.com/reader
+
+* Calendar / Addresses
+
+- https://www.google.com/calendar
+
+
+* Social
+
+- facebook
+- twitter
+
+* Blogging
+
+- http://livejournal.com
+
+
+
+
+* IM, Voice, and video
+
+- http://skype.com (now microsoft)
+
+* Weather
+
+* Maps
+
+- http://openstreetmap.com
+
+* Project management
+
+- http://basecamphq.com/
+
+* Remote login services
+
+Be very careful if you use any of these.  You are may be trusting
+access to your infrastructure to an outside company.
+
+- http://logmein.com
+
+* hosting / computing
+
+- http://www.dotcloud.com/
+- http://slicehost.com/
+- http://aws.amazon.com/ec2/
+- http://code.google.com/appengine/
+
+
+* And....
+
+irc, talk
