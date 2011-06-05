@@ -1,5 +1,16 @@
 #+STARTUP: showall
 
+* Sections to start with
+
+- Background of the class - what are we trying to do - aka what goes
+  into and comes out of ocean mapping / hydrography.  Field work + Data in and
+  cruise report, charts/maps, and archived raw+processed data out.
+- Making the computers and data work for you rather than against you.
+  Freedom to attack any problem.  Ability to work more effeciently
+  with a documented process hopefully aiming towards *repeatability*.
+- Using Linux.  What is linux, why am I push the normally windows
+  crowd into linux?  What is linux will come more through experience.
+
 * Misc notes to incorporate.
 
 - From Glen - 1999 http://www.python.org/doc/essays/ppt/hp-training/sld001.htm
