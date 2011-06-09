@@ -1,10 +1,11 @@
 #+BEGIN_COMMENT
 Local Variables:
-mode: org
 mode: flyspell
 mode: auto-fill
 End:
 #+END_COMMENT
+
+#mode: org
 
 #+STARTUP: showall
 
