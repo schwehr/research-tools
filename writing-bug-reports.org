@@ -22,7 +22,9 @@ End:
 #+EXPORT_EXCLUDE_TAGS: noexport
 #+LINK_HOME: http://schwehr.org
 
-* todo
+* todo and notes
+
+- http://gpsd.berlios.de/faq.html#bug-reporting
 
 * Introduction
 
