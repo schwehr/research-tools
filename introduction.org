@@ -52,6 +52,19 @@ how to do these tasks using free open source software (FOSS) and know
 where to look for help and additional closed software should you need
 more.
 
+** Reproducable Research (RR)                                            :rr:
+
+- http://sepwww.stanford.edu/data/media/public/sep//jon/repropreface.html
+- Might make good data sets for research tools
+  http://sepwww.stanford.edu/public/docs/sepdatalib/toc_html/
+- Writing advice 
+  - Abstract - http://sepwww.stanford.edu/data/media/public/sep/prof/abscrut.html
+  - Intro http://sepwww.stanford.edu/data/media/public/sep//prof/Intro.html
+- http://en.wikipedia.org/wiki/Reproducibility#Reproducible_research
+- http://www.emilsit.net/blog/archives/difficulties-in-data-analysis/
+- http://science.slashdot.org/story/10/02/09/1336250/Call-For-Scientific-Research-Code-To-Be-Released
+
+
 ** Provide the basis for a year long research tools course as it might be tought at UNH
 
 ** Be able to go to sea and prepare a cruise report
