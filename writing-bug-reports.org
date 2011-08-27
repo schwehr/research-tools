@@ -25,6 +25,10 @@ End:
 * todo and notes
 
 - http://gpsd.berlios.de/faq.html#bug-reporting
+- http://www.softwaretestinghelp.com/how-to-write-good-bug-report/
+- The differences between open / closed software
+- The help desk vrs talking directly to programmers
+- http://www.finkproject.org/bugs/Reporting.php
 
 * Introduction
 
