@@ -15,3 +15,76 @@
 #+EXPORT_EXCLUDE_TAGS: noexport
 #+LINK_HOME: http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/
 
+* Introduction
+
+Welcome to Research Tools, Fall 2011.  This course is designed to
+familiarize you with software and processes to facilitate collecting,
+managing, and processing scientific data.  You will also be learning
+ways to manage the writing process: managing references, tracking
+changes in your documents, building papers, and group writing.  The
+class will be a success if some of these tools make the rest of your
+research career more productive and enjoyable.
+
+The syllabus will be updated as the course progresses.  The schedule
+is not currently set and will be starting to be updated soon.
+
+Classes will have audio recordings that will be published.  You are
+welcome (and encouraged) to make your own recordings of the lectures.
+
+* Location and Time
+
+- Where: Rm: 142, Chase Ocean Engineering, University of New Hampshire
+- When: Tuesdays and Thursdays 11:10-12:30
+
+* Computers in the classroom
+
+This is a hands on class.  You will be in front of a computer during 
+class throughout the semester.  Please feel free to use the computer
+to take notes or use instant messanger or Internet Relay Chat (IRC) to
+discuss the course material, but do *not* use the computers for
+non-class related topics.
+
+* What is the goal of the class?
+
+
+* What will be covered?
+
+All of the technologies have been chosen to be readily available and
+likely to be around for many years to come.  You will gain experience
+with the following (do not worry if you have not heard of some or all
+of these).  Because this is a one semester class, we will not be able
+to go into depth on these topics, but this should provide the
+foundation for you to learn more when you need or want to.
+
+Note: this is not the order that we will cover the material and we
+might not get to all of these in class.
+
+- Security
+  - How to manager large numbers of passwords
+- Linux, the "BASH" shell (command line), and VM Ware virtual machines
+- The Python programming language and Matplotlib for creating graphs
+- Structured Query Language (SQL) for simple databases, the SQLite database engine, and the SQLite Manager Firefox Plugin
+- eXtensible Markup Language (XML) for data and ISO metadata
+- The EMACS text editor and the "org-mode" text format
+- LaTeX and HTML formats for publishing writing
+- Bibtex journal reference format.  Jabref and Zotero software for managing references
+- Mercurial (hg) distributed version control system (DVCS)
+- Generic Mapping Tools (GMT) and MB System for reading multibeam sonar data.
+- QuantumGIS (QGIS), GDAL and Proj.4 for general GIS tools
+- Google Earth, Google Fusion Tables, and  NASA World Wind
+- Internet Relay Chat (IRC)
+- Collecting data from serial ports and over the network (TCP and UDP)
+- Mediawiki based wikis
+- GeoMapApp
+
+Topics that I would like to cover, but probably will not be able to
+get to:
+
+- R for statistical analysis
+- GRASS - a large GIS system
+- Octave (an open source subset of Matlab)
+
+* Why python?
+
+
+
