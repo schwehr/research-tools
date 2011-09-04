@@ -9,7 +9,7 @@ End:
 
 #+TITLE:     Chapter XXX: Picking which programming language(s) to learn.
 #+AUTHOR:    Kurt Schwehr
-#+EMAIL:     schwehr@ccom.unh.edu>
+#+EMAIL:     schwehr@ccom.unh.edu
 #+DATE:      $Date: $
 #+DESCRIPTION: Marine Research Data Manipulation and Practices - Databases
 #+TEXT:      $Id: kurt-2010.org 13030 2010-01-14 13:33:15Z schwehr $
