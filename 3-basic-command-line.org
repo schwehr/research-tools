@@ -1,0 +1,65 @@
+#+STARTUP: showall
+
+#+TITLE:     Class 3: Weather Demo, Basic Command line, VM Ware Linux (DRAFT)
+#+AUTHOR:    Kurt Schwehr
+#+EMAIL:     schwehr@ccom.unh.edu
+#+DATE:      <2011-09-06 Tue>
+#+DESCRIPTION: Marine Research Data Manipulation and Practices
+#+KEYWORDS: 
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:nil toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   TeX:t LaTeX:nil skip:t d:nil todo:t pri:nil tags:not-in-toc
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+LINK_HOME: http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/
+
+* Introduction
+
+
+* Internet Relay Chat (IRC)
+
+Start Firefox
+
+Under "Tools," select "ChatZilla" at the bottom.
+
+ChatZilla will use your login name (often referred to as you
+"shortname") by default.  You can pick anything you like, but if you
+don't use something related to your name, people may have trouble
+which user in a chat is you.  For this class, make sure to use the
+same short name as your CCOM account - please do not change your
+alias.
+
+We need to now sign into an "IRC Server" that hosts chat rooms.  There
+are many thousands of servers in the world and we will even setup on
+at CCOM later in the semester.  For now, I have created an unofficial
+channel on http://freenode.net.  FreeNode supports free and opensource
+software and this class is primarily about just those topics.  Type
+this command right into the bottom window of ChatZilla:
+
+#+BEGIN_SRC sh
+/attach irc.freenode.net
+/join #unhresearchtools
+#+END_SRC
+
+** Say "hi" in the IRC channel
+
+Remember that you *must* write at least one message in the IRC chat
+each class.  It can be as simple as "hi".
+
+* TODO "Turn in" your homework by 5PM EDT today
+
+- Create a CCOM user wiki page for yourself.  For example:
+  - http://wiki.ccom.nh/index.php/User:Schwehr
+  - http://wiki.ccom.nh/index.php/User:Ben
+- Link that page into the student section of the research tools page.
+
+* Demonstration - Processing weather data
+
+For this section, you do not need to try to follow along.  Just watch
+what I am doing.  The goal is to give you a feeling for what we will
+be covering.  I do not you expect to understand all the steps just
+yet.  It will take us a number of classes to cover all of this
+material.
+
+
