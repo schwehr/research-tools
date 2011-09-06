@@ -1,0 +1,146 @@
+#+STARTUP: showall
+
+#+TITLE:     Class 2: IRC, Wiki Basics, Shell Basics  (DRAFT)
+#+AUTHOR:    Kurt Schwehr
+#+EMAIL:     schwehr@ccom.unh.edu
+#+DATE:      <2011-08-30 Tue>
+#+DESCRIPTION: Marine Research Data Manipulation and Practices
+#+KEYWORDS: 
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:nil toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   TeX:t LaTeX:nil skip:t d:nil todo:t pri:nil tags:not-in-toc
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+LINK_HOME: http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/
+
+* Introduction
+
+Last time was an overview of the general topics that we will cover in
+the class.  Today we will dig into actual material.  Time to get the
+computer working for you.  We will start by setting up a group
+communication channel over Internet Relay Chat (IRC).  After that,
+we will take a look at basic wiki editing using the CCOM internal
+wiki, which uses the same wiki software as Wikipedia.  We will then
+learn how to securely log into a Linux server setup for the class.  If
+you are outside of CCOM, see if you can find a Linux computer that you
+can an account on.
+
+*NOTE:* This lecture assume that you are sitting at a Windows 7
+computer at CCOM.  If that is not the case, you might have to do a
+little extra work.
+
+* Internet Relay Chat (IRC)
+
+We will now join a open group chat.  Please remember that IRC is not a
+secure service.  Anything you type can be logged or seen by clever
+people not in the chat room.  *Be careful what you type into IRC!*
+
+** ChatZilla in Firefox
+
+- Start Firefox
+- Search for ChatZilla or go directly to
+  https://addons.mozilla.org/en-US/firefox/addon/chatzilla/ 
+- Click "Add to Firefox"
+- Wait while it downloads
+- Click "Install Now" once the Install add-ons popup is ready.
+- Restart Firefox
+
+Firefox 6 on Windows 7 comes up in a different mode than it has in the
+past.  Plugins are not directly available.  Click the "Firefox" label
+on the top left of the Firefox window.  Under "Options", turn on the
+"Menu Bar".  You should now see a menu across the top that contains:
+
+"File Edit View History Bookmarks Tools Help"
+
+Under "Tools," select "ChatZilla" at the bottom.
+
+ChatZilla will use your login name (often referred to as you
+"shortname") by default.  You can pick anything you like, but if you
+don't use something related to your name, people may have trouble
+which user in a chat is you.  For this class, make sure to use the
+same short name as your CCOM account - please do not change your
+alias.
+
+We need to now sign into an "IRC Server" that hosts chat rooms.  There
+are many thousands of servers in the world and we will even setup on
+at CCOM later in the semester.  For now, I have created an unofficial
+channel on http://freenode.net.  FreeNode supports free and opensource
+software and this class is primarily about just those topics.  Type
+this command right into the bottom window of ChatZilla:
+
+# FIX: is there a better language for IRC commands?
+
+#+BEGIN_SRC sh
+/attach irc.freenode.net
+#+END_SRC
+
+It will take a few seconds to log into their server.  We can now join
+the class server.  Select the IRC Menu, Join channel, and type
+"unhresearchtools".  Click "Join".  You can also run a command in the
+lower text bar.
+
+#+BEGIN_SRC sh
+/join #unhresearchtools
+#+END_SRC
+
+Now, when the "#unhresearchtools" tab is selected, what you type into
+the bottom window will go out into the channel.
+
+*REMEMBER*: what you type is not private.  In fact, select the
+"ChatZilla" menu, then Preferences.  Under "General," you can turn on
+logging.  This way, you have a copy of everything that was said in the
+chat room while you are logged in.  Having these notes can be really
+useful when you are working on the same material later and want to go
+back to old discussions.
+
+If you prefer to use a different IRC "client," you are most welcome to
+switch.  ChatZilla is just an easy default in that it is available on
+Mac, Linux, and Windows (anywhere that Firefox is available).
+
+Freenode even has a web based IRC chat client: http://webchat.freenode.net/
+
+** Why did I pick IRC over some other group chat?
+
+IRC is biggest hang out location for open source software developers
+and users.  You sometimes actually chat in real-time with the person
+who wrote the software you are using and you can find other users who
+are potential collaborators.  Working together in the global
+community, we can get more accomplished that working by ourselves.
+
+Remember to be nice to everyone you talk to on IRC!  There is unwritten
+etiquette that you should follow on each channel.  All channels are
+not alike.  Here are some begging guide lines:
+
+http://www.livinginternet.com/r/ru_chatq.htm
+
+** Introduce yourself!
+
+Please introduce yourself on the channel and then say a real hello to
+the class.
+
+** Too much text for IRC?  Use a "paster"
+
+There are many services on the web that let you paste text and share
+the URL (web address).  One I frequently use is http://pastebin.com.
+You should also consider anything pasted on pastebin as public.  Do
+not paste anything that you would not otherwise tell to anyone.  Even
+if you are not logged in, the IP address (the address of your computer
+or network router) is logged.  You can be found.  Don't post anything
+outside of the CCOM acceptable use policy!!! 
+
+* CCOM Wiki
+
+** A look around
+
+- What kind of material is available on the wiki?
+- What are some of the special pages?
+- Create an account for yourself.  Please *DO NOT* edit without being
+  logged in.
+
+** TODO Homework DUE Tuesday Sept 6th <2011-09-06 Tue>
+
+- Create a CCOM user wiki page for yourself.  For example:
+  - http://wiki.ccom.nh/index.php/User:Schwehr
+  - http://wiki.ccom.nh/index.php/User:Ben
+- Link that page into the student section of the research tools page.

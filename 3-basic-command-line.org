@@ -62,4 +62,631 @@ be covering.  I do not you expect to understand all the steps just
 yet.  It will take us a number of classes to cover all of this
 material.
 
+This material has also been written up here on my blog:
 
+http://schwehr.org/blog/archives/2011-09.html#e2011-09-05T19_50_00.txt
+
+First, log into a linux computer and setup a project directory.
+
+#+BEGIN_SRC sh
+ssh researchtools.ccom.nh # or use putty
+mkdir wx
+cd wx # wx is short for "weather"
+#+END_SRC
+
+Check out the weather data that is available over the CCOM internal
+network.  socat is a network data helper.  It can dump what it sees
+from a network connection, pass it to other programs, or forward the
+data.
+
+#+BEGIN_SRC sh
+socat TCP4:datalogger1.ccom.nh:36000 - | head
+#+END_SRC
+
+You should see some [[http://gpsd.berlios.de/NMEA.html][NMEA]] weather data.
+
+#+BEGIN_EXAMPLE 
+$WIMWV,140.3,R,1.8,N,A*2C,rccom-airmar,1315303659.98
+$WIMDA,30.0438,I,1.0174,B,15.6,C,,,,,,,164.4,T,179.8,M,1.8,N,0.9,M*27,rccom-airmar,1315303660.12
+$HCHDT,26.2,T*1F,rccom-airmar,1315303660.25
+$GPZDA,100740,06,09,2011,00,00*47,rccom-airmar,1315303660.31
+$WIMWD,164.6,T,180.0,M,1.7,N,0.9,M*59,rccom-airmar,1315303660.4
+$WIMWV,138.6,T,1.7,N,A*2F,rccom-airmar,1315303660.45
+$WIMWV,140.3,R,1.7,N,A*23,rccom-airmar,1315303660.51
+$GPGGA,100740,4308.1261,N,07056.3764,W,2,9,0.9,42.2,M,,,,*0F,rccom-airmar,1315303660.63
+$HCHDT,26.2,T*1F,rccom-airmar,1315303660.75
+$GPVTG,303.8,T,319.2,M,0.1,N,0.1,K,D*27,rccom-airmar,1315303660.83
+2011/09/06 06:07:40 socat[29595] E write(1, 0x9d6b410, 53): Broken pipe
+#+END_EXAMPLE
+
+What we really want is some "exciting" weather.  Hurricane Irene
+coming through New Hampshire just over a week ago will do.  I logged
+the weather station and put the files online on this web page:
+[[http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/examples/][examples]].  The unix "wget" command will pull the data down for us into
+the "wx" project.
+
+#+BEGIN_SRC sh
+pwd # make sure you are in the "wx" directory
+wget http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/examples/ccom-airmar-2011-08-28.bz2
+wget http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/examples/ccom-airmar-2011-08-29.bz2
+wget http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/examples/ccom-airmar-2011-08-30.bz2
+
+# If you are unfamiliar with .bz2 files, ask the computer if it knows 
+file ccom*
+ccom-airmar-2011-08-28.bz2: bzip2 compressed data, block size = 900k
+ccom-airmar-2011-08-29.bz2: bzip2 compressed data, block size = 900k
+ccom-airmar-2011-08-30.bz2: bzip2 compressed data, block size = 900k
+
+# Uncompress the data.  "*" matches any text
+bunzip2 ccom*.bz2
+
+file ccom-airmar-2011-08-*
+ccom-airmar-2011-08-28: ASCII English text
+ccom-airmar-2011-08-29: ASCII English text
+ccom-airmar-2011-08-30: ASCII English text
+
+head ccom-airmar-2011-08-29
+# START LOGGING UTC seconds since the epoch: 1314576000.23
+# SPEED:       4800
+# PORT:        /dev/ttyS0
+# TIMEOUT:     300.0
+# STATIONID:   ccom-airmar
+# DAEMON MODE: False
+$GPVTG,269.6,T,285.0,M,0.0,N,0.0,K,D*22,rccom-airmar,1314576000.31
+$GPZDA,000000,29,08,2011,00,00*49,rccom-airmar,1314576000.38
+$WIMWV,144.8,R,2.1,N,A*29,rccom-airmar,1314576000.45
+$GPGGA,000000,4308.1252,N,07056.3763,W,2,9,0.9,35.2,M,,,,*0A,rccom-airmar,1314576000.57
+#+END_SRC
+
+We now have weather data logs.  We need to get the software to parse
+the logs.
+
+#+BEGIN_SRC sh
+# Check out the NMEA weather parsing code using mercurial
+hg clone http://schwehr@bitbucket.org/schwehr/nmeadec
+
+# Add it to the python path
+cd nmeadec
+export PYTHONPATH=`pwd`
+cd -
+#+END_SRC
+
+Find some sample weather messages.  They have the NMEA code "MDA" for
+"Composite Weather".  The grep command searches for text.
+
+#+BEGIN_SRC sh
+grep MDA ccom-airmar-2011-08-29 | head
+$WIMDA,29.1166,I,0.9860,B,19.6,C,,,,,,,170.4,T,185.8,M,2.1,N,1.1,M*2D,rccom-airmar,1314576000.72
+$WIMDA,29.1166,I,0.9860,B,19.6,C,,,,,,,174.9,T,190.3,M,2.0,N,1.0,M*2B,rccom-airmar,1314576001.71
+$WIMDA,29.1166,I,0.9860,B,19.6,C,,,,,,,175.8,T,191.2,M,2.0,N,1.0,M*2B,rccom-airmar,1314576002.71
+$WIMDA,29.1166,I,0.9860,B,19.6,C,,,,,,,171.9,T,187.3,M,2.0,N,1.0,M*28,rccom-airmar,1314576003.72
+$WIMDA,29.1166,I,0.9860,B,19.6,C,,,,,,,175.1,T,190.5,M,1.8,N,0.9,M*27,rccom-airmar,1314576004.72
+$WIMDA,29.1166,I,0.9860,B,19.6,C,,,,,,,180.9,T,196.3,M,1.6,N,0.8,M*2A,rccom-airmar,1314576005.72
+$WIMDA,29.1166,I,0.9860,B,19.6,C,,,,,,,182.4,T,197.8,M,1.7,N,0.9,M*2F,rccom-airmar,1314576006.72
+$WIMDA,29.1166,I,0.9860,B,19.6,C,,,,,,,186.7,T,202.1,M,1.6,N,0.8,M*2E,rccom-airmar,1314576007.71
+$WIMDA,29.1166,I,0.9860,B,19.6,C,,,,,,,191.5,T,206.9,M,1.7,N,0.9,M*26,rccom-airmar,1314576008.72
+$WIMDA,29.1166,I,0.9860,B,19.6,C,,,,,,,188.9,T,204.3,M,1.7,N,0.9,M*2A,rccom-airmar,1314576009.72
+#+END_SRC
+
+Now start "ipython" and try out the parser!
+
+#+BEGIN_SRC python
+ipython -pylab  # ask ipython to load plotting and science modules
+
+import nmeadec # pull in Kurt's NMEA parsing library
+
+line = '$WIMDA,29.1166,I,0.9860,B,19.6,C,,,,,,,170.4,T,185.8,M,2.1,N,1.1,M*2D,rccom-airmar,1314576000.72'
+nmeadec.decode(line)
+
+# Your results should look something like this:
+{'air_temp': 19.6,
+ 'pressure_bars': 0.986,
+ 'pressure_hg': 29.1166,
+ 'sentence': 'MDA',
+ 'talker': 'WI',
+ 'wind_dir_mag': 185.8,
+ 'wind_dir_true': 170.4,
+ 'wind_speed_knots': 2.1,
+ 'wind_speed_ms': 1.1}
+#+END_SRC
+
+You can then use the "get_wx" function from process_wx described in
+the blog post to pull in a large record of data.  
+
+One warning about the blog post:  "pylab" pulls in math functions and
+one of them, "sum", causes trouble.  There is a python "sum" builtin
+function.  If you need the normal python sum, here is how to use it:
+
+#+BEGIN_SRC python
+import __builtin__
+__builtin__.sum((1,2,3))
+# Result: 6
+#+END_SRC
+
+Research tools is not setup for graphics, so please follow along in
+the [[http://schwehr.org/blog/archives/2011-09.html#e2011-09-05T19_50_00.txt][blog post]].
+
+The resulting image made by matplotlib using the weather data from
+CCOM's Airmar weather station during hurricane Irene:
+
+[[file:figures/hurricane-irene-matplotlib.png]]
+
+We will go slowly through all the skills that are required to build
+plots like this of data over the next couple of classes.
+
+* Basic command line
+
+** Why learn about the command line?
+
+Today people are often uncomfortable working on the command line to
+get things done with computers or perhaps have never even used the
+command line.  Before windowing systems and mice were common, this was
+really the only way that people were able to tell a computer what to do.
+The advent of the [[http://en.wikipedia.org/wiki/Graphical_user_interface][Graphical User Interface]] (GUI) made some tasks
+easier, but it also made many tasks harder.  If you need to rename
+hundreds of files, using a mouse is going to take you a long time or
+you are going to have to find and learn a small utility program.  With
+the command line, using a "shell", you can write a quick command to
+rename large numbers of files easily.  In the process, you have gained
+something over the GUI method: an inherently easy way to document or
+repeat the task - the text command.  You can paste that command into a
+text file for documentation.  You can even make the file executable and
+run it as a "script" in the future.  The shell will remember commands
+that you have run before and let you rerun them the same way you did
+before or help you edit the commands to run slightly altered versions.
+
+** Why choose bash as your shell environment?
+
+There are many flavors of shells with the most common being tcsh, sh
+bash, zsh, Windows/DOS command, and Windows PowerShell. The Microsoft
+Windows shells are too limited and are not portable to other operating
+systems.  Unix systems started with C-shell (csh) and the Bourne shell
+(sh) in the 1970's and 1980's. Both of these shells were pretty
+limited in features. tcsh, bash, and zsh are improved versions of the
+old csh and sh shells. If you gain experience with csh and sh, you
+will find the syntax of sh to be more flexible and consistent than
+csh. sh provides basic functions that you can call that make writing
+scripts a bit easier.  Additionally, sh is used on Unix type systems
+to start up the system and manage server type processes ("daemons",
+not demons) that work in the background to make the computer more
+functional. You will likely want to create or modify a daemon as you
+get comfortable with the Linux environment to do tasks such as logging
+data from serial ports.  If you learn csh/tcsh, you will likely later
+have to learn at least some sh/bash.  You are better off to just learn
+sh/bash and avoid having to waste time learning two slightly different
+shells.
+
+The Bourne Again Shell (bash) has become the defacto standard rewrite
+of sh that provides a more usable experience than the limited sh. It
+gives us command completion (hit tab to finish a word if it can),
+histories and scrollback of previous command, the ability to control
+processes, etc.
+
+** Debugging stategies
+
+If you are typing in the commands you find here, you might
+occasionally make mistakes that prevent the command from giving you
+exactly what you see here for output.  Here are a couple things that
+can help you figure out what is going on.
+
+First, read aloud the command that you have typed and what is in the
+document. 
+
+Check for common characters to confuse.  It is easy to replace a "1"
+(number one) with an "l" ([[http://en.wikipedia.org/wiki/ICAO_spelling_alphabet][Lima]]) or vice versa if the fonts you have in your
+terminal and web browser make those two characters.  Make sure you are
+using the right quote character (e.g. ", ', or ` are all different).
+Another pair of characters that is sometime trouble are the 0 (zero)
+and O (Oscar).
+
+Note that the pipe character is a vertical bar: "|".  This character
+is sometimes two vertical dashes.  On US keyboards it is located
+between the delete and return/enter keys and is the shift of "\".
+
+** What to do if you get stuck?
+
+Before we get into the commands, we need to talk about what to do if
+things get stuck.  If you mistype a command and it just sits there
+doing nothing, you should first try holding down the "control" key and
+hitting the "C" key.  This sends a "break" or "kill" message to the
+program.  This is often written as "Ctrl-C" or "C-c".  Here is a
+command that hangs.  I then use Ctrl-C to get out of it.  The bash
+shell responds with a "^C" and gives a prompt again.
+
+#+BEGIN_EXAMPLE
+egrep some-string
+^C
+#+END_EXAMPLE
+
+If the command really gets stuck and does not respond to the Ctrl-C,
+you can close the terminal window and open a new window.  Later on,
+you will learn fancier techniques for controlling programs (also known
+as processes), but this will work for now.
+
+
+** Managing files - Where am I and what is here?  (pwd and ls)
+
+To start, we need to become comfortable with managing files in a Linux
+command line environment with the bash shell and the commands that
+come with it.
+
+The first command that you
+need to know tells you the working directory: *pwd* (print
+working directory).  This command writes where you are to the
+terminal.
+
+#+BEGIN_SRC sh
+pwd
+# And the response will have your user name, not "schwehr"
+# /home/CCOMNH/schwehr
+#+END_SRC
+
+You type *pwd*, press enter/return and it will tell you where you
+are.  
+
+The *path* that you see will be different than I show above, but
+hopefully, you get the idea.
+
+If you are accustomed to DOS or Microsoft windows, you have seen that
+directories (called "Folders" on Windows) are separated by the "\"
+character.  With bash, directories are separated byt the "/"
+character.  It is definitely annoying that Microsoft decided to change
+the character, but we are now stuck with this difference.
+
+We can create a new directory with the *mkdir* (make directory)
+command.
+
+#+BEGIN_SRC sh
+mkdir example
+#+END_SRC
+
+Let's now move into that directory with the *cd* (change
+directory) command.
+
+#+BEGIN_SRC sh
+cd example
+#+END_SRC
+
+We should take a look at what is in that directory with the *ls*
+(list directory contents) command.
+
+#+BEGIN_SRC sh
+ls
+#+END_SRC
+
+This will print out nothing.  There are no files in the directory.
+Now is a good time to learn about options to command line programs.
+You can ask the *ls* command to behave differently.  First let's
+try asking for *all* files with the "-a" option.  This means it
+will show any *hidden* files that have a name starting with a ".".
+These are refered to as "dot" files. 
+
+#+BEGIN_SRC sh
+ls -a
+# .  ..
+#+END_SRC
+
+You can pass multiple options to a command.  With the *ls*
+command, we might also want to see the "long" output.  This will give
+us a lot more information than we want right now, but it will show you
+the date and time that the files were last changed and who "ownes"
+each file.
+
+#+BEGIN_SRC sh
+ls -a -l # That is "l" as in Lima
+# total 8
+# drwxr-xr-x  2 schwehr schwehr 4096 2010-10-15 08:13 .
+# drwxr-xr-x 42 schwehr schwehr 4096 2010-10-15 08:13 ..
+#+END_SRC
+
+You can often combine these options into one short option.  The
+previous command can be written like this.
+
+#+BEGIN_SRC sh
+ls -la
+#+END_SRC
+
+When working with bash, each directory has two special dot files.  One
+"." refers to the current working directory.  This is only
+occasionally useful.  More interesting is the file with two dots.  The
+".." entry refers to the directory above this one.  Let's try moving
+to the parent directory.
+
+#+BEGIN_SRC sh
+pwd
+# /home/CCOMNH/schwehr/example
+
+cd ..  # change directory to the parent - also known as "up"
+
+pwd
+# /home/CCOMNH/schwehr/example
+#+END_SRC
+
+Finally, if you are somewhere on the disk and want to get back to your
+home directory, the "~" points back to your home directory.  We can
+use the *echo* command to see what the "~" means and then give it
+a try.  *echo* prints what it is given to the terminal.
+
+#+BEGIN_SRC sh
+echo ~
+# /home/kurt
+
+cd ~
+
+pwd
+# /home/kurt
+
+cd ~/example
+
+pwd
+# /home/kurt/example
+#+END_SRC
+
+bash keeps track of all the commands that you run.  This is helpful
+when you want to run a command that you typed before or want to save
+what you have done to a notes file.
+#+BEGIN_SRC sh
+history
+#+END_SRC
+
+The results:
+
+#+BEGIN_EXAMPLE
+ 1  cd example
+ 2  ls
+ 3  ls -a
+ 4  ls -a -l
+ 5  ls -la
+ 6  pwd
+ 7  cd ..
+ 8  pwd
+ 9  cd -
+ 10 pwd
+ 11 echo ~
+ 12 pwd
+ 13 cd ~/example
+ 14 pwd
+ 15 history
+#+END_EXAMPLE
+
+You can scroll back to previous commands, edit them if necessary, and
+rerun them.  Press the up and down arrows to scroll back through
+previous commands and left/right to edit a command.  We will get into
+more advanced editing of commands later.
+
+We can also ask the shell to tell us which disks are "mounted" (aka
+"attached" or "installed") on the computer with the *df* (disk
+free) command.  Here is an example from a Linux system.  Windows with
+cygwin will look pretty different.  You can also ask it to write out 
+the space on the device in a more "human-readable* format with the
+"-h" option.  Note, you will see "non-disk" things on a linux
+computer, that I have hidden from you here.  Please ignore these
+extraneous entries. 
+
+#+BEGIN_SRC sh
+df   # This is going to give us lots of stuff we do not care about
+Filesystem           1K-blocks      Used Available Use% Mounted on
+/dev/mapper/slash-slash
+                      19206868   2140996  16090208  12% /
+none                    505412       188    505224   1% /dev
+none                    512448         0    512448   0% /dev/shm
+none                    512448       564    511884   1% /var/run
+none                    512448         0    512448   0% /var/lock
+/dev/sda6              3844152     73352   3575524   3% /tmp
+/dev/sda1               188403     28307    150368  16% /boot
+/dev/sda5              3844152    683612   2965264  19% /var
+/dev/mapper/home-home
+                      22585212    340952  21096972   2% /home
+
+# Better:  ask for just the disk associated with the your home directory
+# Pass it a period, meaning the "current directory"
+df .
+df .
+Filesystem           1K-blocks      Used Available Use% Mounted on
+/dev/mapper/home-home
+                      22585212    340952  21096972   2% /home
+
+# Ask for the size to be a bit easier to read with the "-h" option
+df -h .
+Filesystem            Size  Used Avail Use% Mounted on
+/dev/mapper/home-home
+                       22G  333M   21G   2% /home
+#+END_SRC
+
+* Find help and documentation for commands
+
+Linux and cygwin have what are called "manual pages" or "man pages"
+that describe most commands.  Give it a try.
+
+#+BEGIN_SRC sh
+man df
+#+END_SRC
+
+The results:
+
+#+BEGIN_EXAMPLE
+DF(1)                            User Commands                           DF(1)
+
+NAME
+       df - report file system disk space usage
+
+SYNOPSIS
+       df [OPTION]... [FILE]...
+
+DESCRIPTION
+       This  manual  page  documents  the  GNU version of df.  df displays the
+       amount of disk space available on the file system containing each  file
+       name  argument.   If  no file name is given, the space available on all
+       currently mounted file systems is shown.  Disk space  is  shown  in  1K
+       blocks  by  default, unless the environment variable POSIXLY_CORRECT is
+       set, in which case 512-byte blocks are used.
+
+       If an argument is the absolute file name of a disk device node contain‐
+       ing  a  mounted  file system, df shows the space available on that file
+       system rather than on the file system containing the device node (which
+       is  always  the  root file system).  This version of df cannot show the
+       space available on unmounted file systems, because  on  most  kinds  of
+       systems  doing  so requires very nonportable intimate knowledge of file
+       system structures.
+ Manual page df(1) line 1
+#+END_EXAMPLE
+
+*NOTE*: '*q*' gets you out of the above screen!
+
+When you are in the man page, you are interacting with a "pager"
+program (it's actually a program called *less*).  You have use the
+up and down arrow keys, the space bar, the *b* key, *<*, and
+*>* to move up and down the manual.  A very important key to know
+is *q* to quit out of the manual.
+
+You can also search for commands that might help you get a job done.
+This is known as "apropos".  For example "apropos editor" You can also
+ask for it with the "-k" option to man.
+
+#+BEGIN_SRC sh
+man -k sort
+#+END_SRC
+
+#+BEGIN_EXAMPLE
+alphasort (3)        - scan a directory for matching entries
+apt-sortpkgs (1)     - Utility to sort package index files
+bsearch (3)          - binary search of a sorted array
+bunzip2 (1)          - a block-sorting file compressor, v1.0.4
+bzip2 (1)            - a block-sorting file compressor, v1.0.4
+comm (1)             - compare two sorted files line by line
+qsort (3)            - sorts an array
+sort (1)             - sort lines of text files
+sort-dctrl (1)       - sort Debian control files
+texindex (1)         - sort Texinfo index files
+tsort (1)            - perform topological sort
+versionsort (3)      - scan a directory for matching entries
+winop (3blt)         - Perform assorted window operations#+END_EXAMPLE
+#+END_EXAMPLE
+
+On the right, after the dash ("-"), is a description of the command.
+On the left is the name of the command.  Entries with a "(1)" after
+the name are things you can access from the bash command line.
+Entries with a "(2)" or "(3)" are things that are accessible from a
+full programming language such as C, perl, python, etc.
+
+
+* Specifying groups of files (pattern matching)
+
+It is time to jump into the example directory and start working with
+directory listings.
+
+#+BEGIN_SRC sh
+cd ~/example
+#+END_SRC
+
+Now we can use a command called *touch* to create some files.
+touch is designed to update the last modified time, but if the file
+does not exist, it will create an empty file.  Here we will create
+three files.  Many commands can work on many files at the same time.
+
+#+BEGIN_SRC sh
+touch 1 2 3
+
+ls -l
+#+END_SRC
+
+#+BEGIN_EXAMPLE
+total 0
+-rw-r--r-- 1 kurt kurt 0 2010-10-15 09:39 1
+-rw-r--r-- 1 kurt kurt 0 2010-10-15 09:39 2
+-rw-r--r-- 1 kurt kurt 0 2010-10-15 09:39 3
+#+END_EXAMPLE
+
+We can now try removing the files with the "rm" (remove) command.
+
+#+BEGIN_SRC sh
+rm 1 2 3
+#+END_SRC
+
+Now, let's create a bunch of files to give ourselves something to work with.
+
+#+BEGIN_SRC sh
+touch 1 2 3 4 5 6 7 8 9 10 11 12 13 100
+#+END_SRC
+
+We can now start trying out some of the shells abilities to select
+groups of files.  This is know in shell terminology as pattern
+matching or "glob".  The complete bash manual on matching files is
+here.
+
+http://www.gnu.org/software/bash/manual/bash.html#Pattern-Matching
+
+This is a bit of a big topic, but just jump in and over time you will
+pick up these tricks.  I will use them throughout the rest of the book
+and with repetition, you will start to get the hang of them.
+
+First, the "*" matches anything.  By itself, it will match all the
+files.  When combined with text, it will match anything with that
+text.  Here are some examples to give you the idea.  In bash, the "#"
+character starts a comment on a line.  I will use comments to explain
+each entry.
+
+#+BEGIN_SRC sh
+# all files in a directory (effectively the same a just a plain "ls")
+ls *
+# 1  10  100  11  12  13  2  3  4  5  6  7  8  9
+
+# anything starting with "1"
+ls 1*
+# 1  10  100  11  12  13
+
+# anything ending with a "0" - This is the number zero
+ls *0
+# 10  100
+
+# anything starting with 1 and ending with a 0
+ls 1*0
+# 10  100
+#+END_SRC
+
+The "?" is more specific than the "*".  The "?" matches any single
+character.  Give it a try.
+
+#+BEGIN_SRC sh
+# Match anything that has just 1 character
+ls ?
+# 1  2  3  4  5  6  7  8  9
+
+# anything with exactly two letters
+ls ??
+# 10  11  12  13
+
+# the letter "1" followed by any single character
+ls 1?
+# 10  11  12  13
+#+END_SRC
+
+You can get fancier by using square brackets for "[]" specifying sets
+of characters or ranges by putting a dash between two characters.
+It's best to just see some examples.
+
+#+BEGIN_SRC sh
+# List files that are one character of the number 2 through 5
+ls [2-5]
+# 2  3  4  5
+
+# List files that start with 1 and have a 1 or 3 following.
+ls 1[13]
+# 11  13
+
+# Combine the * and [] to ask for any file ending in 1 or 3
+ls *[13]
+# 1  11  13  3
+
+# Here we are using a special system directory for an example using a
+# range of alphabetical characters (x, y, & z).
+# Please do not worry about what these files are
+ls /sbin/*[x-z]
+# /sbin/fsck.minix  /sbin/getty  /sbin/iwspy  /sbin/mkfs.minix  /sbin/pam_tally
+#+END_SRC
+
+* Using a Virtual Machine (VM) version of Ubuntu Linux
+
+Before we go any more into the shell, it is worth taking the time to
+show you how to be able to do this type of thing on your own computer
+and not always have to log into researchtools.ccom.nh.

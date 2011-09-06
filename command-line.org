@@ -239,7 +239,7 @@ terminal.
 
 #+BEGIN_SRC sh
 pwd
-#+END_EXAMPLE
+#+END_SRC
 
 You type *pwd*, press enter/return and it will tell you where you
 are.  
@@ -510,8 +510,6 @@ man gawk
 # verify your files.
 
 * Specifying groups of files (pattern matching)
-
-#First let's get back to the example directory:
 
 It is time to jump into the example directory and start working with
 directory listings.
