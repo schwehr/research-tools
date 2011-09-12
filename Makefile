@@ -16,9 +16,12 @@ HTMLS := $(ORGS:.org=.html)
 list_html:
 	@for html in ${HTMLS}; do echo $$html; done
 
-push:
-	scp ${HTMLS} ${ORGS} vislab-ccom:www/Classes/2011/esci895-researchtools/
-	scp figures/*.png vislab-ccom:www/Classes/2011/esci895-researchtools/figures/
+CLASS_SCP := vislab-ccom.unh.edu:www/Classes/2011/esci895-researchtools/
+push: 
+	scp HEADER.html ${CLASS_SCP}
+# FIX: Make this rsync!
+#	scp ${HTMLS} ${ORGS} vislab-ccom:www/Classes/2011/esci895-researchtools/
+#	scp figures/*.png vislab-ccom:www/Classes/2011/esci895-researchtools/figures/
 
 missing:
 	echo "Missing html files:"

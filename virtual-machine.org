@@ -1,0 +1,96 @@
+
+
+* Shrinking
+
+http://kegel.com/linux/jeos-vmware-player/jeos-vmware-player-howto.html
+
+#+begin_src sh
+sudo apt-get clean
+rm -rf /lib/linux-restricted-modules
+rm /var/log/dpkg.log
+rm /var/cache/apt/*pkgcache.bin
+sudo apt-get autoremove
+df -h .
+Filesystem            Size  Used Avail Use% Mounted on
+/dev/sda1              19G  3.9G   14G  22% /
+sudo apt-get install aptitude
+sudo apt-get update
+sudo apt-get upgrade # seems to have done right thing.
+#+end_src
+
+/var/cache/apt/archives/ and /var/cache/apt/archives/partial/
+
+http://www.howtoforge.com/how-to-shrink-vmware-virtual-disk-files-vmdk
+
+
+s -lSr *.vmdk
+-rw-------@ 1 schwehr  staff        1016 Aug 26 16:06 Ubuntu-11.04-32bit.vmdk
+-rw-------@ 1 schwehr  staff       65536 Aug 26 16:25 Ubuntu-11.04-32bit-s011.vmdk
+-rw-------@ 1 schwehr  staff    12058624 Aug 26 16:25 Ubuntu-11.04-32bit-s010.vmdk
+-rw-------@ 1 schwehr  staff   144506880 Aug 26 16:25 Ubuntu-11.04-32bit-s006.vmdk
+-rw-------@ 1 schwehr  staff   286851072 Aug 26 16:25 Ubuntu-11.04-32bit-s004.vmdk
+-rw-------@ 1 schwehr  staff   305004544 Aug 26 16:25 Ubuntu-11.04-32bit-s005.vmdk
+-rw-------@ 1 schwehr  staff   383123456 Aug 26 16:25 Ubuntu-11.04-32bit-s009.vmdk
+-rw-------@ 1 schwehr  staff   649723904 Aug 26 16:25 Ubuntu-11.04-32bit-s003.vmdk
+-rw-------@ 1 schwehr  staff   735117312 Aug 26 16:25 Ubuntu-11.04-32bit-s007.vmdk
+-rw-------@ 1 schwehr  staff   854458368 Aug 26 16:25 Ubuntu-11.04-32bit-s008.vmdk
+-rw-------@ 1 schwehr  staff   968556544 Aug 26 16:25 Ubuntu-11.04-32bit-s002.vmdk
+-rw-------@ 1 schwehr  staff  1870331904 Aug 26 16:25 Ubuntu-11.04-32bit-s001.vmdk
+
+
+Library/Application\ Support/VMware\ Fusion/vmware-vdiskmanager -d Ubuntu-11.04-32bit.vmdk 
+  Defragment: 12% done.
+
+ls -lSr *.vmdk-rw-------@ 1 schwehr  staff        1016 Aug 26 16:06 Ubuntu-11.04-32bit.vmdk
+-rw-------@ 1 schwehr  staff       65536 Aug 26 16:33 Ubuntu-11.04-32bit-s011.vmdk
+-rw-------@ 1 schwehr  staff    12058624 Aug 26 16:33 Ubuntu-11.04-32bit-s010.vmdk
+-rw-------@ 1 schwehr  staff   144506880 Aug 26 16:33 Ubuntu-11.04-32bit-s006.vmdk
+-rw-------@ 1 schwehr  staff   286851072 Aug 26 16:33 Ubuntu-11.04-32bit-s004.vmdk
+-rw-------@ 1 schwehr  staff   305004544 Aug 26 16:33 Ubuntu-11.04-32bit-s005.vmdk
+-rw-------@ 1 schwehr  staff   383123456 Aug 26 16:33 Ubuntu-11.04-32bit-s009.vmdk
+-rw-------@ 1 schwehr  staff   649723904 Aug 26 16:33 Ubuntu-11.04-32bit-s003.vmdk
+-rw-------@ 1 schwehr  staff   735117312 Aug 26 16:33 Ubuntu-11.04-32bit-s007.vmdk
+-rw-------@ 1 schwehr  staff   854458368 Aug 26 16:33 Ubuntu-11.04-32bit-s008.vmdk
+-rw-------@ 1 schwehr  staff   968556544 Aug 26 16:33 Ubuntu-11.04-32bit-s002.vmdk
+-rw-------@ 1 schwehr  staff  1870331904 Aug 26 16:33 Ubuntu-11.04-32bit-s001.vmdk
+
+/Library/Application\ Support/VMware\ Fusion/vmware-vdiskmanager -k Ubuntu-11.04-32bit.vmdk   Shrink: 10% done.
+
+ls -lSr *.vmdk
+-rw-------@ 1 schwehr  staff        1016 Aug 26 16:06 Ubuntu-11.04-32bit.vmdk
+-rw-------@ 1 schwehr  staff       65536 Aug 26 16:37 Ubuntu-11.04-32bit-s011.vmdk
+-rw-------@ 1 schwehr  staff    12058624 Aug 26 16:37 Ubuntu-11.04-32bit-s010.vmdk
+-rw-------@ 1 schwehr  staff   144506880 Aug 26 16:37 Ubuntu-11.04-32bit-s006.vmdk
+-rw-------@ 1 schwehr  staff   286851072 Aug 26 16:37 Ubuntu-11.04-32bit-s004.vmdk
+-rw-------@ 1 schwehr  staff   305004544 Aug 26 16:37 Ubuntu-11.04-32bit-s005.vmdk
+-rw-------@ 1 schwehr  staff   383123456 Aug 26 16:37 Ubuntu-11.04-32bit-s009.vmdk
+-rw-------@ 1 schwehr  staff   649723904 Aug 26 16:37 Ubuntu-11.04-32bit-s003.vmdk
+-rw-------@ 1 schwehr  staff   735117312 Aug 26 16:37 Ubuntu-11.04-32bit-s007.vmdk
+-rw-------@ 1 schwehr  staff   854458368 Aug 26 16:37 Ubuntu-11.04-32bit-s008.vmdk
+-rw-------@ 1 schwehr  staff   968556544 Aug 26 16:37 Ubuntu-11.04-32bit-s002.vmdk
+-rw-------@ 1 schwehr  staff  1869873152 Aug 26 16:37 Ubuntu-11.04-32bit-s001.vmdk
+
+# schwehr@Catbox4-MBAir.local 90 $ cd && du -hs
+5.8G	.
+
+Not really shrinking...
+
+Apparently, I have to copy the image.
+
+/Library/Application\ Support/VMware\ Fusion/vmware-vdiskmanager -r Ubuntu-11.04-32bit.vmdk -t 0 new.vmdk
+
+type 0 is a single growable file
+
+ls -lSh new.vmdk 
+-rw-------@ 1 schwehr  staff   5.8G Aug 26 16:44 new.vmdk
+
+Running schrink from sudo vmware-tools inside of the guest ubuntu os
+
+dfschwehr@ubuntu:~$ df -h .
+Filesystem            Size  Used Avail Use% Mounted on
+/dev/sda1              19G  5.3G   13G  30% /
+schwehr@ubuntu:~$ df -h .
+Filesystem            Size  Used Avail Use% Mounted on
+/dev/sda1              19G  4.1G   14G  23% /
+schwehr@ubuntu:~$ 
+
