@@ -1,3 +1,114 @@
+#+STARTUP: showall
+
+* WARNING
+
+This is a very rough document at the moment!
+
+* to do
+
+- [X] qgis
+- [X] grass
+- [ ] qgis-grass-plugin
+- [X] gpsd
+- [X] libkml
+- [ ] pykml
+- [ ] do I want flight gear?
+- [ ] r
+- [X] octave
+- [ ] password manager
+- [ ] pyproj, 
+- [X] ipython
+- [X] matplotlib
+- [ ] mapserver
+- [ ] mapnik
+- [ ] socat
+- [ ] wireshark
+- [ ] remove libreoffice
+
+* Introduction
+
+- https://help.ubuntu.com/community/UbuntuScience
+- http://www.poseidonlinux.org/
+
+
+* Installing packages via built in deb
+
+** Misc Science
+
+#+BEGIN_SRC sh
+sudo apt-get install octave3.2
+#+END_SRC
+
+** Emacs text editor
+
+#+BEGIN_SRC sh
+sudo apt-get install emacs23
+sudo apt-get install org-mode
+sudo apt-get install bbdb yasnippet pymacs css-mode debian-el dictionary-el easypg edb emacs-jabber erc git-el global gnuplot-mode
+sudo apt-get install id-utils liece magit mell python-mode python-ropemacs riece slime wget-el yaml-mode
+#+END_SRC
+
+** Misc coding
+
+#+BEGIN_SRC sh
+sudo apt-get install source-highlight tree
+#+END_SRC
+
+** GIS related
+
+#+BEGIN_SRC sh
+sudo apt-get install qgis
+sudo apt-get install gdal-bin
+sudo apt-get python-gdal
+sudo apt-get install grass
+sudo apt-get install gpsbabel gpsd gpsd-clients
+sudo apt-get install gmt gmt-coast-low 
+sudo apt-get install worldwind
+#+END_SRC
+
+# http://www.khattam.info/solved-package-dependencies-cannot-be-resolved-while-installing-qgis-plugin-grass-2010-09-12.html
+# sudo apt-get install qgis-plugin-grass
+
+** Python
+
+#+BEGIN_SRC sh
+sudo apt-get install python-shapely
+sudo apt-get install python-kml
+sudo apt-get install ipython
+sudo apt-get install python-scitools python-matplotlib python-matplotlib-data
+sudo apt-get install diveintopython python-beautifulsoup python-daemon python-dateutil python-debian python-dev python-examples
+sudo apt-get install python-genshi python-geoip python-imaging python-jabber python-jinja2
+sudo apt-get install python-ldap python-levenshtein python-lockfile python-lxml python-magic
+sudo apt-get install python-mako python-markupsafe python-mysqldb python-nose
+sudo apt-get install python-numpy python-notify python-oauth python-ogg python-openid python-openssl python-paramiko python-parsedatetime
+sudo apt-get install python-paste python-pastedeploy python-pastescript python-pexpect python-pkg-resources python-protobuf python-psycopg2 python-pyasn1 python-pycurl python-pygments python-pygresql
+sudo apt-get install python-pylibacl python-pyrex  # err... which one was py26?
+sudo apt-get install python-rdflib python-reportlab python-rrdtool python-rsvg python-serial python-setuptools 
+sudo apt-get install python-smbc python-speechd python-sphinx python-svn python-twisted
+sudo apt-get install python-vobject python-yaml
+sudo apt-get install python-virtualenv
+sudo apt-get install kodos # regular expression builder / tester
+#+END_SRC
+
+* Installing packages custom
+
+- Download the deb here http://www.google.com/earth/
+#+BEGIN_SRC sh
+sudo apt-get install lsb-core
+sudo apt-get -f install  # may not be required
+sudo dpkg -i google-earth-stable_current_i386.deb 
+#+END_SRC
+
+* Shrinking
+
+#+BEGIN_SRC sh
+# list installed packages
+dpkg --get-selections | grep -i libre
+sudo apt-get remove libreoffice-core
+#+END_SRC
+
+
+sudo apt-get install fslint
 
 
 * Shrinking
@@ -77,15 +188,19 @@ Not really shrinking...
 
 Apparently, I have to copy the image.
 
+#+BEGIN_EXAMPLE 
 /Library/Application\ Support/VMware\ Fusion/vmware-vdiskmanager -r Ubuntu-11.04-32bit.vmdk -t 0 new.vmdk
+#+END_EXAMPLE
 
 type 0 is a single growable file
 
+#+BEGIN_EXAMPLE 
 ls -lSh new.vmdk 
 -rw-------@ 1 schwehr  staff   5.8G Aug 26 16:44 new.vmdk
+#+END_EXAMPLE
 
 Running schrink from sudo vmware-tools inside of the guest ubuntu os
-
+#+BEGIN_EXAMPLE 
 dfschwehr@ubuntu:~$ df -h .
 Filesystem            Size  Used Avail Use% Mounted on
 /dev/sda1              19G  5.3G   13G  30% /
@@ -93,4 +208,25 @@ schwehr@ubuntu:~$ df -h .
 Filesystem            Size  Used Avail Use% Mounted on
 /dev/sda1              19G  4.1G   14G  23% /
 schwehr@ubuntu:~$ 
+#+END_EXAMPLE
 
+
+- http://maketecheasier.com/8-ways-to-maintain-a-clean-lean-ubuntu-machine/2008/10/07
+- http://maketecheasier.com/shrink-your-virtualbox-vm/2009/04/06
+#+BEGIN_EXAMPLE 
+df -h .
+Filesystem            Size  Used Avail Use% Mounted on
+/dev/sda1              19G  3.9G   14G  22% /
+
+sudo apt-get autoclean
+sudo apt-get clean
+sudo apt-get autoremove
+
+sudo vmware
+shrink
+
+/Library/Application\ Support/VMware\ Fusion/vmware-vdiskmanager -r Ubuntu-11.04-32bit.vmdk -t 0 ubuntu-rt-20110908.vmdk
+
+# /Library/Application\ Support/VMware\ Fusion/vmware-vdiskmanager -k ubuntu-rt-20110908.vmdk 
+# This made no difference
+#+END_EXAMPLE
