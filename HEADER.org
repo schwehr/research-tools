@@ -1,0 +1,38 @@
+#+STARTUP: showall
+#+TITLE: Course material
+#+OPTIONS:   H:3 num:nil toc:nil \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   TeX:nil LaTeX:nil skip:t d:nil todo:t pri:nil tags:not-in-toc
+
+* 2011 Research Tools
+
+These chapters are being created for the 2011 Research Tools course.
+They are extremely rough.  If you give them a read, I would appreciate
+any kind of feedback that you are willing to offer.  The goal is to
+give students skills that will help them conquer data throughout their
+career.  I am hoping to get this wrapped together as a book that
+people can take with them when they leave CCOM.  I will be releasing
+it under a creative commons non-commercial license, so that you can
+pass copies to your co-workers.
+
+1. [[./1-introduction.html][Introduction]] (draft) [ [[audio/1-introduction.mp3][mp3]] ][ [[audio/1-introduction.m4a][m4a]] ][ [[audio/1-introduction.ogg][ogg]] ]
+2. [[./2-irc-wiki-basic-shell.html][IRC, Wiki, Basic Shell]] (draft) [ [[audio/2-irc-wiki-basic-shell.mp3][mp3]] ][ [[audio/2-irc-wiki-basic-shell.m4a][m4a]] ][ [[audio/2-irc-wiki-basic-shell.ogg][ogg]] ]
+3. [[./3-basic-command-line.html][Wiki editing, Weather Demo, Basic Command Line]] (draft)
+#1. [[./introduction.html][Introduction]] - outline only
+#1. [[./communication.html][Communications tools]] - outline only
+#1. [[./choosing-a-text-editor.html][Choosing a Text Editor]] - covers a little of emacs, rest is outlines
+#1. [[./choosing-a-programming-language.html][Choosing a Programming Language]] - outline only
+#1. [[./command-line.html][Command Line]] - rough draft written
+#1. [[./python-intro.html][Introduction to Python]] - rough draft written
+#1. [[./python-intro-from-matlab.html][Intro to Python for Matlab Programmers]] - barely started writing
+#1. [[./databases.html][Database basics]] - partial rough draft
+#1. [[./python-binary-files.html][Parsing binary data files with python]] - rough draft half done
+#
+#Yet to get started:
+#
+#- Octave (and Matlab)
+#- R for statistics
+#- Matplotlib - plotting from python
+#- Scipy - data analysis in python
+
+[[file:audio][Audio podcasts of class]]
+
