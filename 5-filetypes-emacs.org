@@ -16,7 +16,7 @@
 
 * Introduction
 
-Rough plan...
+Rough plan
 
 - mention the NOAA Field Proceedures manual and IHO
   - Inside ccom wiki
@@ -27,3 +27,112 @@ Rough plan...
 - gdal info
 - imagemagick identify
 - creating a script... using source
+
+* New IRC server                                                        :irc:
+
+I am switching the class to use an IRC server at CCOM using http://ngircd.barton.de/
+This will give us total control of the channels that we want to have.
+There are many different ways to connect to the IRC server.
+
+** Text based - irssi
+
+You can do this either from inside your ubuntu virtual machine inside
+the ccom network or by using ssh/putty to connect to
+researchtools.ccom.nh.  If you are using the class virtual machine,
+first install the [[http://www.irssi.org][irssi]] IRC client:
+
+#+BEGIN_SRC sh
+sudo apt-get install irssi
+#+END_SRC
+
+Now start irssi and connect:
+
+#+BEGIN_SRC sh
+irssi
+/connect researchtools.ccom.nh
+/join #unhresearchtools
+#+END_SRC
+
+You will need to read the irssi documentation about how to use the
+client, but the most important command you probably need to start with
+is how to quit:
+
+#+BEGIN_EXAMPLE 
+/quit
+#+END_EXAMPLE
+
+** Browser based - Chatzilla
+
+** Graphical Client - Pidgin
+
+From the virtual machine, run [[http://www.pidgin.im/][Pidgin]].  From the menu, it is
+Applications -> Internet -> Pidgin Internet Messenger.  Then from the
+Buddy List, Accounts -> Manage Accounts.  The press the "Add..."
+button.  Under the Add Account "Basic" tab, select the protocol as:
+IRC.  Pick a username (should match your CCOM username), and select
+the server as *researchtools.ccom.nh*.  There is *no* password.  Leave
+password blank.
+
+Make sure that the account is "Enabled" (put a check mark in the
+account).
+
+Then under buddies, select "Join a Chat".  You can put in
+"#unhresearchtools" or you can push the "Room List" button.
+
+* The Cloud - Tools on the internet - Bookmarking               :bookmarking:
+
+The idea of cloud bookmarking is that you save a link in your web
+browser and you can do more than just use it locally on that computer
+in the particular web browser that you made the bookmark from.  First,
+if you switch browsers or computers, your bookmarks should follow you.
+Second, you should be able to share bookmarks with others and also be
+able to keep a bookmark private if you do not want others to see it
+(there are many reasons to keep bookmarks private).
+
+There are many services on the internet for storing your bookmarks to
+web pages in the cloud.  The old standby is http://delicious.com.
+This service was owned by Yahoo for a while, but is now under new
+management.  It is fairly simple and has an easy to use interface for
+Firefox, Chrome, and IE.
+
+http://www.delicious.com/help/tools
+
+I have been using delicious for a while now.  My main page on
+delicious is:
+
+http://www.delicious.com/goatbar
+
+I have been trying to be good about consistently bookmarks to bring
+order to the chaos that is the internet.  For example, I have a tag
+for this Research Tools course: <a
+href="http://www.delicious.com/goatbar/researchtools">researchtools</a>.  
+Anything that I think might be relevant for the class gets that tag.
+Delicious tries to offer you suggested tags when you mark a page.  You
+can adopt those and/or create your own strategy.  I don't know who
+invented tag clouds, but they can be helpful to understand focus.
+Take a look at my tag cloud:
+
+http://www.delicious.com/tags/goatbar
+
+*WARNING:* If you create an account for yourself at any of these
+bookmarking services, make sure that you create a unique password for
+the site.  Also remember that, even if the service says that a link
+you say is private, it might not always be secure.  Some links should
+never be put into a linking service.
+
+Both Chrome and Firefox have built in sync services.  I do not have
+much experience with these, but they are likely very good.
+
+There are many many other bookmark services.  Some are free, some for pay.
+
+http://en.wikipedia.org/wiki/List_of_social_bookmarking_websites
+
+For whichever bookmark server you choose to use, make sure that the
+service allows you to back up your bookmarks (a.k.a. export) and back
+them up!  For example, here is the export / backup feature for
+delicious:
+
+https://secure.delicious.com/settings/bookmarks/export
+
+SEE ALSO: [[http://en.wikipedia.org/wiki/Comparison_of_browser_synchronizers][Comparison of browser synchronizers]] (Wikipedia)
+
