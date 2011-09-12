@@ -18,6 +18,8 @@
 
 Rough plan...
 
+- mention the NOAA Field Proceedures manual and IHO
+  - Inside ccom wiki
 - emacs
 - get and unpack a tar of example files
 - file command
