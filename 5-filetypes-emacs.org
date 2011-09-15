@@ -16,17 +16,8 @@
 
 * Introduction
 
-Rough plan
-
-- mention the NOAA Field Proceedures manual and IHO
-  - Inside ccom wiki
-- emacs
-- get and unpack a tar of example files
-- file command
-- less/more/most
-- gdal info
-- imagemagick identify
-- creating a script... using source
+Rough plan - you will have to wait for a newer version of this lecture
+notes to have an introduction.
 
 * New IRC server                                                        :irc:
 
@@ -136,3 +127,497 @@ https://secure.delicious.com/settings/bookmarks/export
 
 SEE ALSO: [[http://en.wikipedia.org/wiki/Comparison_of_browser_synchronizers][Comparison of browser synchronizers]] (Wikipedia)
 
+* Loading the sample data
+
+Today, we are going to start exploring data types in Linux.  I have
+put together a collection of various files that we will use to learn
+how to look at files.  We will learn more about many of these file
+types over the semester.  For now, we will only graze the surface of
+these files.
+
+Open a terminal in your Linux virtual machine.  I have created a
+TinyURL to make it easier to type the whole URL to the file, which is:
+
+http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/examples/examples-20110913.tar.bz2
+
+We will use the command "wget" to pull the file down in the terminal.
+This is similar to doing a right-click and "Save Link As" in a web
+browser.
+
+#+BEGIN_SRC sh
+wget http://tinyurl.com/examples-20110913
+
+100%[==========================================================>] 100,421,141 8.72M/s   in 11s
+#+END_SRC
+
+Take a look at what we have downloaded.  First use the list files
+command, "ls", with a "-l" for a long listing.  
+#+BEGIN_EXAMPLE 
+ls -l
+
+-rw-r--r-- 1 schwehr schwehr 100421141 2011-09-13 08:52 examples-20110913
+#+END_EXAMPLE
+
+If you look at the whole original URL, you will see that we wanted the
+file to be called "examples-20110913.tar.bz2".  We can rename the file
+using the *mv* command to move the file to the correct name.  Remember
+that in the shell, you can use the *TAB* key to complete filenames.
+If you type "ex" and press the TAB key, it will complete as far as it
+can.  In this case to "example".  Press TAB again until it shows you
+all the options (there is also an examples.desktop directory).
+Complete the example by adding "-" and pressing tab again to get
+"examples-20110913".
+
+#+BEGIN_SRC sh
+mv examples-20110913 examples-20110913.tar.bz2
+#+END_SRC
+
+The ".tar.bz2" at the end of the name is a hint at the type of file.
+First, start from the right with the "bz2".  This implied (but does
+not guarantee) that the file is compressed with the [[http://bzip.org/][bzip2]] program. 
+For now, we don't have to worry about this as the next hint will cover
+us for now.  The ".tar" implies that this is a "tape archive".  This
+is much like a zip file that you may already be familiar with.  The
+idea is that one file acts as a container in while you can stuff a
+whole bunch of files.  You can then move around that single file,
+email it, etc much easier than you would a whole tree of files.
+
+If you want to learn more about tar, check out the [[http://www.gnu.org/software/tar/][web page for GNU
+tar]] and the wikipedia entry on the [[http://en.wikipedia.org/wiki/Tar_%28file_format%29][TAR file format]].  Or you can use
+the command line:
+
+#+BEGIN_SRC sh
+tar --help
+man tar  # remember that "q" quits out of a man page
+#+END_SRC
+
+The tar program knows how to handle uncompressing certain types of
+compression and that includes the bzip2 format.  We can ask tar to
+first list the contents of what is inside of the tar.  It is safer to
+look at what is in the tar before unpacking it.  If it starts taking a
+while to list the files, you can break out by pressing *Control-C*.
+You will see that with the "^C" that appears in the terminal.
+
+#+BEGIN_SRC sh
+tar tfvv examples-20110913.tar.bz2
+
+tar tfvv examples-20110913.tar.bz2
+drwxr-xr-x schwehr/schwehr   0 2011-09-10 11:47 examples-20110913/
+-rw-r--r-- schwehr/schwehr 48128 2011-09-12 17:34 examples-20110913/Presentation1.ppt
+-rwxr-xr-x schwehr/schwehr    32 2011-09-12 17:01 examples-20110913/shell-script.sh
+-rw-r--r-- schwehr/schwehr 3715206 2011-09-13 08:11 examples-20110913/0479_20080620_175447_RVCS.all.bz2
+-rw-r--r-- schwehr/schwehr  143781 2011-09-12 17:42 examples-20110913/mov02175.mp4
+-rwxr-xr-x schwehr/schwehr      46 2011-09-12 17:05 examples-20110913/perldemo.pl
+^C
+#+END_SRC
+
+The tar looks good, so go ahead and extract it.
+
+#+BEGIN_SRC sh
+tar xf examples-20110913.tar.bz2
+#+END_SRC
+
+It is time to start examining the example files.  A first command to
+see what is in there is =tree=.  I will not show the test results of
+tree as the do not reproduce in the text mode of these notes.
+
+#+BEGIN_SRC sh
+tree 
+#+END_SRC
+
+That gives you a look at the structure of the directories and gives
+some hint to file type with the colors.  Blue text is directories, red
+files are compressed, yellow-green are files marked "executable".
+
+Go into the directory and do a long listing, but also add the -h for
+"human readable file sizes"
+
+#+BEGIN_SRC sh
+cd examples-20110913
+
+ls -l -h 
+total 110M
+-rw-r--r-- 1 schwehr schwehr 3.6M 2011-09-13 08:11 0479_20080620_175447_RVCS.all.bz2
+-rw-r--r-- 1 schwehr schwehr 4.0M 2011-09-06 15:03 13003_1.KAP
+-rw-r--r-- 1 schwehr schwehr 7.3K 2011-09-06 15:03 13003.BSB
+-rw-r--r-- 1 schwehr schwehr  77K 2011-09-12 14:09 20110912-1801.jpeg
+drwxr-xr-x 2 schwehr schwehr 4.0K 2011-09-13 08:18 a-folder
+-rw-r--r-- 1 schwehr schwehr 737K 2011-09-12 17:47 bags.sqlite
+-rw-r--r-- 1 schwehr schwehr 2.6K 2011-09-12 14:01 delicious.htm
+-rw-r--r-- 1 schwehr schwehr  117 2011-09-13 08:34 dos-text.txt
+-rw-r--r-- 1 schwehr schwehr    0 2011-09-13 08:18 empty-file
+-rw-r--r-- 1 schwehr schwehr 5.1M 2011-09-10 14:25 Field_Procedures_Manual_May_2011.pdf
+...
+#+END_SRC
+
+You will also see colors again for the file types.  
+
+** The default way to open a file                                      :open:
+
+There is a command line program that can attempt to open files based
+on its best guess for how a file should be opened: =xdg-open= (or just
+=open= on the Mac)  This works well
+for some image types.
+
+#+BEGIN_SRC sh
+xdg-open Field_Procedures_Manual_May_2011.pdf
+#+END_SRC
+
+You might be accustomed to using the "double click" in graphical
+interfaces, but knowing how to open files in the default application
+is very helpful for working from a scripting environment.
+
+** The NOAA Field Procedures Manual
+
+A quick aside: Stop and take a quick look at the NOAA Field Procedures
+Manual.  There are a number of very helpful documents available for
+material related to this course.  NOAA has put together this document
+to talk about how they do Hydrographic Surveying.  This might be
+different for you if you do hydrographic surveying for some other
+organization or surveying for goals other than hydrography.  However,
+this and many documents like it provide excellent reference and
+background material.
+
+If you are at CCOM, you can see some of the documents we have links to
+in the wiki:
+
+http://wiki.ccom.unh.edu/index.php/Survey_manuals
+
+We will talk more about helpful references and how to manage these
+documents throughout the rest of the semester.
+
+** Using file                                                          :file:
+
+Now we can try asking the computer more about these files.  There is a
+The *file* command tries to look at a little bit of the beginning of
+each file to see if it can figure out what type of data is in that
+file.
+
+*WARNING:* Always be aware that file names are just a hint to a file
+type.  Renaming a file to some random characters does not change the
+contents of the file.  Some programs count on the "extensions" on the
+end of the file name (e.g. ".tar"), but you will find that those are
+not always consistent with the content of the file.
+
+#+BEGIN_SRC sh
+file *
+0479_20080620_175447_RVCS.all.bz2:    bzip2 compressed data, block size = 900k
+13003_1.KAP:                          data
+13003.BSB:                            ASCII English text, with CRLF line terminators
+20110912-1801.jpeg:                   JPEG image data, JFIF standard 1.01
+a-folder:                             directory
+bags.sqlite:                          SQLite 3.x database
+delicious.htm:                        exported SGML document text
+dos-text.txt:                         ASCII text, with CRLF line terminators
+empty-file:                           empty
+Field_Procedures_Manual_May_2011.pdf: PDF document, version 1.4
+foo.csv:                              ASCII text
+...
+#+END_SRC
+
+There are a large number of files in this directory, but just look at
+the first file that comes up: 
+
+#+BEGIN_EXAMPLE 
+0479_20080620_175447_RVCS.all.bz2:    bzip2 compressed data, block size = 900k
+#+END_EXAMPLE
+
+The =file= command does not get past the fact that the file is
+compressed.  We need to uncompress all of the files that have been
+shrunk with bzip2 or another program called *gzip*.  gzip files tend
+to end in ".gz".
+
+#+BEGIN_SRC sh
+ls -l *.bz2 *.gz
+-rw-r--r-- 1 schwehr schwehr  3715206 2011-09-13 08:11 0479_20080620_175447_RVCS.all.bz2
+-rw-r--r-- 1 schwehr schwehr 42990137 2011-09-13 08:08 reson7111-201005.s7k.bz2
+-rw-r--r-- 1 schwehr schwehr     8868 2010-10-16 12:16 terrain.grd.gz
+-rwxr-xr-x 1 schwehr schwehr 15541594 2011-09-13 08:11 y1104-02.segy.bz2
+
+bunzip2 *.bz2
+gunzip *.gz
+
+ls -l *.bz2 *.gz
+#+END_SRC
+
+Now when we run *file* on 0479_20080620_175447_RVCS.all, we get:
+
+#+BEGIN_SRC sh
+file 0479_20080620_175447_RVCS.all 
+0479_20080620_175447_RVCS.all: data
+#+END_SRC
+
+So, it turns out that =file= does not know anything about our ".all"
+file.  It's binary data, but we can try some other means to see if we
+can identify the file... we can look into the file.  If we try the
+pager command =less=, it will ask us if we are sure we want to look at
+the binary data.  Yes, we would like to take a look.
+
+#+BEGIN_SRC sh
+less 0479_20080620_175447_RVCS.all 
+"0479_20080620_175447_RVCS.all" may be a binary file.  See it anyway?
+#+END_SRC
+
+Answer yes, and you will see lots of weird stuff with some characters
+in there.  Type a "q" to quit out of less and we will try another
+helpful command to try to hide the "noise" of the binary data and see
+if there is any useful text in the file.  The command =strings= will
+go through a file and return only readable characters from a file.  We
+can see how many strings there are first by "piping" the output from
+strings to a command called word count (=wc=).  
+
+#+BEGIN_SRC sh
+strings 0479_20080620_175447_RVCS.all | wc
+  21912   26248  143940
+#+END_SRC
+
+The vertical bar is the "pipe" command.  =wc= tells us the number of
+lines followed by the number of words in the middle and the number of
+characters on the right.  21 thousand matches is too many to look at,
+so we should just look at the first few strings returned using the
+head command (there is also an equivalent =tail= command for the other
+end of the stream).
+
+#+BEGIN_SRC sh
+strings 0479_20080620_175447_RVCS.all | wc
+  21912   26248  143940
+schwehr@ubuntu:~/examples-20110913$ strings 0479_20080620_175447_RVCS.all | head
+WLZ=0.57,SMH=481, ... DSV=3.0.7 040104,SID=Hydro2008_Day2,COM=Day1 of Summer Hydro 2008. 
+Area1
+06/14/1501,
+G":s
+" xj
+K!)k
+u!Wk
+H"5m
+Z!?!
+.!h!
+#+END_SRC
+
+I have replaced a whole lot of text with "..." above, but this first
+line returned tells us quite a bit about this file.  From this, I can
+know that the file has something to do about the CCOM Summer Hydro
+class in 2008.  We don't have anything that tells us much more, but
+now we have something we can use for a web search or to ask around
+about the Summer Hydro class.
+
+** using grep to search for strings                                    :grep:
+
+We can use a program called "grep" to search for text patterns in the
+results of the =file= command.  The pictures in the file return a line
+that contains the word "image".   For example, I found this JPEG image:
+
+#+BEGIN_EXAMPLE 
+20110912-1801.jpeg:                   JPEG image data, JFIF standard 1.01
+#+END_EXAMPLE
+We can pass the output through a pipe
+to the grep command and ask it to search for the word "image".
+
+#+BEGIN_SRC sh
+file * | grep image
+20110912-1801.jpeg:                   JPEG image data, JFIF standard 1.01
+H11296_5m-hillshade.tif:              TIFF image data, little-endian
+#+END_SRC
+
+** imagemagick to examine images
+
+We have a JPEG image and a tiff image.  That doesn't tell us much
+about those images, but we can find out more with other tools.  The
+first tool that we will use is [[http://www.imagemagick.org/][ImageMagick]].  It comes with a command
+called identify.
+
+#+BEGIN_SRC sh
+identify  *.jpeg *.tif 
+20110912-1801.jpeg JPEG 1280x960 1280x960+0+0 8-bit DirectClass 78.4KB 0.000u 0:00.000
+H11296_5m-hillshade.tif[1] TIFF 3205x1278 3205x1278+0+0 8-bit Grayscale DirectClass 4.107MB 0.000u 0:00.000
+identify: H11296_5m-hillshade.tif: unknown field with tag 33550 (0x830e) encountered. `TIFFReadDirectory' @ warning/tiff.c/TIFFWarnings/704.
+identify: H11296_5m-hillshade.tif: unknown field with tag 33922 (0x8482) encountered. `TIFFReadDirectory' @ warning/tiff.c/TIFFWarnings/704.
+identify: H11296_5m-hillshade.tif: unknown field with tag 34735 (0x87af) encountered. `TIFFReadDirectory' @ warning/tiff.c/TIFFWarnings/704.
+...
+#+END_SRC
+
+Ignore the warnings with "unknown field" in them.  This is a geotiff
+with information that ImageMagick does not know about.  identify has
+told us the size of the images a little about the type of content.
+Better yet to take a look at the images.
+
+#+BEGIN_SRC sh
+display  *.jpeg *.tif 
+#+END_SRC
+
+The jpeg turns out to be an image from the camera above the bridge of
+the USCG Ice Breaker Healy.  The tiff looks weird, but is actually a
+gray scale image of some Lidar data from the area near the UNH campus.
+
+** Using gdal to ask more about the images                             :gdal:
+
+The Geospatial Data Abstraction Library ( [[http://www.gdal.org/][GDAL]] ) library, has tools
+for identifying both raster (e.g. images) and vector (e.g. line) data
+that has spatial data attached to it.  First try =gdalinfo= on the
+JPEG image:
+
+#+BEGIN_EXAMPLE 
+gdalinfo 20110912-1801.jpeg 
+Driver: JPEG/JPEG JFIF
+Files: 20110912-1801.jpeg
+Size is 1280, 960
+Coordinate System is `'
+Metadata:
+  EXIF_XResolution=(72)
+  EXIF_YResolution=(72)
+  EXIF_ResolutionUnit=2
+  EXIF_YCbCrPositioning=1
+  EXIF_GPSVersionID=0x2 0x2 00 00
+  EXIF_GPSLatitudeRef=N
+  EXIF_GPSLatitude=(81) (14) (24.5814)
+  EXIF_GPSLongitudeRef=W
+  EXIF_GPSLongitude=(126) (47) (30.5148)
+Image Structure Metadata:
+  SOURCE_COLOR_SPACE=YCbCr
+  INTERLEAVE=PIXEL
+  COMPRESSION=JPEG
+Corner Coordinates:
+Upper Left  (    0.0,    0.0)
+Lower Left  (    0.0,  960.0)
+Upper Right ( 1280.0,    0.0)
+Lower Right ( 1280.0,  960.0)
+Center      (  640.0,  480.0)
+Band 1 Block=1280x1 Type=Byte, ColorInterp=Red
+  Image Structure Metadata:
+    COMPRESSION=JPEG
+Band 2 Block=1280x1 Type=Byte, ColorInterp=Green
+  Image Structure Metadata:
+    COMPRESSION=JPEG
+Band 3 Block=1280x1 Type=Byte, ColorInterp=Blue
+  Image Structure Metadata:
+    COMPRESSION=JPEG
+#+END_EXAMPLE
+
+JPEG images have special data called "EXIF" tags that can record more
+than just the image.  In this case it has save the GPS location of the
+ship from when the picture was taken.  The ship was at roughly 81
+North and 126 West when the picture was taken.  That is way up in the
+Arctic!
+
+Now take a look at the results for the "GeoTiff":
+
+#+BEGIN_EXAMPLE 
+gdalinfo H11296_5m-hillshade.tif 
+Driver: GTiff/GeoTIFF
+Files: H11296_5m-hillshade.tif
+Size is 3205, 1278
+Coordinate System is:
+GEOGCS["WGS 84",
+    DATUM["WGS_1984",
+        SPHEROID["WGS 84",6378137,298.2572235629972,
+            AUTHORITY["EPSG","7030"]],
+        AUTHORITY["EPSG","6326"]],
+    PRIMEM["Greenwich",0],
+    UNIT["degree",0.0174532925199433],
+    AUTHORITY["EPSG","4326"]]
+Origin = (-70.778190923162583,43.023240535377035)
+Pixel Size = (0.000058406003444,-0.000058406003444)
+Metadata:
+  AREA_OR_POINT=Area
+Image Structure Metadata:
+  INTERLEAVE=BAND
+Corner Coordinates:
+Upper Left  ( -70.7781909,  43.0232405) ( 70d46'41.49"W, 43d 1'23.67"N)
+Lower Left  ( -70.7781909,  42.9485977) ( 70d46'41.49"W, 42d56'54.95"N)
+Upper Right ( -70.5909997,  43.0232405) ( 70d35'27.60"W, 43d 1'23.67"N)
+Lower Right ( -70.5909997,  42.9485977) ( 70d35'27.60"W, 42d56'54.95"N)
+Center      ( -70.6845953,  42.9859191) ( 70d41'4.54"W, 42d59'9.31"N)
+Band 1 Block=3205x2 Type=Byte, ColorInterp=Gray
+  NoData Value=0
+#+END_EXAMPLE
+
+The results for the JPEG picture were different than for this GeoTiff.
+The picture is located just at one point on the Earth.  In the tif, we
+see that there is a Coordinate System definition (WGS84) and that
+there 4 corners of the rectangle defined to say where this area is
+(Newcastle, NH to the Isle of Shoals).
+
+* Creating a script
+
+Now we would like to start creating a script to be able to record and
+rerun basic operations that we have been doing on the command line.  
+
+First you can review what we have done today in the shell with the
+=history= command.  Your results will look different than what I have here:
+
+#+BEGIN_SRC sh
+  420  gunzip *.gz
+  422  bunzip2 *.bz2
+  423  file 0479_20080620_175447_RVCS.all 
+  424  less 0479_20080620_175447_RVCS.all 
+  426  strings 0479_20080620_175447_RVCS.all | wc
+  427  strings 0479_20080620_175447_RVCS.all | head
+  428  file *
+  433  file * | grep image
+  438  identify  *.jpeg *.tif 
+  439  display  *.jpeg *.tif 
+  440  gdalinfo 20110912-1801.jpeg 
+  441  ls *.tif
+  442  gdalinfo H11296_5m-hillshade.tif 
+  443  history
+#+END_SRC
+
+If we want to make it easy to rerun some commands, we will want to
+start creating "scripts".
+
+** Emacs - a powerful text editor
+
+First, we should add GNU Emacs to the quick start short cut location
+on the toolbar at the top of the screen.
+
+Right click on the gray bar, and select "Add to Panel...".  Double
+click "Application Launcher... Copy a launcher from he applications
+menu".  Press the small arrow to the left of "Accessories" to expand
+the items inside of accessories.  Double click on "GNU Emacs 23".
+Click "Close" to stop adding programs to the "Panel".
+
+Click the "E" icon to start Emacs.  You are now faced with a very
+powerful tool that can handle very complicated editing jobs.  Emacs is
+very complicated, but it is worth the time to learn.
+
+On your own time, I strongly suggest that you go through the "Emacs
+Tutorial" and "Emacs Guided Tour".  Emacs has key strokes that you can
+use for every command, but starting off, you can use the menus at the
+top.
+
+To start with, open a new file.  "File" -> "Visit New File".  Click
+the "Browse for other folders" arrow to see directories.  Double click
+"examples-20110913".  Now type in "my-script.sh" into the name.
+
+You are now looking at a blank space where you can create your
+script.  Start off by creating a very basic script to print on line of
+text just to get started:
+
+#+BEGIN_SRC sh
+echo "hello from my script"
+#+END_SRC
+
+Save this file "File" -> "Save".
+
+Now switch back to your terminal and take a look at the file your
+created.  It will be the newest file, so we can do a list files, but
+add sort by time (-t) and reverse the sort order (-r) to put the
+newest files at the bottom.  I will pipe the output through =tail= to
+give us only the last 10 lines.
+
+#+BEGIN_SRC sh
+ls -ltr | tail
+-rw-r--r-- 1 schwehr schwehr    46393 2011-09-13 08:29 sample-audio.m4a
+-rw-r--r-- 1 schwehr schwehr    70310 2011-09-13 08:30 sample-audio.mp3
+-rw-r--r-- 1 schwehr schwehr   416460 2011-09-13 08:31 sample-audio.wav
+-rw-r--r-- 1 schwehr schwehr   208512 2011-09-13 08:31 sample-audio.ac3
+-rw-r--r-- 1 schwehr schwehr       78 2011-09-13 08:33 foo.csv
+-rw-r--r-- 1 schwehr schwehr      117 2011-09-13 08:34 dos-text.txt
+-rw-r--r-- 1 schwehr schwehr      294 2011-09-13 08:36 sample.org
+-rw-r--r-- 1 schwehr schwehr      980 2011-09-13 08:36 sample.tex
+-rw-r--r-- 1 schwehr schwehr    64942 2011-09-13 08:37 sample.pdf
+-rw-r--r-- 1 schwehr schwehr       28 2011-09-13 10:38 my-script.sh
+#+END_SRC
+
+You should see my-script.sh.  Take a look the file.  We can use =cat=
+to take a look.
