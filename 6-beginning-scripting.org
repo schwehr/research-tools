@@ -18,7 +18,6 @@
 
 Today we will
 
-- 
 - Emacs org-mode - Taking notes
 - How to create a script
 - Getting images from the healy
@@ -331,7 +330,9 @@ Press the letter "b"
 
 You now should see Firefox open up and show the file "example.html".
 
-You can also export to a pdf.
+You can also export to a pdf:
+
+"Org" -> "Export/Publish" -> press "d"
 
 ** Tables
 
@@ -363,10 +364,19 @@ an example, it will not show the normal formatting.  Try this:
 \#+END_EXAMPLE
 #+END_EXAMPLE
 
-** TODO Creating a log - HOMEWORK
+
+
+* TODO Creating a log - HOMEWORK
+  DEADLINE: <2011-09-22 Thu>
 
 I keep a very detailed log of what I work on in org mode.  For
-Tuesday, you will need to turn in a log file
+Thursday, you will need to turn in a log file
+
+You will turn in a tar file with a directory with three files in it.
+
+The directory will named your username, a dash, and 
+
+'''WARNING:''' check back Friday at 5 PM for the complete assignment for homework.
 
 
 #* Working with images
