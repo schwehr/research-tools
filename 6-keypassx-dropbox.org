@@ -1,6 +1,6 @@
 #+STARTUP: showall
 
-#+TITLE:     Class 6: Beginning Scripting (DRAFT)
+#+TITLE:     Class 6: KeyPassX and Cloud storage with DropBox (DRAFT)
 #+AUTHOR:    Kurt Schwehr
 #+EMAIL:     schwehr@ccom.unh.edu
 #+DATE:      <2011-09-15 Thu>
@@ -17,11 +17,6 @@
 * Introduction
 
 Today we will
-
-- Emacs org-mode - Taking notes
-- How to create a script
-- Getting images from the healy
-- Homework that is due <2011-09-20 Tue 11:10>
 
 * Managing passwords with KeePassX                       :keepassx:passwords:
 
@@ -210,6 +205,10 @@ more space than that for the class.
 
 ** Installing Drop Box
 
+WARNING: If you use these notes after  September 2011, there is like a
+newer version of dropbox.  You will want to skip to the next section
+and download dropbox through a web browser.
+
 If dropbox is not installed in your virtual machine (my first version
 of the Ubuntu VM does *not* have dropbox), you need to install it.
 This is not open source software, so you will have to go through a 
@@ -223,8 +222,48 @@ You will need to get the 32-bit Ubuntu version (referred to as "x86 .deb")
 e.g.
 
 #+BEGIN_SRC sh
-wget -o nautilus-dropbox_0.6.9_i386.deb https://www.dropbox.com/download?dl=packages/nautilus-dropbox_0.6.9_i386.deb
+wget --output-document=nautilus-dropbox_0.6.9_i386.deb https://www.dropbox.com/download?dl=packages/nautilus-dropbox_0.6.9_i386.deb
 #+END_SRC
+
+It is a good idea to verify that what we downloaded is what we
+expected.  First, we can use the file command from the last class to
+ask if it knows what type of file this is:
+
+#+BEGIN_SRC sh
+file *.deb
+nautilus-dropbox_0.6.9_i386.deb: Debian binary package (format 2.0)
+#+END_SRC
+
+We will talk more about checksums, but there the basic idea is that
+you can run an algorithm on the contents of a file to make sure that
+the file probably contains the same bytes that you expect it to.  The
+[[http://en.wikipedia.org/wiki/MD5][md5 algorithm]] is one of the most commonly used today.  Give it a try
+and see if you get the same results:
+
+#+BEGIN_SRC sh
+md5sum *.deb
+64f62fc8921d9ddc1b24c2b911c48921  nautilus-dropbox_0.6.9_i386.deb
+#+END_SRC
+
+If you were able to download the deb correctly, you can skip the next
+step.  If you got a file that did not match, you will need to try to
+download the deb via a web browser in the next section.
+
+** Getting dropbox via a web browser
+
+If you are working through these notes after September 2011, you will
+like be facing a newer version of the "deb" package.  Get it via a web
+browser inside of your virtual machine (e.g. using Firefox).
+
+https://www.dropbox.com/downloading?os=lnx
+
+This virtual machine is a 32-bit Ubuntu image, so you want to get the
+'''Ubuntu (x86 .deb)''' version.  "x86_64" implies an Intel processor
+in 64 bit mode.
+
+[[file:figures/dropbox-ubuntu.jpg]]
+
+** run the installer
 
 Then you need to install the software:
 
@@ -233,161 +272,19 @@ sudo dpkg -i nautilus-dropbox_0.6.9_i386.deb
 #+END_SRC
 
 Answer yes to what it asks and then click the button to "Restart
-Nautilus".  Then click "Start Dropbox".  You can then sign in and
-dropbox will start to synchronize your files.  There will now be a
-icon on the top right of your screen that is supposed to look like a
-box with an open top.  This will give you a short cut to 
+Nautilus".  Click the "Next" button.  Then click "Start Dropbox".  You
+can then sign in and dropbox will start to synchronize your files.
+There will now be a icon on the top right of your screen that is
+supposed to look like a box with an open top.  This will give you a
+short cut to see what files have recently been changed in your account
+and see other dropbox functions.
 
-* Introduction to Emacs
+'''NOTE:''' you can just stick with the 2GB free account.
 
-** Initial setup
+* Finish up
 
-I missed one emacs package that we need for today.  Without a package
-called htmlize, org-mode output will not have code colored.  It is a
-part of the emacs goodies package.  texlive is used to produce PDF
-documents.
+You now need to put your keypassx database into dropbox.
 
 #+BEGIN_SRC sh
-sudo apt-get install emacs-goodies-el
-sudo apt-get install texlive texlive-latex-extra
+mv yourname.kdb ~/Dropbox/
 #+END_SRC
-
-** Opening files
-
-I will give an introduction to using emacs for basic files here.  This
-really needs a video of the section to show what I'm doing.
-
-- opening a directory
-- searching with C-s
-
-** Basic org-mode - outlining
-
-The format for org-mode is very similar to Mediawiki.  However, the
-characters used to mark up the text are slightly different.  There are
-large numbers of markup languages, but we will ignore the others right
-now.
-
-Start by opening a new org mode file.  Org-mode starts by default if
-the file name ends in ".org".  "File" -> "Visit New File" and pick
-type in "example.org".
-
-An alternative approach is to use the keyboard shortcut:  
-
-#+BEGIN_EXAMPLE 
-C-x C-f example.org
-#+END_EXAMPLE
-
-At the bottom of the window, you will see:
-
-#+BEGIN_EXAMPLE 
---:--- example.org All L1 (Org)------------
-#+END_EXAMPLE
-
-You are staring at a blank page, but there are helpers under the "Org"
-and "Tbl" (meaning table) menus that just appeared at the top of the
-Window.  Select =Org= -> =New Heading=.  You will see a "*" appear.
-Headings are made up of 1 or more "*" characters followed by the text.
-
-#+BEGIN_EXAMPLE 
-* Introduction
-#+END_EXAMPLE
-
-Sub-headings have two like this: 
-
-#+BEGIN_EXAMPLE 
-** This is a sub heading
-#+END_EXAMPLE
-
-You can type paragraphs in any heading or sub-heading.
-
-Lists start with "-".  A list
-looks like this:
-
-#+BEGIN_EXAMPLE 
-- first item
-- another item
-- yet another
-#+END_EXAMPLE
-
-The list will look like this:
-
-- first item
-- another item
-- yet another
-
-** Seeing the results?
-
-But how do we see what the results are???  We have to "publish" or
-"export" the document.  There are many formats, but we will start with
-HTML.
-
-"Org" -> "Export/Publish"
-
-You will now see lots of options for the output.  Start off by trying
-"export as HTML and open in browser".  
-
-Press the letter "b"
-
-You now should see Firefox open up and show the file "example.html".
-
-You can also export to a pdf:
-
-"Org" -> "Export/Publish" -> press "d"
-
-** Tables
-
-Tables are built with the vertical "|" character.  Entries with all
-"---" characters create horizontal rulers.
-
-#+BEGIN_EXAMPLE 
-| Column header  | something else           |
-|----------------+--------------------------|
-| hello          | world                    |
-| a second entry | what do you want to say? |
-#+END_EXAMPLE
-
-Would look like this:
-
-| Column header  | something else           |
-|----------------+--------------------------|
-| hello          | world                    |
-| a second entry | what do you want to say? |
-
-** Examples and source code
-
-You can also create example blocks and source code blocks.  Inside of
-an example, it will not show the normal formatting.  Try this:
-
-#+BEGIN_EXAMPLE 
-\#+BEGIN_EXAMPLE 
-* This is a heading
-\#+END_EXAMPLE
-#+END_EXAMPLE
-
-
-
-* TODO Creating a log - HOMEWORK
-  DEADLINE: <2011-09-22 Thu>
-
-I keep a very detailed log of what I work on in org mode.  For
-Thursday, you will need to turn in a log file
-
-You will turn in a tar file with a directory with three files in it.
-
-The directory will named your username, a dash, and 
-
-'''WARNING:''' check back Friday at 5 PM for the complete assignment for homework.
-
-
-#* Working with images
-# http://mgds.ldeo.columbia.edu/healy/reports/aloftcon/2011/20110912-1801.jpeg
-
-
-##+BEGIN_SRC sh
-#http://mgds.ldeo.columbia.edu/healy/reports/aloftcon/2011/20110910-0801.jpeg
-##+END_SRC
-
-
-#** Animated gif of images
-
-# onvert -delay 50 -loop 0 

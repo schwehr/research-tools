@@ -24,6 +24,11 @@ that you can pass copies to your co-workers.
 - [[file:audio][Audio podcasts of class]]
 - [[file:virtual-machines][Ubuntu Virtual Machines]] for VMWare
 
+* Virtual Machine account:
+
+- user: researchtools
+- pass: !rt2011vm
+
 * Lectures:
 
 #+ATTR_HTML: border="1" rules="all" frame="all"
@@ -34,7 +39,9 @@ that you can pass copies to your co-workers.
 |  3. | 2011-09-06 | [[./3-basic-command-line.html][Wiki editing, Weather Demo, Basic Command Line]] (draft) | [ [[audio/3-wiki-weather-shell.mp3][mp3]] ][ [[audio/3-wiki-weather-shell.m4a][m4a]] ][ [[audio/3-wiki-weather-shell.ogg][ogg]] ] |
 |  4. | 2011-09-08 | VMWare Ubuntu Image (*Coming soon*)                    | [ [[audio/4-vmware-ubuntu-virtual-machine.mp3][mp3]] ][ [[audio/4-vmware-ubuntu-virtual-machine.m4a][m4a]] ][ [[audio/4-vmware-ubuntu-virtual-machine.ogg][ogg]] ] |
 |  5. | 2011-09-13 | [[./5-filetypes-emacs.html][File types, Intro to Emacs, beginning scripts]]          | [ [[audio/5-identifying-file-types.mp3][mp3]] ][ [[audio/5-identifying-file-types.m4a][m4a]] ][ [[audio/5-identifying-file-types.ogg][ogg]] ] |
-|  6. | 2011-09-15 | [[./6-beginning-scripting.html][Dropbox, Beginning Scripting, Emacs]]                    | (*Coming soon*)       |
+|  6. | 2011-09-15 | [[./6-keypassx-dropbox.html][KeyPassX and Dropbox]]                                   | [ [[audio/6-keypassx-dropbox.mp3][mp3]] ][ [[audio/6-keypassx-dropbox.m4a][m4a]] ][ [[audio/6-keypassx-dropbox.ogg][ogg]] ] |
+
+
 
 #1. [[./introduction.html][Introduction]] - outline only
 #1. [[./communication.html][Communications tools]] - outline only

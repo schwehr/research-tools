@@ -1,0 +1,306 @@
+#+STARTUP: showall
+
+#+TITLE:     Class 6: KeyPassX and Cloud storage with DropBox (DRAFT)
+#+AUTHOR:    Kurt Schwehr
+#+EMAIL:     schwehr@ccom.unh.edu
+#+DATE:      <2011-09-15 Thu>
+#+DESCRIPTION: Marine Research Data Manipulation and Practices
+#+KEYWORDS: 
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:nil toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   TeX:t LaTeX:nil skip:t d:nil todo:t pri:nil tags:not-in-toc
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+LINK_HOME: http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/
+
+* todo items
+
+- Why am I teaching these tools? http://slashgeo.org/2011/09/16/FOSS4G-2011-Brian-Timoney-GeoSpatial-One-Stop-Irene-USA
+- create homework
+- the command to list what is installed
+- http://manpages.ubuntu.com and use the ones for 11.04
+- http://stackoverflow.com/
+- finding out about software in Ubuntu
+
+* Introduction
+
+- Emacs org-mode - Taking notes
+- How to create a script
+- Getting images from the healy
+- Homework that is due <2011-09-22 Thu 11:10>
+- Safari Books
+
+* A quick look at Ubuntu and Software                       :ubuntu:sysadmin:
+
+There have been questions in class as to how to find out which
+software is installed.  I'll give you a quick intruduction here.
+
+** Which version of Linux?
+
+First, how do you find out which version of linux you are using?  Most
+linux systems have a file that describes the version of linux.  It's
+usually a "release" file in the /etc directory.  "etc" is a directory
+tree that contains most of the system wide settings.  On Redhat and
+CentOS Linux systems, there is a /etc/redhad-release file:
+
+#+BEGIN_SRC sh
+ls -l /etc/*release
+# -rw-r--r-- 1 root root 27 Apr 25  2010 /etc/redhat-release
+
+cat /etc/redhat-release 
+CentOS release 5.5 (Final)
+
+cat /etc/issue
+CentOS release 5.5 (Final)
+Kernel \r on an \m
+#+END_SRC
+
+Ubuntu and any other system that follows the
+[[http://en.wikipedia.org/wiki/Linux_Standard_Base][Linux Standard Base (LSB)]] guidelines for Linux have one or both of two
+files named
+/etc/lsb-release and /etc/issue that document the version of the system:
+
+#+BEGIN_SRC sh
+cat /etc/issue
+Ubuntu 11.04
+
+cat /etc/lsb-release 
+DISTRIB_ID=Ubuntu
+DISTRIB_RELEASE=11.04
+DISTRIB_CODENAME=natty
+DISTRIB_DESCRIPTION="Ubuntu 11.04"
+#+END_SRC
+
+** Command line exploration of software on the system and available for install
+
+There are many different ways to look at the software on a Ubuntu
+computer, but this is the way that I go about it.
+
+First, what is installed?
+
+#+BEGIN_SRC sh
+researchtools@ubuntu:~$ dpkg --get-selections | wc -l
+1789
+
+dpkg --get-selections | head
+adduser						install
+apel						install
+apparmor					install
+apparmor-utils					install
+apport						install
+apport-symptoms					install
+apt						install
+apt-transport-https				install
+apt-utils					install
+apt-xapian-index				install
+
+dpkg --get-selections | grep emacs
+emacs						install
+emacs-jabber					install
+emacs23						install
+emacs23-bin-common				install
+emacs23-common					install
+emacsen-common					install
+python-ropemacs					install
+#+END_SRC
+
+If you want to read through them all, use a pager (e.g. more, less or most):
+
+#+BEGIN_SRC sh
+dpkg --get-selections | less
+#+END_SRC
+
+If you know a package that is installed, you can use listfiles option
+to dpkg.  A common task is to list the programs available in a package.
+
+#+BEGIN_SRC sh
+dpkg --listfiles gmt | grep bin | head
+/usr/bin
+/usr/bin/GMT
+/usr/lib/gmt/bin
+/usr/lib/gmt/bin/gmt_shell_functions.sh
+/usr/lib/gmt/bin/gmtget
+/usr/lib/gmt/bin/gmtlogo
+/usr/lib/gmt/bin/isogmt
+/usr/lib/gmt/bin/psbbox.sh
+/usr/lib/gmt/bin/blockmean
+/usr/lib/gmt/bin/blockmedian
+#+END_SRC
+
+If you would like to know which package a file belongs to, you can ask
+the system.  We can combine that with the command =type= that tells
+you where in your path a program is located.  For example, the sudo command
+that gives you access to administrator capabilities (aka "root").  The
+"hashed" means that the shell has an internal table of commands to
+speed up searching.
+
+#+BEGIN_SRC sh
+type sudo
+sudo is hashed (/usr/bin/sudo)
+
+dpkg --search /usr/bin/sudo
+sudo: /usr/bin/sudo
+#+END_SRC
+
+There are also an interactive text based program to examine packages
+without a full graphical interface:
+
+http://wiki.debian.org/Aptitude
+ 
+** Graphical software management - Synaptic
+
+[[file:./figures/synaptic-package-manager.png]]
+
+* Introduction to Emacs
+
+** Initial setup
+
+I missed one emacs package that we need for today in the Virtual
+Machine.  Without a package called htmlize, org-mode output will not
+have code colored.  It is a part of the emacs goodies package.
+texlive is used to produce PDF documents.
+
+#+BEGIN_SRC sh
+sudo apt-get install emacs-goodies-el
+sudo apt-get install texlive
+sudo apt-get install texlive-latex-extra
+#+END_SRC
+
+** Opening files
+
+I will give an introduction to using emacs for basic files here.  This
+really needs a video of the section to show what I'm doing.
+
+- opening a directory
+- searching with C-s
+
+** Basic org-mode - outlining
+
+The format for org-mode is very similar to Mediawiki.  However, the
+characters used to mark up the text are slightly different.  There are
+large numbers of markup languages, but we will ignore the others right
+now.
+
+Start by opening a new org mode file.  Org-mode starts by default if
+the file name ends in ".org".  "File" -> "Visit New File" and pick
+type in "example.org".
+
+An alternative approach is to use the keyboard shortcut:  
+
+#+BEGIN_EXAMPLE 
+C-x C-f example.org
+#+END_EXAMPLE
+
+At the bottom of the window, you will see:
+
+#+BEGIN_EXAMPLE 
+--:--- example.org All L1 (Org)------------
+#+END_EXAMPLE
+
+You are staring at a blank page, but there are helpers under the "Org"
+and "Tbl" (meaning table) menus that just appeared at the top of the
+Window.  Select =Org= -> =New Heading=.  You will see a "*" appear.
+Headings are made up of 1 or more "*" characters followed by the text.
+
+#+BEGIN_EXAMPLE 
+* Introduction
+#+END_EXAMPLE
+
+Sub-headings have two like this: 
+
+#+BEGIN_EXAMPLE 
+** This is a sub heading
+#+END_EXAMPLE
+
+You can type paragraphs in any heading or sub-heading.
+
+Lists start with "-".  A list
+looks like this:
+
+#+BEGIN_EXAMPLE 
+- first item
+- another item
+- yet another
+#+END_EXAMPLE
+
+The list will look like this:
+
+- first item
+- another item
+- yet another
+
+** Seeing the results?
+
+But how do we see what the results are???  We have to "publish" or
+"export" the document.  There are many formats, but we will start with
+HTML.
+
+"Org" -> "Export/Publish"
+
+You will now see lots of options for the output.  Start off by trying
+"export as HTML and open in browser".  
+
+Press the letter "b"
+
+You now should see Firefox open up and show the file "example.html".
+
+You can also export to a pdf:
+
+"Org" -> "Export/Publish" -> press "d"
+
+** Tables
+
+Tables are built with the vertical "|" character.  Entries with all
+"---" characters create horizontal rulers.
+
+#+BEGIN_EXAMPLE 
+| Column header  | something else           |
+|----------------+--------------------------|
+| hello          | world                    |
+| a second entry | what do you want to say? |
+#+END_EXAMPLE
+
+Would look like this:
+
+| Column header  | something else           |
+|----------------+--------------------------|
+| hello          | world                    |
+| a second entry | what do you want to say? |
+
+** Examples and source code
+
+You can also create example blocks and source code blocks.  Inside of
+an example, it will not show the normal formatting.  Try this:
+
+: #+BEGIN_EXAMPLE 
+: * This is a heading
+: #+END_EXAMPLE
+
+
+
+* TODO Creating a log - HOMEWORK
+  DEADLINE: <2011-09-22 Thu>
+
+I keep a very detailed log of what I work on in org mode.  For
+Thursday, you will need to turn in a log file
+
+You will turn in a tar file with a directory with three files in it.
+
+The directory will named your username, a dash, and 
+
+'''WARNING:''' check back Friday at 5 PM for the complete assignment for homework.
+
+
+#* Working with images
+# http://mgds.ldeo.columbia.edu/healy/reports/aloftcon/2011/20110912-1801.jpeg
+
+
+##+BEGIN_SRC sh
+#http://mgds.ldeo.columbia.edu/healy/reports/aloftcon/2011/20110910-0801.jpeg
+##+END_SRC
+
+
+#** Animated gif of images
+
+# onvert -delay 50 -loop 0 
