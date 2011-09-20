@@ -1,21 +1,16 @@
 #+STARTUP: showall
 
-# Research Tools 2011 Homework Assignment by Kurt Schwehr
+# Research Tools 2011 Homework Assignment by Kurt Schwehr.  2011-Sep-20
+# Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License.
 
 #+TITLE:     Homework 2: command line and org-mode
 #+AUTHOR:    FIX: your name
 #+EMAIL:     FIX: your email
-#+DATE:      <2011-09-22 Thu>
-#+DESCRIPTION: Marine Research Data Manipulation and Practices
-#+KEYWORDS: 
-#+LANGUAGE:  en
-#+OPTIONS:   H:3 num:nil toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
-#+OPTIONS:   TeX:t LaTeX:nil skip:t d:nil todo:t pri:nil tags:not-in-toc
-#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
-#+EXPORT_SELECT_TAGS: export
-#+EXPORT_EXCLUDE_TAGS: noexport
+#+DATE:      FIX: use C-. to put in the date
 #+LINK_HOME: http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/
 
+* This assignment is due Thurs by 5PM EDT
+  DEADLINE: <2011-09-22 Thu 17:00>
 
 * Introduction
 
@@ -35,6 +30,25 @@ C-c= to mark the check box as done.
 *NOTE:* You should complete this assignment on your own first.
 But it is okay to check over each other's completed assignments.  I
 strongly recommend that you have another classmate check your work.
+
+This assignment depends on attention to detail.
+
+* TODO Download and get started
+
+- [ ] Log in to your virtual machine
+- [ ] Open a terminal
+- [ ] =mkdir -p hw/2=
+- [ ] =cd hw/2=
+- [ ] =wget http://tinyurl.com/hw-2-shell-and-org-mode-dotorg=
+- [ ] =mv hw-2-shell-and-org-mode-dotorg hw-2-shell-and-org-mode.org=
+- [ ] start emacs and open the homework
+
+Or if you want to do less typing, you can replace the wget and mv
+command with this:
+
+#+BEGIN_SRC sh
+wget ----output-file=hw-2-shell-and-org-mode.org http://tinyurl.com/3fjdphv 
+#+END_SRC
 
 * TODO A little org mode intro
 
@@ -101,7 +115,6 @@ Use the =file= command to find out what type of file this is.
 
 #+BEGIN_SRC sh
 FIX: put answer here
-
 #+END_SRC
 
 Results:
@@ -164,3 +177,171 @@ Results:
 FIX: put results here
 #+END_EXAMPLE
 
+* TODO Creating your homework submission
+
+Follow this section very carefully.  You should be creating a
+submission that is layed out exactly as I have done.
+
+** TODO Check your assignment to make sure it is complete
+
+Use the emacs search command for the string "FIX:".  The only place
+where this string should be in your org-mode homework 2 file is in
+this section.  I use that string to mark sections where you need to be
+replacing it with something.
+
+Searching starts by holding =Control= and pressing =s= (written C-s).
+Then type what you want to search for. In this case, type "FIX:"
+(without the quotes). To search for the next instance of the string,
+press =C-s= again.  When you get to the end of the file, press =C-s=
+again and it will jump to the top of the document.
+
+** TODO Build the submission                                  :tar:bzip2:md5:
+
+First create an HTML export of your assignment.  In emacs you can
+type =C-c C-e=.  Remember to hold down the =control= key and press the
+letter that follows the dash.  You should now see the list of org
+export formats.  Press the letter =b= and you should see Firefox open
+up and show you your homework.  The full command:
+
+#+BEGIN_EXAMPLE 
+C-c C-e b
+#+END_EXAMPLE
+
+Switch back to the terminal.  You should be in ~/hw/2.  You will now
+create your submission.  Replace YOURNAME with your user name.
+*NOTE:* If you don't remember your username, it is what you used to log
+into researchtools.
+
+First, build the directory tree:
+
+#+BEGIN_SRC sh
+mkdir hw2-YOURNAME
+cp hw-2-shell-and-org-mode.org hw2-YOURNAME/hw2-YOURNAME.org
+cp hw-2-shell-and-org-mode.html hw2-YOURNAME/hw2-YOURNAME.html
+#+END_SRC
+
+Verify that your homework submission looks correct.  It should look
+something like this:
+
+#+BEGIN_SRC sh
+ls -l hw2-YOURNAME/
+total 20
+-rw-r--r-- 1 researchtools researchtools 11904 2011-09-16 05:57 hw2-YOURNAME.html
+-rw-r--r-- 1 researchtools researchtools  4740 2011-09-16 05:57 hw2-YOURNAME.org
+#+END_SRC
+
+Now we need to create a "tar" archive of your homework:
+
+#+BEGIN_SRC sh
+tar cf hw2-YOURNAME.tar hw2-YOURNAME
+#+END_SRC
+
+Verify the contents of your tar:
+
+#+BEGIN_SRC sh
+tar tfvv hw2-YOURNAME.tar
+drwxr-xr-x researchtools/researchtools 0 2011-09-16 05:57 hw2-YOURNAME/
+-rw-r--r-- researchtools/researchtools 4740 2011-09-16 05:57 hw2-YOURNAME/hw2-YOURNAME.org
+-rw-r--r-- researchtools/researchtools 11904 2011-09-16 05:57 hw2-YOURNAME/hw2-YOURNAME.html
+#+END_SRC
+
+Compress your tar archive using bzip2 with maximum compression
+
+#+BEGIN_SRC sh
+bzip2 -9 hw2-YOURNAME.tar
+#+END_SRC
+
+Compute the md5 checksum. 
+
+#+BEGIN_SRC sh
+md5sum hw2-YOURNAME.tar.bz2
+57e88b90db260511eee305108d0b2d91  hw2-YOURNAME.tar.bz2
+#+END_SRC
+
+*NOTE:* You checksum will be different!!!!
+
+#+BEGIN_EXAMPLE 
+57e88b90db260511eee305108d0b2d91  hw2-YOURNAME.tar.bz2
+#+END_EXAMPLE
+
+The ">" character redirects the output from the screen to a file.
+Save that md5 sum to a file.  Put the checksum in a file:
+
+#+BEGIN_SRC sh
+md5sum hw2-YOURNAME.tar.bz2 > hw2-YOURNAME.tar.bz2.md5
+#+END_SRC
+
+** Push the files to the researchtools server using scp                 :scp:
+
+Use the secure copy command to copy your files from the virtual
+machine to the researchtools server
+
+#+BEGIN_SRC sh
+scp hw2-YOURNAME.tar.bz2* YOURNAME@researchtools.ccom.nh:
+#+END_SRC
+
+You will see this the first time that you ssh or scp to a computer
+from a new computer or account.  Each computer has a unique signature
+that should not change.  When you say yes here, the computer will
+record the host signature.  If the host key changes, ssh or scp will
+warn you loudly about it.
+
+#+BEGIN_EXAMPLE
+The authenticity of host 'researchtools.ccom.nh (192.168.2.28)' can't be established.
+ECDSA key fingerprint is 16:c1:64:32:da:23:b9:58:0a:87:06:5b:05:1a:c5:35.
+Are you sure you want to continue connecting (yes/no)? yes
+
+YOURNAME@researchtools.ccom.nh's password: 
+hw2-YOURNAME.tar.bz2                                    100% 4705     4.6KB/s   00:00    
+hw2-YOURNAME.tar.bz2.md5                                100%   55     0.1KB/s   00:00    
+#+END_EXAMPLE
+
+** Setup your researchtools homework area
+
+Use =ssh= to log into the researchtools server.
+
+#+BEGIN_EXAMPLE 
+ssh YOURNAME@researchtools.ccom.nh
+The authenticity of host 'researchtools.ccom.nh (192.168.2.28)' can't be established.
+ECDSA key fingerprint is 16:c1:64:32:da:23:b9:58:0a:87:06:5b:05:1a:c5:35.
+Are you sure you want to continue connecting (yes/no)? yes
+#+END_EXAMPLE
+
+Make sure you are actually logged in to researchtools.
+
+#+BEGIN_SRC sh
+echo $HOSTNAME
+researchtools
+#+END_SRC
+
+Setup your homework area, unpack your homework, and move the tar to
+the "hw" directory.
+
+#+BEGIN_SRC sh
+mkdir hw
+cd hw
+tar xf ~/hw2-YOURNAME.tar.bz2
+mv ../hw22-YOURNAME.tar.bz2 .
+#+END_SRC
+
+Verify that your homework is in place.
+
+#+BEGIN_SRC sh
+ls -la hw2-YOURNAME/
+total 28
+drwxr-xr-x 2 schwehr domain users  4096 2011-09-16 05:57 .
+drwxr-xr-x 3 schwehr domain users  4096 2011-09-20 09:42 ..
+-rw-r--r-- 1 schwehr domain users 11904 2011-09-16 05:57 hw2-YOURNAME.html
+-rw-r--r-- 1 schwehr domain users  4740 2011-09-16 05:57 hw2-YOURNAME.org
+#+END_SRC
+
+** Tell your instructor that your homework is done
+
+Email me from your UNH email account (no hotmail/gmail/yahoo/etc
+email) with the subject line "research tools homework 2".
+
+My email address is [[mailto:kurt@ccom.unh.edu][kurt@ccom.unh.edu]]
+
+In the email, include the md5 sum of your .tar.bz2 archive.  I will
+then log into researchtools to check on your homework.  I will compute
+the md5 sum of your tar
