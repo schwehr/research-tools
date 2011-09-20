@@ -47,7 +47,7 @@ Or if you want to do less typing, you can replace the wget and mv
 command with this:
 
 #+BEGIN_SRC sh
-wget ----output-file=hw-2-shell-and-org-mode.org http://tinyurl.com/3fjdphv 
+wget --output-file=hw-2-shell-and-org-mode.org http://tinyurl.com/3fjdphv 
 #+END_SRC
 
 * TODO A little org mode intro

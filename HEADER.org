@@ -32,14 +32,16 @@ that you can pass copies to your co-workers.
 * Lectures:
 
 #+ATTR_HTML: border="1" rules="all" frame="all"
-| No. |       Date | Title/Notes                                            | Audio/Podcast         |
-|-----+------------+--------------------------------------------------------+-----------------------|
-|  1. | 2011-08-30 | [[./1-introduction.html][Introduction]] (draft)                                   | [ [[audio/1-introduction.mp3][mp3]] ][ [[audio/1-introduction.m4a][m4a]] ][ [[audio/1-introduction.ogg][ogg]] ] |
-|  2. | 2011-09-01 | [[./2-irc-wiki-basic-shell.html][IRC, Wiki, Basic Shell]] (draft)                         | [ [[audio/2-irc-wiki-basic-shell.mp3][mp3]] ][ [[audio/2-irc-wiki-basic-shell.m4a][m4a]] ][ [[audio/2-irc-wiki-basic-shell.ogg][ogg]] ] |
-|  3. | 2011-09-06 | [[./3-basic-command-line.html][Wiki editing, Weather Demo, Basic Command Line]] (draft) | [ [[audio/3-wiki-weather-shell.mp3][mp3]] ][ [[audio/3-wiki-weather-shell.m4a][m4a]] ][ [[audio/3-wiki-weather-shell.ogg][ogg]] ] |
-|  4. | 2011-09-08 | VMWare Ubuntu Image (*Coming soon*)                    | [ [[audio/4-vmware-ubuntu-virtual-machine.mp3][mp3]] ][ [[audio/4-vmware-ubuntu-virtual-machine.m4a][m4a]] ][ [[audio/4-vmware-ubuntu-virtual-machine.ogg][ogg]] ] |
-|  5. | 2011-09-13 | [[./5-filetypes-emacs.html][File types, Intro to Emacs, beginning scripts]]          | [ [[audio/5-identifying-file-types.mp3][mp3]] ][ [[audio/5-identifying-file-types.m4a][m4a]] ][ [[audio/5-identifying-file-types.ogg][ogg]] ] |
-|  6. | 2011-09-15 | [[./6-keypassx-dropbox.html][KeyPassX and Dropbox]]                                   | [ [[audio/6-keypassx-dropbox.mp3][mp3]] ][ [[audio/6-keypassx-dropbox.m4a][m4a]] ][ [[audio/6-keypassx-dropbox.ogg][ogg]] ] |
+|  No. |       Date | Title/Notes                                                 | Audio/Podcast         |
+|------+------------+-------------------------------------------------------------+-----------------------|
+|   1. | 2011-08-30 | [[./1-introduction.html][Introduction]] (draft)                                        | [ [[audio/1-introduction.mp3][mp3]] ][ [[audio/1-introduction.m4a][m4a]] ][ [[audio/1-introduction.ogg][ogg]] ] |
+|   2. | 2011-09-01 | [[./2-irc-wiki-basic-shell.html][IRC, Wiki, Basic Shell]] (draft)                              | [ [[audio/2-irc-wiki-basic-shell.mp3][mp3]] ][ [[audio/2-irc-wiki-basic-shell.m4a][m4a]] ][ [[audio/2-irc-wiki-basic-shell.ogg][ogg]] ] |
+|   3. | 2011-09-06 | [[./3-basic-command-line.html][Wiki editing, Weather Demo, Basic Command Line]] (draft)      | [ [[audio/3-wiki-weather-shell.mp3][mp3]] ][ [[audio/3-wiki-weather-shell.m4a][m4a]] ][ [[audio/3-wiki-weather-shell.ogg][ogg]] ] |
+|   4. | 2011-09-08 | VMWare Ubuntu Image (*Coming soon*)                         | [ [[audio/4-vmware-ubuntu-virtual-machine.mp3][mp3]] ][ [[audio/4-vmware-ubuntu-virtual-machine.m4a][m4a]] ][ [[audio/4-vmware-ubuntu-virtual-machine.ogg][ogg]] ] |
+|   5. | 2011-09-13 | [[./5-filetypes-emacs.html][File types, Intro to Emacs, beginning scripts]]               | [ [[audio/5-identifying-file-types.mp3][mp3]] ][ [[audio/5-identifying-file-types.m4a][m4a]] ][ [[audio/5-identifying-file-types.ogg][ogg]] ] |
+|   6. | 2011-09-15 | [[./6-keypassx-dropbox.html][KeyPassX and Dropbox]]                                        | [ [[audio/6-keypassx-dropbox.mp3][mp3]] ][ [[audio/6-keypassx-dropbox.m4a][m4a]] ][ [[audio/6-keypassx-dropbox.ogg][ogg]] ] |
+|   7. | 2011-09-20 | [[./7-emacs-and-org-mode.html][Emacs and org-mode]]                                          | Coming soon           |
+| HW 2 | 2011-09-20 | [[./hw/hw-2-shell-and-org-mode.html][Homework 2: shell and org-mode]] due Thurs 2011-09-22 5PM EDT |                       |
 
 
 

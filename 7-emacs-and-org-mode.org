@@ -1,35 +1,90 @@
 #+STARTUP: showall
 
-#+TITLE:     Class 6: KeyPassX and Cloud storage with DropBox (DRAFT)
+#+TITLE:     Class 7: Emacs and org-mode (DRAFT)
 #+AUTHOR:    Kurt Schwehr
 #+EMAIL:     schwehr@ccom.unh.edu
-#+DATE:      <2011-09-15 Thu>
+#+DATE:      <2011-09-20 Tue>
 #+DESCRIPTION: Marine Research Data Manipulation and Practices
-#+KEYWORDS: 
+#+KEYWORDS: emacs, org-mode
 #+LANGUAGE:  en
 #+OPTIONS:   H:3 num:nil toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
 #+OPTIONS:   TeX:t LaTeX:nil skip:t d:nil todo:t pri:nil tags:not-in-toc
 #+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
-#+EXPORT_SELECT_TAGS: export
-#+EXPORT_EXCLUDE_TAGS: noexport
 #+LINK_HOME: http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/
 
-* todo items
+* Reminder to log in to the IRC                                         :irc:
 
-- Why am I teaching these tools? http://slashgeo.org/2011/09/16/FOSS4G-2011-Brian-Timoney-GeoSpatial-One-Stop-Irene-USA
-- create homework
-- the command to list what is installed
-- http://manpages.ubuntu.com and use the ones for 11.04
-- http://stackoverflow.com/
-- finding out about software in Ubuntu
+Please *only* use the Ubuntu virtual machine in class today.  There is
+too much confusion when switching between Windows and Ubuntu.
+
+Make sure to not use "researchtools" as your login name for the IRC channel!
 
 * Introduction
 
-- Emacs org-mode - Taking notes
-- How to create a script
-- Getting images from the healy
-- Homework that is due <2011-09-22 Thu 11:10>
-- Safari Books
+Today, we will start off with a little more background on where to
+find material.  We will look at man pages online and the Safari Technical
+Books.  Last time, the question was asked how to find out about what
+software is available and which is already installed.  There is a
+section on that, but I will leave it to you to read outside of class.
+
+Next, we will dive into taking notes with emacs org-mode.  I take most
+of my work notes in org-mode and some students use it to keep track of
+the their research and draft material for their thesis.  All of the
+lecture notes for this class and the homework assignments are written
+in org-mode format.
+
+*HOMEWORK*:  The end of this document links to homework due on
+Thursday.  Please pay close attention to detail when doing the
+homework.
+
+* Ubuntu man pages online                                               :man:
+
+Sometimes you have a second computer next to you when working. One of
+the many ways that you can take advantage of that computer by using it
+to view "man pages".  Ubuntu has the man pages online.  We are using
+"Ubuntu 11.04" during this class, but man pages for other versions
+should be very similar.
+
+http://manpages.ubuntu.com/
+
+Try searching for =minmax=. If you use the search box in the top left,
+you will be taken to a menu of Ubuntu versions.  Select 11.04 and you
+will be taken to this page:
+
+http://manpages.ubuntu.com/manpages/natty/en/man1/minmax.1gmt.html
+
+* Technical/Computer Online Books at UNH - Safari
+
+[[http://safaribooksonline.com][Safari Books Online]] provides technical books online.  UNH has a
+subscription, so if you are a student, staff or faculty at UNH, you
+can get access to a wide range of technical books.  If you are not at
+UNH and your job does not provide the service, you can sign up for 
+a personal account.  This can save you a lot of money over buying a
+large number of books.  However, I do not think that you can take
+these with you off line and I still like "dead tree" books (aka the
+real thing).
+
+- https://blackboard.unh.edu
+- Click "Library" Tab
+- Click "Connect to Databases" Link - http://www.library.unh.edu/researchtools/databases/index.shtml
+- Click "[S-T]"
+- Click on "Safari Books Online"
+
+You should now be able to get access to a very large number of books.
+Some books that might be useful for this lecture '''NOTE:''' I have
+not necessarily read these books.
+
+- Ubuntu Linux
+  - [[http://proquest.safaribooksonline.com/book/operating-systems-and-server-administration/linux/9781449382827][Ubuntu: Up and Running]] by Robin Nixon, O'Reilly, April, 2010.
+  - [[http://proquest.safaribooksonline.com/book/operating-systems/9781430230397][Beginning Ubuntu Linux, Fifth Edition]] by Emilio Raggi; Keir Thomas;
+    Trevor Parsons; Andy Channelle; Sander van Vugt, Apress, September 2010.
+- Emacs
+  - [[http://proquest.safaribooksonline.com/book/operating-systems-and-server-administration/emacs/0596006489][Learning GNU Emacs, Third Edition]] by Debra Cameron; James Elliott;
+    Marc Loy; Eric S. Raymond; Bill Rosenblatt, Dec, 2004.
+  - [[http://proquest.safaribooksonline.com/book/operating-systems-and-server-administration/linux/9780137057870/the-editors/ch07?reader=][A Practical Guide to Linux® Commands, Editors, and Shell Programming, Second Edition, Ch 7]]
+    by Mark G. Sobell, Nov. 2009.
+
+[[file:./figures/safari-books.jpg]]
 
 * A quick look at Ubuntu and Software                       :ubuntu:sysadmin:
 
@@ -152,7 +207,51 @@ http://wiki.debian.org/Aptitude
 
 [[file:./figures/synaptic-package-manager.png]]
 
-* Introduction to Emacs
+* Introduction to Emacs                                       :emacs:orgmode:
+
+Emacs is a very powerful text editing environment.  It is the editor
+that I use for writing this class, for programming, and many other
+tasks.  As you use emacs, you will discover that that many of the
+shortcuts in emacs have been adopted by other programs (especially
+bash).
+
+I got started in seriously using an electronic work log in 2004 at the
+suggestion of [[http://humansystemdebugging.blogspot.com/][Anne Wright]], while I was working at NASA JPL.  Paper
+logs are really helpful, but they are hard to search.
+
+We will start out jumping right into writing a log in emacs.  I use
+emacs [[http://orgmode.org/][org-mode]] to keep most of my work logs.  I don't use as many
+features of org-mode as I would like, but it really pushes me to take
+better notes.  I started using org-mode for my work log in 2010 (I
+found some old notes files and have since converted them into org
+mode.  e.g. 1998, 2000, and 2001).
+
+From the number of lines of log files, you can see that I take
+electronic logs very seriously.
+
+#+BEGIN_EXAMPLE 
+wc -l kurt-????.{txt,org}
+     192 kurt-1998.org
+     149 kurt-2000.org
+     327 kurt-2001.org
+      62 kurt-2002.txt
+     475 kurt-2003.txt
+   12139 kurt-2004.txt
+    6644 kurt-2005.txt
+   19332 kurt-2006.txt
+   28292 kurt-2007.txt
+   28746 kurt-2008.txt
+   18740 kurt-2009.txt
+   30945 kurt-2010.org
+   21929 kurt-2011.org
+#+END_EXAMPLE
+
+Org-mode is much more useful than just straight text.  It can produce
+a table of contents and helps me keep a much more organized log.
+
+[[file:./figures/org-mode-contents.png]]
+
+[[file:./figures/org-mode-example-entry.png]]
 
 ** Initial setup
 
@@ -278,29 +377,24 @@ an example, it will not show the normal formatting.  Try this:
 : #+END_EXAMPLE
 
 
+* Alternative strategies for note taking
 
-* TODO Creating a log - HOMEWORK
+- Wiki on a stick - Some people have had some data loss with WOAS
+- Twiki - Your own local wiki
+- https://github.com/github/gollum 
+- http://www.tiddlywiki.com/
+- http://www.google.com/notebook
+
+See also: [[http://en.wikipedia.org/wiki/Comparison_of_notetaking_software][Comparison of Notetaking Software]] and
+[[http://en.wikipedia.org/wiki/Comparison_of_wiki_software][Comparison of Wiki Software]]
+
+* TODO HOMEWORK - shell and org-mode
   DEADLINE: <2011-09-22 Thu>
 
-I keep a very detailed log of what I work on in org mode.  For
-Thursday, you will need to turn in a log file
+Homework 2 is available online:
 
-You will turn in a tar file with a directory with three files in it.
+http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/hw/hw-2-shell-and-org-mode.html
 
-The directory will named your username, a dash, and 
+or 
 
-'''WARNING:''' check back Friday at 5 PM for the complete assignment for homework.
-
-
-#* Working with images
-# http://mgds.ldeo.columbia.edu/healy/reports/aloftcon/2011/20110912-1801.jpeg
-
-
-##+BEGIN_SRC sh
-#http://mgds.ldeo.columbia.edu/healy/reports/aloftcon/2011/20110910-0801.jpeg
-##+END_SRC
-
-
-#** Animated gif of images
-
-# onvert -delay 50 -loop 0 
+http://tinyurl.com/3fjdphv 
