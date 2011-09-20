@@ -1,0 +1,166 @@
+#+STARTUP: showall
+
+# Research Tools 2011 Homework Assignment by Kurt Schwehr
+
+#+TITLE:     Homework 2: command line and org-mode
+#+AUTHOR:    FIX: your name
+#+EMAIL:     FIX: your email
+#+DATE:      <2011-09-22 Thu>
+#+DESCRIPTION: Marine Research Data Manipulation and Practices
+#+KEYWORDS: 
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:nil toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   TeX:t LaTeX:nil skip:t d:nil todo:t pri:nil tags:not-in-toc
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+EXPORT_SELECT_TAGS: export
+#+EXPORT_EXCLUDE_TAGS: noexport
+#+LINK_HOME: http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/
+
+
+* Introduction
+
+Homework 1 had you create a CCOM wiki page.  Much of the homework for
+the rest of the class will be in emacs org-mode.  You will submit your
+homework as an emacs org-mode file and an exported HTML file as a tar
+with the proper file name.  Make sure to mark all TODO items as DONE.
+Make sure to fill in all sections.  Mark all check boxes when you
+complete them.
+
+Put your answers in the appropriate "#+BEGIN\_SRC" or "#+VERSE"
+sections when they are in the homework. 
+
+Some questions may start with a "- [ ]". Fill in the line and use =C-c
+C-c= to mark the check box as done.
+
+*NOTE:* You should complete this assignment on your own first.
+But it is okay to check over each other's completed assignments.  I
+strongly recommend that you have another classmate check your work.
+
+* TODO A little org mode intro
+
+This is what inline questions look like.  The first question is
+answered for you and marked as complete.
+
+- [X] What is the CCOM website?
+      http://ccom.unh.edu
+- [ ] What is the website for the operating system we are using in
+  this class inside of the virtual machine?
+- [ ] What is the URL for the Wikipedia Entry on Multibeam Sonars?
+
+* TODO Fill in your name and email at the top
+
+If you don't put your name on your homework, even if sending it to me
+and naming the files approriately, I will deduct points.
+
+Go to the top of this file and do the following:
+
+- [ ] Replace "FIX: your name" with your name
+- [ ] Replace "FIX: your email" with your email address.  This must be
+  UNH or NOAA address, or no points.
+
+* TODO Shell basics
+
+** TODO download the example data
+
+Download this file using wget:
+http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/examples/2007-boston-construction.csv.bz2
+
+Place the command inside the "SRC" and the results inside of the
+example.  I will do the first one for you.
+
+#+BEGIN_SRC sh
+wget http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/examples/2007-boston-construction.csv.bz2
+#+END_SRC
+
+Results:
+
+#+BEGIN_EXAMPLE 
+--2011-09-16 03:47:58--  http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/examples/2007-boston-construction.csv.bz2
+Resolving vislab-ccom.unh.edu... 132.177.103.235
+Connecting to vislab-ccom.unh.edu|132.177.103.235|:80... connected.
+HTTP request sent, awaiting response... 200 OK
+Length: 1030480 (1006K) [application/x-bzip2]
+Saving to: `2007-boston-construction.csv.bz2'
+
+100%[========================================================>] 1,030,480   51.4K/s   in 27s     
+
+2011-09-16 03:48:25 (37.9 KB/s) - `2007-boston-construction.csv.bz2' saved [1030480/1030480]
+#+END_EXAMPLE
+
+** Uncompress
+
+Use the correct command to uncompress 2007-boston-construction.csv.bz2
+
+#+BEGIN_SRC sh
+# FIX: put command here
+#+END_SRC
+
+** TODO What generally is in this file?
+
+Use the =file= command to find out what type of file this is.
+
+#+BEGIN_SRC sh
+FIX: put answer here
+
+#+END_SRC
+
+Results:
+
+#+BEGIN_EXAMPLE 
+FIX: put results here
+#+END_EXAMPLE
+
+How many lines are in this file?
+
+#+BEGIN_SRC sh
+# FIX: put command here
+#+END_SRC
+
+Results:
+
+#+BEGIN_EXAMPLE 
+FIX: put results here
+#+END_EXAMPLE
+
+- [ ] Read the man page for =head=
+
+Display the first 5 lines of the file.
+
+#+BEGIN_SRC sh
+# FIX: put command here
+#+END_SRC
+
+Results:
+
+#+BEGIN_EXAMPLE 
+FIX: put results here
+#+END_EXAMPLE
+
+Output the *last* 5 lines of the file.  Hint: you can use "man
+--apropos" to try to find the command to use.
+
+#+BEGIN_SRC sh
+# FIX: put command here
+#+END_SRC
+
+Results:
+
+#+BEGIN_EXAMPLE 
+FIX: put results here
+#+END_EXAMPLE
+
+** Bounding box
+
+You can use the "GMT minmax" command from [[http://gmt.soest.hawaii.edu/][GMT]] to get the bounding box of
+this data.  What is it?
+
+#+BEGIN_SRC sh
+# FIX: put command here
+#+END_SRC
+
+Results:
+
+#+BEGIN_EXAMPLE 
+FIX: put results here
+#+END_EXAMPLE
+
