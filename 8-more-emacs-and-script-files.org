@@ -1,0 +1,38 @@
+#+STARTUP: showall
+
+#+TITLE:     Class 8: More emacs and script files (DRAFT)
+#+AUTHOR:    Kurt Schwehr
+#+EMAIL:     schwehr@ccom.unh.edu
+#+DATE:      <2011-09-20 Tue>
+#+DESCRIPTION: Marine Research Data Manipulation and Practices
+#+KEYWORDS: emacs, org-mode
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:nil toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   TeX:t LaTeX:nil skip:t d:nil todo:t pri:nil tags:not-in-toc
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+LINK_HOME: http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/
+
+* todo
+* todo items
+
+- Why am I teaching these tools? http://slashgeo.org/2011/09/16/FOSS4G-2011-Brian-Timoney-GeoSpatial-One-Stop-Irene-USA
+- create homework
+- http://manpages.ubuntu.com and use the ones for 11.04
+- http://stackoverflow.com/
+- finding out about software in Ubuntu
+- How to create a script
+- Getting images from the healy
+
+http://stackoverflow.com/questions/7431167/escaping-org-mode-example-block-inside-of-an-example-block
+
+* Introduction
+
+* Videos on Emacs
+
+Sadly, http://showmedo.com has vanished from the intertubes :(
+
+Other videos that you might want to watch to get more comfortable with emacs:
+
+- [[http://www.youtube.com/user/rpdillon#g/u][Hack Emacs]] by rpdillon on YouTube.
+
+
