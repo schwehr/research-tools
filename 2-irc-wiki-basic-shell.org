@@ -36,6 +36,10 @@ We will now join a open group chat.  Please remember that IRC is not a
 secure service.  Anything you type can be logged or seen by clever
 people not in the chat room.  *Be careful what you type into IRC!*
 
+** See Also:
+
+- [[http://www.youtube.com/watch?v=yzkJZLgtO3w][What is IRC? (Internet Relay Chat) How do I connect to it?]] by thisweekinlinux
+
 ** ChatZilla in Firefox
 
 - Start Firefox

@@ -230,3 +230,16 @@ shrink
 # /Library/Application\ Support/VMware\ Fusion/vmware-vdiskmanager -k ubuntu-rt-20110908.vmdk 
 # This made no difference
 #+END_EXAMPLE
+
+* Tweaking the setup of a virtual machine
+
+** Graphics
+
+Jordan suggested upping the video memory.
+
+#+BEGIN_EXAMPLE 
+svga.vramSize = "<num bytes>"
+
+The default for all VMs is 16MB.  The VM has to be restarted in order
+for the change to take effect.
+#+END_EXAMPLE

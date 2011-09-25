@@ -3,7 +3,7 @@
 #+TITLE:     Class 8: More emacs and script files (DRAFT)
 #+AUTHOR:    Kurt Schwehr
 #+EMAIL:     schwehr@ccom.unh.edu
-#+DATE:      <2011-09-20 Tue>
+#+DATE:      <2011-09-22 Thu>
 #+DESCRIPTION: Marine Research Data Manipulation and Practices
 #+KEYWORDS: emacs, org-mode
 #+LANGUAGE:  en
@@ -12,27 +12,338 @@
 #+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
 #+LINK_HOME: http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/
 
-* todo
-* todo items
+* Introduction
 
-- Why am I teaching these tools? http://slashgeo.org/2011/09/16/FOSS4G-2011-Brian-Timoney-GeoSpatial-One-Stop-Irene-USA
-- create homework
-- http://manpages.ubuntu.com and use the ones for 11.04
-- http://stackoverflow.com/
-- finding out about software in Ubuntu
-- How to create a script
-- Getting images from the healy
+* Getting help                                                :stackoverflow:
 
 http://stackoverflow.com/questions/7431167/escaping-org-mode-example-block-inside-of-an-example-block
 
-* Introduction
-
 * Videos on Emacs
 
-Sadly, http://showmedo.com has vanished from the intertubes :(
+Sadly, http://showmedo.com does not have any good videos on the basics
+of using emacs.  You might find the [[http://www.youtube.com/user/rpdillon#g/u][Hack Emacs]] videos on YouTube by
+rpdillon useful for getting more comfortable with emacs.
 
-Other videos that you might want to watch to get more comfortable with emacs:
+** Microsoft Windows
 
-- [[http://www.youtube.com/user/rpdillon#g/u][Hack Emacs]] by rpdillon on YouTube.
+- Russell Adams installs emacs and org mode on windows: [[http://vimeo.com/16533939][Setting up Emacs Org-mode for Windows]]
 
+* Working with the ocean drilling projects site database                :odp:
+
+#+BEGIN_SRC sh
+mkdir -p class/8
+cd class/8
+#+END_SRC
+
+Today, we will use a program very similar to wget called [[http://curl.haxx.se/][curl]]
+[[http://manpages.ubuntu.com/manpages/natty/en/man1/curl.1.html][(curl.1 man page]]) to fetch data.
+
+#+BEGIN_SRC sh
+sudo apt-get install curl
+
+curl -O http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/examples/holes.csv.bz2
+# /esci895-researchtools/examples/holes.csv.bz2
+#  % Total    % Received % Xferd  Average Speed   Time    Time     Time  Current
+#                                  Dload  Upload   Total   Spent    Left  Speed
+# 100 38953  100 38953    0     0   224k      0 --:--:-- --:--:-- --:--:--  358k
+#+END_SRC
+
+Uncompress and take a first look at this file:
+
+#+BEGIN_SRC sh
+bunzip2 holes.csv.bz2
+
+wc -l holes.csv 
+# 3047 holes.csv
+
+head holes.csv 
+#+END_SRC
+
+The beginning of the holes.csv file looks like this:
+
+#+BEGIN_EXAMPLE 
+Expedition,Site,Hole,Program,Longitude,Latitude,Water Depth (m),Core Recovered (m)
+1,1,,DSDP,-92.1833,25.8583,2827,50
+1,2,,DSDP,-92.0587,23.0455,3572,13
+1,3,,DSDP,-92.0433,23.03,3747,47
+1,4,,DSDP,-73.792,24.478,5319,15
+1,4,A,DSDP,-73.792,24.478,5319,5.8
+1,5,,DSDP,-73.641,24.7265,5354,6.4
+1,5,A,DSDP,-73.641,24.7265,5354,1.8
+1,6,,DSDP,-67.6477,30.8398,5124,28
+1,6,A,DSDP,-67.6477,30.8398,5124
+#+END_EXAMPLE
+
+Now we are going to use a program called [[http://manpages.ubuntu.com/manpages/natty/en/man1/cut.1.html][cut]] to try to extract
+the "Program" column of the file.  You can see above in the comma
+separated value (CSV) formatted data that there is at least a "DSDP",
+which is the [[http://en.wikipedia.org/wiki/Deep_Sea_Drilling_Program][Deep Sea Drill Program]] that ran from 1968 to 1983.  Cut
+can work a couple different ways, but here we are going to ask it to
+work in "field mode" and tell it that commas (",") are the delimiter
+(or separator) between fields.  We do that with a "-d" and the comma
+character.  We then specify the number of the field we want.  Looking
+at the first line of the file, you can see that "Program" appears in
+the fourth position.
+
+#+BEGIN_SRC sh
+cut -d, -f4 holes.csv | head
+# Program
+# DSDP
+# DSDP
+# DSDP
+# DSDP
+# DSDP
+# DSDP
+# DSDP
+# DSDP
+# DSDP
+#+END_SRC
+
+When you run the above command, you will only see the first 10 lines
+on the screen. That is not very helpful. We would like to see how many
+unique entry types there are. The [[http://manpages.ubuntu.com/manpages/natty/en/man1/uniq.1.html][uniq]] command removes duplicates in
+the lines of text that it receives.
+
+#+BEGIN_SRC sh
+cut -d, -f4 holes.csv | uniq
+# Program
+# DSDP
+# ODP
+# IODP
+#+END_SRC
+
+Next, let's see how many lines there are for each program.  We can
+pass the output of the grep to the word count program we used before.
+=wc= has an option to only print the number of lines, so we will
+add "-l" to the command line.  
+
+The data gets passed from one program to another by a *pipe*.
+What goes in one side, comes out the other.  A pipe is created by the
+vertical bar character: "|".
+
+#+BEGIN_SRC sh
+egrep DSDP holes.csv | wc -l  # the letter "l" as in Lima, not the number 1
+# 1116
+
+egrep ODP holes.csv | wc -l
+# 1930
+
+egrep IODP holes.csv | wc -l
+# 153
+#+END_SRC
+
+We have a slight problem here in that the counts are not adding up.
+The string ODP is found in both the ODP and IODP entries. Here I am
+using the "binary calculator" ([[http://manpages.ubuntu.com/manpages/natty/en/man1/bc.1.html][bc.1 man page]]) to do a little math. I
+suspect you can just do this by hand, but the example shows another
+pipe.
+
+#+BEGIN_SRC sh
+# The 3 results from the word counts above
+echo  "1116 + 1930 + 153" | bc
+# 3199
+
+# That adds up to more than the number of lines in the file
+wc -l holes.csv
+# 3047 holes.csv
+#+END_SRC
+
+We can use the "," that precedes the ODP to help avoid the IODP.
+
+#+BEGIN_SRC sh
+egrep 'ODP' holes.csv  | wc -l
+# 1930
+
+egrep ',ODP' holes.csv  | wc -l
+# 1777
+#+END_SRC
+
+There are lots of other ways that we could have solved this, but this
+way is pretty simple compared to some of the others.
+
+*  Writing results to a file and making a quick plot with Gnuplot :gnuplot:redirection:
+
+It is always important to get a graphical view of spatial data.  Later
+in this chapter, we will start using Google Earth and in a future
+chapter, we will load our data into a Geographical Information System
+(GIS).  For now, we will draw the locations with [[http://www.gnuplot.info/][Gnuplot]].  This
+graphing program is not as flexible as matplotlib that we will cover
+in the programming in Python chapters, but it can definitely get the
+job done.
+
+Gnuplot works most easily with files that have space delimited rather
+than comma delimited text data values.  We need to pull out the
+longitude and latitude values from the holes.csv file.  We can start
+back with the cut command that we used before.  This time we will give
+it two different fields in the csv to print with "-f5-6".  This means
+we are asking for fields 5 through 6.  We could also have said
+"-f5,6", which would be fields 5 and 6.
+
+#+BEGIN_SRC sh
+cut -d, -f5-6 holes.csv | head
+#+END_SRC
+
+#+BEGIN_EXAMPLE
+Longitude,Latitude
+-92.1833,25.8583
+-92.0587,23.0455
+-92.0433,23.03
+-73.792,24.478
+-73.792,24.478
+-73.641,24.7265
+-73.641,24.7265
+-67.6477,30.8398
+-67.6477,30.8398
+#+END_EXAMPLE
+
+Gnuplot will get confused by the "Longitude,Latitude" strings on the
+first line.  We can get rid of this line with the egrep command.
+Normally, egrep returns the lines that match, be we can ask it to
+return all lines that do not match by giving it the inverse option of
+"-v".  We then give it string "Longitude" to match and it returns all
+lines that do not match.
+
+#+BEGIN_SRC sh
+egrep -v Longitude holes.csv | cut -d, -f5-6 | head
+#+END_SRC
+
+#+BEGIN_EXAMPLE
+-92.1833,25.8583
+-92.0587,23.0455
+-92.0433,23.03
+-73.792,24.478
+-73.792,24.478
+-73.641,24.7265
+-73.641,24.7265
+-67.6477,30.8398
+-67.6477,30.8398
+-68.2967,30.134
+#+END_EXAMPLE
+
+The output above is pretty close to being usable, but we have a ","
+characters between each longitude and latitude.  We can use the
+[[http://manpages.ubuntu.com/manpages/natty/en/man1/tr.1.html][tr]] (translate) command to exchange the "," for a " " (space).
+Make sure to place the =tr= after the =cut= command or cut
+will not be able to tell the comma separated fields apart.
+
+#+BEGIN_SRC sh
+egrep -v Longitude holes.csv | cut -d, -f5-6 | tr "," " " | head
+#+END_SRC
+
+#+BEGIN_EXAMPLE
+-92.1833 25.8583
+-92.0587 23.0455
+-92.0433 23.03
+-73.792 24.478
+-73.792 24.478
+-73.641 24.7265
+-73.641 24.7265
+-67.6477 30.8398
+-67.6477 30.8398
+-68.2967 30.134
+#+END_EXAMPLE
+
+This is the format that we need for Gnuplot, but we need the longitude
+and latitude lines saved to a file.  The ">" (great than character)
+"redirects" the output from the last program in the chain of pipes to
+a file that is named after the ">".  Be warned that ">" will overwrite
+a previous file with the same name if one existed.  First, try a
+simpler example to see ">" in action.  Here, I also use the *cat*
+(concatenate and print files) command to dump the contents of the
+"listing" file to the terminal.  *cat* is much simpler than
+*less*, but if a file is very long or you are not sure how long
+the file is, you are better off using *less*.
+
+Note: ">>" appends to a file if it already exists or create a new file
+when needed, whereas ">" will clobber a file in one already exists.
+
+#+BEGIN_SRC sh
+ls -la > listing
+
+# You output may be different depending on the files you have in your
+# current directory
+cat listing
+#+END_SRC
+
+#+BEGIN_EXAMPLE
+ls -l
+total 124
+-rw-r--r-- 1 researchtools researchtools 125861 2011-09-22 04:46 holes.csv
+#+END_EXAMPLE
+
+Now that you know how to redirect the output to a file, send the
+results of the chain of pipes consisting of =egrep=, =cut=,
+and =tr= to the file "xy.dat".
+
+#+BEGIN_SRC sh
+egrep -v Longitude holes.csv | cut -d, -f5-6 | tr "," " " > xy.dat
+
+head xy.dat
+#+END_SRC
+
+#+BEGIN_EXAMPLE
+-92.1833 25.8583
+-92.0587 23.0455
+-92.0433 23.03
+-73.792 24.478
+-73.792 24.478
+-73.641 24.7265
+-73.641 24.7265
+-67.6477 30.8398
+-67.6477 30.8398
+-68.2967 30.134
+#+END_EXAMPLE
+
+It is time to give gnuplot a quick try.  This does not give you much
+of a sense of what =gnuplot= can do, but we can at least look at the
+locations of the cores.  
+
+Note for Cygwin users:  You must be running a shell through X11 to be
+able to plot with Gnuplot.  If you are on Linux or Mac, this should
+just work with a graph popping up on your screen.
+
+#+BEGIN_SRC sh
+gnuplot
+plot 'xy.dat'
+# There should be a plot of the data on your screen.
+quit
+#+END_SRC
+
+That looks really wrong!  Check it out with the =GMT minmax= command
+from the homework:
+
+#+BEGIN_SRC sh
+GMT minmax xy.dat
+#+END_SRC
+
+This looks very wrong!!
+
+#+BEGIN_EXAMPLE 
+xy.dat: N = 3046	<-179.5558/179.738>	<-77.4413/5736.4>
+#+END_EXAMPLE
+
+A latitude higher than 90 North is definitely wrong.  Let's constrain
+the plot to the glob and see what we get.
+
+#+BEGIN_SRC sh
+gnuplot
+set yrange [-90:90]
+plot 'xy.dat'
+quit
+#+END_SRC
+
+To get this database to work, we will clearly need to do some fixing
+of problems.  Lesson:
+
+#+BEGIN_VERSE 
+Real data has real warts.
+#+END_VERSE
+
+This will be the last time that we use =gnuplot=.  We will do the rest
+of our plotting using matplotlib in python!
+
+You can see examples of the wide range of plots that can be made with
+Gnuplot here:
+
+http://www.gnuplot.info/screenshots/
 

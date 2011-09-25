@@ -752,7 +752,7 @@ wc holes.csv
 The first column on the left is the number of lines in the file,
 followed by the number of words, and finishing with the number of
 characters.  Notice that the number of characters is the same as the
-size of the file when you did a *ls*.
+size of the file when you did a =ls=.
 
 Now we are going to use a program called *cut* to try to extract
 the "Program" column of the file.  You can see above in the comma
@@ -771,7 +771,7 @@ cut -d, -f4 holes.csv
 
 When you run the above command, you will see 3047 lines whiz by on the
 screen.  That is not very helpful.  We only want to see how many
-unique entry types there are.  The *uniq* command removes
+unique entry types there are.  The =uniq= command removes
 duplicates in the lines of text that it receives.
 
 #+BEGIN_SRC sh
@@ -781,6 +781,7 @@ cut -d, -f4 holes.csv | uniq
 # ODP
 # IODP
 #+END_SRC
+
 We can see now that there are 3 programs in there and that the CSV
 first line that tells us what the fields in there gets lumped in there
 with it.
@@ -808,7 +809,7 @@ add "-l" to the command line.
 
 The data gets passed from one program to another by a *pipe*.
 What goes in one side, comes out the other.  A pipe is created by the
-vertical bar character: "|".  This might look like to vertical bars on
+vertical bar character: "|".  This might look like 2 vertical bars on
 some keyboards and in the United States is between the return and
 delete keys to the right of the "p" key.
 
@@ -833,7 +834,7 @@ just do this by hand, but the example shows another pipe.
 echo  "1116 + 1930 + 153" | bc
 # 3199
 
-# That adds up to more than the number of lines in the file@
+# That adds up to more than the number of lines in the file
 wc -l holes.csv
 # 3047 holes.csv
 #+END_SRC
@@ -975,8 +976,8 @@ listing
 #+END_EXAMPLE
 
 Now that you know how to redirect the output to a file, send the
-results of the chain of pipes consisting of *egrep*, *cut*,
-and *tr* to the file "xy.dat".
+results of the chain of pipes consisting of =egrep=, =cut=,
+and =tr= to the file "xy.dat".
 
 #+BEGIN_SRC sh
 egrep -v Longitude holes.csv | cut -d, -f5-6 | tr "," " " > xy.dat

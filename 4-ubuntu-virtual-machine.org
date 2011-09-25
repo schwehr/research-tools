@@ -15,3 +15,65 @@
 #+LINK_HOME: http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/
 
 * Introduction
+
+Before this lecture, we used putty on Windows to log into
+researchtools.ccom.nh using the ssh protocol.  In this lecture we will
+download a Ubuntu Virtual Machine that can be run from the VMWare
+Player.
+
+* Troubles connecting to irc.freenode.net                               :irc:
+
+We hit serious trouble in this class with irc.freenode.net.  CCOM uses
+network address translation just like you usually do at your house.
+All of the computers at CCOM look like they are ccom.unh.edu to the
+outside world and inside computers all have IP addresses like
+192.168.*.* (which is a local use only address).
+
+In future classes we will use an irc server that is inside of CCOM.
+This has the drawback that you must be inside of CCOM to access the
+IRC server.
+
+* What is a virtual machine or "VM"?
+
+http://en.wikipedia.org/wiki/Virtual_machine
+
+A virtual machine is basically an entire computer inside of another
+computer.  You start with a "host" computer which in our case is the Windows 7
+PC's.  This could also me a Linux or Mac computer.  On that computer,
+you run a program that provides and environment that looks like a bare
+computer without an operating system.  This software simulates
+hardware and passes information between the "guest" operating system
+that runs inside this program and the host computer.  In this way, we
+will be able to run Ubuntu Linux in a window on the Windows 7
+computers.  You can even run multiple virtual machines at the same
+time.
+
+There are many different "virtualization" software systems out there.
+The most common that you are likely to run into are:
+
+- [[http://www.vmware.com/][VMWare]] - [[http://en.wikipedia.org/wiki/VMware][VMWare on Wikipedia]]. Owned by EMC.
+- [[http://www.virtualbox.org/][VirtualBox]] - [[http://en.wikipedia.org/wiki/VirtualBox][VirtualBox on Wikipedia]] (open source; owned by Oracle)
+
+Both work quite well on recent computers.  I met with the CCOM IT team
+and we decided to use [[http://www.vmware.com/products/player/][VMWare Player]] for this class, but it would be
+possible to duplicate everything that we do on VirtualBox.
+
+
+
+* See Also
+
+** VMWare
+
+- [[http://itunes.apple.com/us/podcast/vmware-communities-roundtable/id292461263][VMware Communities Roundtable By vmware]] on iTunes
+- http://blogs.vmware.com/
+
+
+** VirtualBox
+
+While we are not using VirtualBox in this class, learning more about
+it will definitely help you understand what we are doing with the
+VMWare Virtual Machine.
+
+In [[http://twit.tv/show/floss-weekly/130][FLOSS Weekly 130 - Virtual Box]], [[http://wiki.twit.tv/wiki/Randal_Schwartz][Randal Schwartz]] interviews to key
+people in the Virtual Box project.  You will see these notes link to a
+number of his "Free Libre Open Source Software" podcasts.
