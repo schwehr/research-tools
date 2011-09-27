@@ -1,6 +1,6 @@
 #+STARTUP: showall
 
-#+TITLE:     Class 9: FIX (DRAFT)
+#+TITLE:     Class 9: org-babel, bash, Google Earth, QGIS, and a movie in Firefox
 #+AUTHOR:    Kurt Schwehr
 #+EMAIL:     schwehr@ccom.unh.edu
 #+DATE:      <2011-09-27 Tue>
@@ -34,8 +34,9 @@ modelled after the videos on http://showmedo.com.
 
 * Setup org-babel
 
-If you try to execute a "sh" (bash shell) source code block in an org-mode file, you
-will probably 
+If you try to execute a "sh" (bash shell) source code block in an
+org-mode file (using =C-c C-c=), you will probably see an error
+message like this in the mini buffer at the bottom:
 
 #+BEGIN_EXAMPLE 
 No org-babel-execute function for sh!
@@ -448,6 +449,9 @@ chmod +x
 
 How might you change that healy.bash script to let you set the date?
 
+* TODO Earth Science Tea!
+
+If you have the time, head over to James hall for the Earth Science Tea!
 
 * TODO HOMEWORK
   DEADLINE: <2011-09-29 Thu> by 5PM EDT
