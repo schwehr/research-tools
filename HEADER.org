@@ -22,6 +22,7 @@ that you can pass copies to your co-workers.
 * Course Materials
 
 - [[file:audio][Audio podcasts of class]]
+- [[http://www.youtube.com/playlist?list%3DPL7E11B34616530F5E][Playlist of extra class videos on YouTube]]
 - [[file:virtual-machines][Ubuntu Virtual Machines]] for VMWare
 
 * Virtual Machine account:
@@ -36,6 +37,7 @@ that you can pass copies to your co-workers.
 #+ATTR_HTML: border="1" rules="all" frame="all"
 |   No. |       Date | Title/Notes                                                         | Audio/Podcast         |
 |-------+------------+---------------------------------------------------------------------+-----------------------|
+| Vid 4 | 2011-09-26 | [[http://youtu.be/2Cl_aiUkkG0][Emacs part 4: yet more emacs]]                                        |                       |
 | Vid 3 | 2011-09-25 | [[http://youtu.be/ht4JtEbFtFI][Emacs part 3: org-mode and org-babel]]                                |                       |
 | Vid 2 | 2011-09-25 | [[http://youtu.be/P2Q_WL0h-mY][Emacs part 2: more advanced emacs]]                                   |                       |
 | Vid 1 | 2011-09-24 | [[http://youtu.be/16Rd46SE-20][Emacs part 1: emacs keyboard introduction]] and [[http://vislab-ccom.unh.edu/~schwehr/rt/video/video-1-intro-emacs.txt][sample text]]           | [ [[./video/video-1-emacs-keyboard.mov][H264]] ]              |
