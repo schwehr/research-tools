@@ -1,0 +1,218 @@
+#+STARTUP: showall
+
+#+TITLE:     Class 9: FIX (DRAFT)
+#+AUTHOR:    Kurt Schwehr
+#+EMAIL:     schwehr@ccom.unh.edu
+#+DATE:      <2011-09-27 Tue>
+#+DESCRIPTION: Marine Research Data Manipulation and Practices
+#+KEYWORDS: emacs, org-mode
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:nil toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   TeX:t LaTeX:nil skip:t d:nil todo:t pri:nil tags:not-in-toc
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+LINK_HOME: http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/
+
+
+* todo items
+
+- Why am I teaching these tools? http://slashgeo.org/2011/09/16/FOSS4G-2011-Brian-Timoney-GeoSpatial-One-Stop-Irene-USA
+- create homework
+- http://manpages.ubuntu.com and use the ones for 11.04
+- http://stackoverflow.com/
+- finding out about software in Ubuntu
+- How to create a script
+- Getting images from the healy
+
+
+* Creating a log file                                               :logging:
+
+For the rest of the semester, you need to keep a log file for this class.
+
+mkdir ~/Dropbox/logs
+
+* Creating a Google Earth KML                               :googleearth:kml:
+
+Now we are going to create our first KML file.  We are going to cheat
+a bit and not try to understand the file format, but this will at
+least show you how easy it can be.
+
+First, get the header and footer text for the KML line format:
+
+#+BEGIN_SRC sh
+curl -O http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/google-earth-line-start.kml
+curl -O http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/google-earth-line-end.kml
+#+END_SRC
+
+These two pieces give you the front and back of the KML and all we
+need to do is provide the coordinates for the 
+
+Get the coordinates file from the Boston Construction file used during
+the homework:
+
+#+BEGIN_SRC sh
+curl -O http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/examples/2007-boston-construction.csv.bz2
+
+bunzip2 2007-boston-construction.csv.bz2
+#+END_SRC
+
+Take a look at the file:
+
+#+BEGIN_SRC sh
+head 2007-boston-construction.csv 
+#+END_SRC
+
+#+BEGIN_EXAMPLE 
+-70.5014566667,42.1006833333,1179617934
+-70.5016466667,42.101755,1179617991
+-70.501845,42.1028766667,1179618051
+-70.5020833333,42.1039,1179618111
+-70.5022083333,42.1049116667,1179618176
+-70.5022883333,42.1059316667,1179618233
+-70.502515,42.1069266667,1179618296
+-70.5027566667,42.10796,1179618356
+-70.5028616667,42.1090066667,1179618416
+-70.5029816667,42.1102133333,1179618486
+#+END_EXAMPLE
+
+We can reuse the cut command to get just the X and Y coordinates:
+
+#+BEGIN_SRC sh
+cut -d, -f1,2 2007-boston-construction.csv | head
+-70.5014566667,42.1006833333
+-70.5016466667,42.101755
+-70.501845,42.1028766667
+-70.5020833333,42.1039
+-70.5022083333,42.1049116667
+-70.5022883333,42.1059316667
+-70.502515,42.1069266667
+-70.5027566667,42.10796
+-70.5028616667,42.1090066667
+-70.5029816667,42.1102133333
+#+END_SRC
+
+We are lucky!  KML expects coordinates to come as x,y,z or x,y
+
+#+BEGIN_SRC xml
+  <Placemark>
+    <LineString>
+      <coordinates>
+        -125.810021667,48.4840316667
+        -125.810295,48.483705
+      </coordinates>
+    </LineString>
+  </Placemark>
+#+END_SRC
+
+Let's create the x,y pairs in a file:
+
+#+BEGIN_SRC sh
+cut -d, -f1,2 2007-boston-construction.csv > 2007-boston-construction.xy
+#+END_SRC
+
+We can now put the header, points and tail together to create a KML
+file.  Google Earth has trouble with lines with too many points in
+them, so we will use head to only output some of the points.
+
+#+BEGIN_SRC sh
+cat        google-earth-line-start.kml >  2007-boston-construction.kml
+head -1000 2007-boston-construction.xy >> 2007-boston-construction.kml
+cat        google-earth-line-end.kml   >> 2007-boston-construction.kml
+#+END_SRC
+
+* Creating a script
+
+There are some key tricks to understanding variables in bash.  First,
+you must have no spaces before or after the equal sign.  Bash is very
+picky about this.  The other part is where your variable is available.
+Without the *export*, the variable is not available to other programs
+that are called from the command line.  For us, right now, the export
+is not important, but later on for things like the PATH variable that
+control where to look for programs, *export* is essential.
+
+To demonstrate variables, we will use the *echo* command which
+will just print out to the screen whatever we pass to it.  Give it a
+try.  The "$" character starts the use of a variable.
+
+#+BEGIN_SRC sh
+# Set a variable
+testing=123
+
+# Print the variable
+echo $testing
+# 123
+
+# Start a new bash shell inside the original one
+bash
+
+# See that "testing" is not set.  If there is no variable, bash gives
+# an empty string
+echo $testing
+
+# quit back to the main bash shell
+exit
+
+# Set testing to have a value that will be inherited
+export testing="hello world"
+
+bash
+
+# Now see that the exported variable went through
+echo $testing
+# hello world
+#+END_SRC
+
+How can we use a variable to help out?  What if we want to download
+one image every hour from one day on the USCGC Healy?  Here is the
+2010 set of images for the Healy:
+
+http://mgds.ldeo.columbia.edu/healy/reports/aloftcon/2010/
+
+Open emacs open a file called "healy.sh" and start typing:
+
+# for hour in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23
+
+#+BEGIN_SRC sh
+for hour in 01 02 03 04 05 06 07 
+do
+  echo $hour
+done
+#+END_SRC
+
+Try running that from the terminal.
+
+#+BEGIN_SRC sh
+source healy.sh
+#+END_SRC
+
+You should see:
+
+#+BEGIN_EXAMPLE 
+01
+02
+03
+04
+05
+06
+07
+#+END_EXAMPLE
+
+Now we can try to construct a curl command in the echo.
+
+#+BEGIN_SRC sh 
+for hour in 01 02 03 04 05 06 07 
+do
+  echo curl -O http://mgds.ldeo.columbia.edu/healy/reports/aloftcon/2010/20101009-${hour}01.jpeg
+done
+#+END_SRC
+
+Try it and you should see:
+
+#+BEGIN_EXAMPLE 
+curl -O http://mgds.ldeo.columbia.edu/healy/reports/aloftcon/2010/20101009-0101.jpeg
+curl -O http://mgds.ldeo.columbia.edu/healy/reports/aloftcon/2010/20101009-0201.jpeg
+curl -O http://mgds.ldeo.columbia.edu/healy/reports/aloftcon/2010/20101009-0301.jpeg
+curl -O http://mgds.ldeo.columbia.edu/healy/reports/aloftcon/2010/20101009-0401.jpeg
+curl -O http://mgds.ldeo.columbia.edu/healy/reports/aloftcon/2010/20101009-0501.jpeg
+curl -O http://mgds.ldeo.columbia.edu/healy/reports/aloftcon/2010/20101009-0601.jpeg
+curl -O http://mgds.ldeo.columbia.edu/healy/reports/aloftcon/2010/20101009-0701.jpeg
+#+END_EXAMPLE
