@@ -71,6 +71,7 @@ Go to the top of this file and do the following:
 - [ ] Replace "FIX: your name" with your name
 - [ ] Replace "FIX: your email" with your email address.  This must be
   UNH or NOAA address, or no points.
+- [ ] Replace the date line just under those two with the current date.
 
 * TODO Shell basics
 
@@ -137,7 +138,7 @@ FIX: put results here
 
 - [ ] Read the man page for =head=
 
-Display the first 5 lines of the file.
+What is the command to display the first 5 lines of the file?
 
 #+BEGIN_SRC sh
 # FIX: put command here
@@ -149,7 +150,7 @@ Results:
 FIX: put results here
 #+END_EXAMPLE
 
-Output the *last* 5 lines of the file.  Hint: you can use "man
+Output the *last* 15 lines of the file.  Hint: you can use "man
 --apropos" to try to find the command to use.
 
 #+BEGIN_SRC sh
@@ -186,8 +187,9 @@ submission that is layed out exactly as I have done.
 
 Use the emacs search command for the string "FIX:".  The only place
 where this string should be in your org-mode homework 2 file is in
-this section.  I use that string to mark sections where you need to be
-replacing it with something.
+this section and the two list check boxes that talk about filling in
+your name, email, and the date.  I use that string to mark sections
+where you need to be replacing it with something.
 
 Searching starts by holding =Control= and pressing =s= (written C-s).
 Then type what you want to search for. In this case, type "FIX:"
@@ -196,6 +198,10 @@ press =C-s= again.  When you get to the end of the file, press =C-s=
 again and it will jump to the top of the document.
 
 ** TODO Build the submission                                  :tar:bzip2:md5:
+
+*WARNING*: If you properly follow this section, the "TODO" above and
+any TODO or [ ] markers below will be left unflagged inside of the
+tar.  They are included to help you work through the process.
 
 First create an HTML export of your assignment.  In emacs you can
 type =C-c C-e=.  Remember to hold down the =control= key and press the
@@ -258,7 +264,7 @@ md5sum hw2-YOURNAME.tar.bz2
 57e88b90db260511eee305108d0b2d91  hw2-YOURNAME.tar.bz2
 #+END_SRC
 
-*NOTE:* You checksum will be different!!!!
+*NOTE:* Your checksum will be different!!!!
 
 #+BEGIN_EXAMPLE 
 57e88b90db260511eee305108d0b2d91  hw2-YOURNAME.tar.bz2
@@ -344,4 +350,12 @@ My email address is [[mailto:kurt@ccom.unh.edu][kurt@ccom.unh.edu]]
 
 In the email, include the md5 sum of your .tar.bz2 archive.  I will
 then log into researchtools to check on your homework.  I will compute
-the md5 sum of your tar
+the md5 sum of your tar.
+
+*DO NOT* put the tar or .md5 file in the email.  Only copy the md5 sum
+and filename in the email.
+
+Include these in the email:
+
+- [ ] your tar file name
+- [ ] the text of the md5 checksum
