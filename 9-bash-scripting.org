@@ -12,23 +12,135 @@
 #+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
 #+LINK_HOME: http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/
 
+* Introduction
 
-* todo items
+Up to this point, we have been working hard as a class to get
+comfortable with a powerful text editor and the terminal.  We will do
+a little more setup today and in lecture 10 on <2011-09-29 Thu>, but
+we will be starting into learning Python in lecture 10.  Hopefully,
+you will appreciate the 4 weeks of setup when working with Python in
+emacs.
 
-- Why am I teaching these tools? http://slashgeo.org/2011/09/16/FOSS4G-2011-Brian-Timoney-GeoSpatial-One-Stop-Irene-USA
-- create homework
-- http://manpages.ubuntu.com and use the ones for 11.04
-- http://stackoverflow.com/
-- finding out about software in Ubuntu
-- How to create a script
-- Getting images from the healy
+Today we will setup org-babel so that we can execute code from inside
+of emacs org-mode files and write a shell script file.
+
+http://orgmode.org/worg/org-contrib/babel/
+
+* Extra content
+
+The first 4 videos are available:  [[http://www.youtube.com/playlist?list%3DPL7E11B34616530F5E][2011 Research Tools YouTube
+playlist]].  These supplementary videos cover using emacs.  They are
+modelled after the videos on http://showmedo.com.
+
+* Setup org-babel
+
+If you try to execute a "sh" (bash shell) source code block in an org-mode file, you
+will probably 
+
+#+BEGIN_EXAMPLE 
+No org-babel-execute function for sh!
+#+END_EXAMPLE
+
+We need to setup emacs to have org-mode fully installed.  Open the
+file [[file:~/.emacs][~/.emacs]]
+
+#+BEGIN_SRC emacs-lisp
+  ; Must have org-mode loaded before we can configure org-babel
+  (require 'org-install)
+  
+  ; Some initial langauges we want org-babel to support
+  (org-babel-do-load-languages
+   'org-babel-load-languages
+   '(
+     (sh . t)
+     (python . t)
+     (R . t)
+     (ruby . t)
+     (ditaa . t)
+     (dot . t)
+     (octave . t)
+     (sqlite . t)
+     (perl . t)
+     ))
+  
+  ; Add short cut keys for the org-agenda
+  (global-set-key "\C-cl" 'org-store-link)
+  (global-set-key "\C-cc" 'org-capture)
+  (global-set-key "\C-ca" 'org-agenda)
+#+END_SRC
+
+Now restart emacs.
+
+** Testing org-babel                                                :testing:
+
+Try executing this block with =C-c C-c= while the point (aka cursor)
+is inside the SRC block.
+
+#+BEGIN_SRC sh
+echo $SHELL
+#+END_SRC
+
+You should see something like this appear:
+
+#+BEGIN_SRC org
+  ,#+results:
+  ,: /bin/bash
+#+END_SRC
 
 
 * Creating a log file                                               :logging:
 
-For the rest of the semester, you need to keep a log file for this class.
+For the rest of the semester, you need to keep a log file for this
+class with =C-c C-c= inside the src block.
 
+#+BEGIN_SRC sh
 mkdir ~/Dropbox/logs
+#+END_SRC
+
+Start a log file.  Replace YOURUSERNAME below with your short username at CCOM.
+
+#+BEGIN_SRC sh
+log=~/Dropbox/logs/researchtools-YOURUSERNAME.org
+echo "#+STARTUP: showall" > $log 
+
+echo "Log contains:"
+cat $log
+#+END_SRC
+
+You can now open up that log file in another emacs window.  Add
+AUTHOR and EMAIL lines just line in homework 2.  
+
+
+#+BEGIN_SRC org
+#+TITLE:     Research Tools log file for FIX: your name
+#+AUTHOR:    FIX: your name
+#+EMAIL:     FIX: your email
+#+END_SRC
+
+And you can make entries that look something like this:
+
+#+BEGIN_SRC org
+* Log entry for a day <2011-09-27 Tue>                            :day:
+#+END_SRC
+
+I start them by typing line this: 
+
+#+BEGIN_SRC org
+* Log entry for a day 
+#+END_SRC
+
+Then I use =C-c .= to add the date.  I follow it up with at least the
+=day= tag by doing =C-c C-c= on the header line and typing "day".  I
+also use "travel" as a tag for days that I'm traveling.
+
+You can now make entries for that day with two "*" entries for a 2nd
+level heading:
+
+#+BEGIN_SRC org
+** Research Tools Class 09                              :researchtools:class:
+
+# FIX: Start writing about the class here.
+#+END_SRC
 
 * Creating a Google Earth KML                               :googleearth:kml:
 
@@ -36,9 +148,18 @@ Now we are going to create our first KML file.  We are going to cheat
 a bit and not try to understand the file format, but this will at
 least show you how easy it can be.
 
-First, get the header and footer text for the KML line format:
+First, make sure we have a working directory for this class:
 
 #+BEGIN_SRC sh
+mkdir -p ~/class/09
+ls -ld ~/class/09
+#+END_SRC
+
+Now, get the header and footer text for the KML line format:
+
+#+BEGIN_SRC sh
+cd ~/class/09
+
 curl -O http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/google-earth-line-start.kml
 curl -O http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/google-earth-line-end.kml
 #+END_SRC
@@ -50,6 +171,8 @@ Get the coordinates file from the Boston Construction file used during
 the homework:
 
 #+BEGIN_SRC sh
+cd ~/class/09
+
 curl -O http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/examples/2007-boston-construction.csv.bz2
 
 bunzip2 2007-boston-construction.csv.bz2
@@ -58,8 +181,13 @@ bunzip2 2007-boston-construction.csv.bz2
 Take a look at the file:
 
 #+BEGIN_SRC sh
+cd ~/class/09
+
 head 2007-boston-construction.csv 
 #+END_SRC
+
+We see that it has longitude, latitude, and a [[http://en.wikipedia.org/wiki/Unix_time][Unix UTC timestamp]].  We
+will ignore the timestamp for now.
 
 #+BEGIN_EXAMPLE 
 -70.5014566667,42.1006833333,1179617934
@@ -77,7 +205,14 @@ head 2007-boston-construction.csv
 We can reuse the cut command to get just the X and Y coordinates:
 
 #+BEGIN_SRC sh
+cd ~/class/09
+
 cut -d, -f1,2 2007-boston-construction.csv | head
+#+END_SRC
+
+Which should look like this:
+
+#+BEGIN_EXAMPLE 
 -70.5014566667,42.1006833333
 -70.5016466667,42.101755
 -70.501845,42.1028766667
@@ -88,9 +223,13 @@ cut -d, -f1,2 2007-boston-construction.csv | head
 -70.5027566667,42.10796
 -70.5028616667,42.1090066667
 -70.5029816667,42.1102133333
-#+END_SRC
+#+END_EXAMPLE
 
-We are lucky!  KML expects coordinates to come as x,y,z or x,y
+
+We are lucky!  KML expects coordinates to come as x,y,z or x,y.  If
+you want to read more, you can look at the KML Reference section on
+[[http://code.google.com/apis/kml/documentation/kmlreference.html#coordinates][coordinates]], [[http://code.google.com/apis/kml/documentation/kmlreference.html#placemark][Placemark]] and [[http://code.google.com/apis/kml/documentation/kmlreference.html#linestring][LineString]].  We will talk more about KML in
+future lectures quite a bit.
 
 #+BEGIN_SRC xml
   <Placemark>
@@ -106,6 +245,8 @@ We are lucky!  KML expects coordinates to come as x,y,z or x,y
 Let's create the x,y pairs in a file:
 
 #+BEGIN_SRC sh
+cd ~/class/09
+
 cut -d, -f1,2 2007-boston-construction.csv > 2007-boston-construction.xy
 #+END_SRC
 
@@ -113,13 +254,51 @@ We can now put the header, points and tail together to create a KML
 file.  Google Earth has trouble with lines with too many points in
 them, so we will use head to only output some of the points.
 
+The ">" redirects output to a file just as we have done in the past.
+However, if we use it a 2nd time to the same file, it will overwrite
+the first file and destroy anything that we did before.
+
+The ">>" string does redirection, but *appends* the data to any
+existing file.
+
 #+BEGIN_SRC sh
+cd ~/class/09
+
 cat        google-earth-line-start.kml >  2007-boston-construction.kml
 head -1000 2007-boston-construction.xy >> 2007-boston-construction.kml
 cat        google-earth-line-end.kml   >> 2007-boston-construction.kml
 #+END_SRC
 
-* Creating a script
+We can now open the file in Google Earth.  It appears that Google
+Earth on a Ubuntu 11.04 virtual machine on the Mac is very crash
+prone.  You can put the kml file into your dropbox folder and then
+download it through http://dropbox.com.
+
+#+BEGIN_SRC sh
+# This does NOT work
+google-earth ~/class/09/2007-boston-construction.kml
+#+END_SRC
+
+Or you can try running Google Earth and then doing a File->Open to
+select your KML.  That appears to be more stable.
+
+You can also open the KML file in QGIS.  In the Ubuntu menu's, go to
+Applications->Science->Quantum GIS.
+
+Once QGIS is running, do Layer->Add Vector Layer.  Navigate to
+~/class/09.  On the bottom right of the file browser dialog box, there
+is an "[OGR]" file type selector.  Pick "[OGR] KML" and then select
+2007-boston-construction.kml.
+
+You will now be looking at the path of a ship that worked on building
+an offshore natural gas terminal near Boston, MA.
+
+
+* Working with bash shell variables                          :bash:variables:
+
+We will be using variables in the bash shell a bunch today.  A
+variable has a name that is prefixed by a =$=.  You set the variable
+with "=".
 
 There are some key tricks to understanding variables in bash.  First,
 you must have no spaces before or after the equal sign.  Bash is very
@@ -132,6 +311,11 @@ control where to look for programs, *export* is essential.
 To demonstrate variables, we will use the *echo* command which
 will just print out to the screen whatever we pass to it.  Give it a
 try.  The "$" character starts the use of a variable.
+
+Open up a shell inside of emacs by doing:
+
+- Split the window: C-x 2
+- Start the shell: M-x shell
 
 #+BEGIN_SRC sh
 # Set a variable
@@ -161,13 +345,16 @@ echo $testing
 # hello world
 #+END_SRC
 
+
+* Creating a script
+
 How can we use a variable to help out?  What if we want to download
 one image every hour from one day on the USCGC Healy?  Here is the
 2010 set of images for the Healy:
 
 http://mgds.ldeo.columbia.edu/healy/reports/aloftcon/2010/
 
-Open emacs open a file called "healy.sh" and start typing:
+Open emacs open a file called [[file:~/class/09/healy.bash][~/class/09/healy.bash]] and start typing:
 
 # for hour in 01 02 03 04 05 06 07 08 09 10 11 12 13 14 15 16 17 18 19 20 21 22 23
 
@@ -181,7 +368,7 @@ done
 Try running that from the terminal.
 
 #+BEGIN_SRC sh
-source healy.sh
+source healy.bash
 #+END_SRC
 
 You should see:
@@ -216,3 +403,62 @@ curl -O http://mgds.ldeo.columbia.edu/healy/reports/aloftcon/2010/20101009-0501.
 curl -O http://mgds.ldeo.columbia.edu/healy/reports/aloftcon/2010/20101009-0601.jpeg
 curl -O http://mgds.ldeo.columbia.edu/healy/reports/aloftcon/2010/20101009-0701.jpeg
 #+END_EXAMPLE
+
+Remove the =echo= in that script and add hours 08 to 23.
+
+Run it!  You should now have all the images down.  Time to make an "animated
+gif" using imagemagick/graphicsmagick.
+
+#+BEGIN_SRC sh
+cd ~/class/09
+
+convert -delay 100 -loop 0 *.jpeg healy-20101009-day-animation.gif
+
+file healy-20101009-day-animation.gif
+#+END_SRC
+
+View that animated gif movie!!
+
+#+BEGIN_SRC sh
+cd ~/class/09
+
+firefox healy-20101009-day-animation.gif
+#+END_SRC
+
+We can turn that script that we are running with =source= into a
+proper script.  Add this to the script at the first line:
+
+#+BEGIN_SRC sh
+#!/bin/bash
+#+END_SRC
+
+Now make the script "executable" with chmod.  "Change mod" sets the
+permissions for a file and one of those permissions is "x" for executable.
+You can also put that convert command inside the script as the last line.
+
+#+BEGIN_SRC sh
+cd ~/class/09
+
+chmod +x
+
+./healy.bash
+#+END_SRC
+
+* Food for thought
+
+How might you change that healy.bash script to let you set the date?
+
+
+* TODO HOMEWORK
+  DEADLINE: <2011-09-29 Thu> by 5PM EDT
+
+Note: These check boxes are just to help you.
+
+- [ ] Watch youtube videos:  [[http://youtu.be/16Rd46SE-20][1]]  [[http://youtu.be/P2Q_WL0h-mY][2]]  [[http://youtu.be/ht4JtEbFtFI][3]]  [[http://youtu.be/2Cl_aiUkkG0][4]]   
+  - [ ] Put any questions that you have into your org-mode log file
+- [ ] Make sure you have log entries for both <2011-09-27 Tue> and
+      <2011-09-29 Thu> for the Research Tools course
+- [ ] Turn in your log file on the researchtools server as this file
+      ~/hw/03/log-$USER-$(date +%Y%m%d).org
+- [ ] Email mailto:kurt@ccom.unh.edu the md5 sum of the log file.  Do
+      not make this an attachment.
