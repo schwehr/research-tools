@@ -1,0 +1,78 @@
+* What is org-mode?
+
+- note taking system, todo lists, project planning, repeatable research platform
+
+* Getting started
+
+- Install... if you are using Debian or Ubuntu linux, sudo apt-get install org-mode
+- open demo.org
+
+Headlines
+
+* top
+** 2nd
+*** 3rd
+*** another 3rd
+
+* Marking up text
+
+*bold*, /italic/, _underlined_ , =code= and ~verbatim~
+
+http://ccom.unh.edu
+
+* Exporting - see what you have done
+
+* comments and blocks
+Comments with # at the left.
+
+** COMMENT do not export
+
+Nothing here
+
+** These all export
+
+#+BEGIN_VERSE
+Great clouds overhead
+Tiny black birds rise and fall
+Snow covers Emacs
+    -- AlexSchroeder
+#+END_VERSE
+
+#+BEGIN_QUOTE
+Everything should be made as simple as possible,
+but not any simpler 
+-- Albert Einstein
+#+END_QUOTE
+
+#+BEGIN_CENTER
+      Everything should be made as simple as possible, \\
+      but not any simpler
+#+END_CENTER
+
+* Lists
+
+- item in a list
+- [ ] todo item
+- [ ] 
+
+
+* Motion and controlling the structure
+
+Tab for folding
+S-Tab for global folding
+
+* TODO to do items C-c C-t
+  :PROPERTIES:
+  :ORDERED:  t
+  :END:
+
+* Date time
+
+C-u C-c .  <---- insert date and time  (NOT UTC booo!)
+
+<2011-09-25 Sun 15:45>--<2011-09-25 Sun 15:45>
+
+
+
+[[Http://unh.edu][University of New Hampshire]] C-c C-l to edit a link
+
