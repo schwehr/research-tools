@@ -206,3 +206,7 @@ AsciiDoc is weird
 - JonnyB suggested the students write validators for data and metadata
   as part of their assignments.
 
+From Racicot:
+
+- http://www.qgisworkshop.org/html/workshop/index.html
+- http://www.qgis.org/pyqgis-cookbook/

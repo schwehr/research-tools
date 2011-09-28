@@ -178,6 +178,16 @@ Results:
 FIX: put results here
 #+END_EXAMPLE
 
+* TODO Save your org-mode homework file!
+
+If you do not save the org-mode file you are working on before
+creating the submission, the HTML will be fine, but your org-mode file
+will not show your completed home.  Save your file with:
+
+#+BEGIN_EXAMPLE 
+C-x C-s
+#+END_EXAMPLE
+
 * TODO Creating your homework submission
 
 Follow this section very carefully.  You should be creating a
@@ -327,7 +337,7 @@ the "hw" directory.
 mkdir hw
 cd hw
 tar xf ~/hw2-YOURNAME.tar.bz2
-mv ../hw22-YOURNAME.tar.bz2 .
+mv ../hw2-YOURNAME.tar.bz2 .
 #+END_SRC
 
 Verify that your homework is in place.
