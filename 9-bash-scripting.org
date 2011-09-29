@@ -283,10 +283,6 @@ google-earth ~/class/09/2007-boston-construction.kml
 Or you can try running Google Earth and then doing a File->Open to
 select your KML.  That appears to be more stable.
 
-You can also open the KML file in QGIS.  In the Ubuntu menu's, go to
-Applications->Science->Quantum GIS.
-
-
 * TODO Earth Science Tea!
 
 If you have the time, head over to James hall for the Earth Science Tea!
