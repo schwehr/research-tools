@@ -20,7 +20,7 @@ Healy's Aloftcon camera, and try out ipython with matplotlib.
 
 * Setup for today's class
 
-You can do this one of 3 ways. You pick.
+You can do this one of 2 ways. You pick.
 
 - Open a terminal and paste in the command
 - Open a shell inside of emacs and paste in the command
