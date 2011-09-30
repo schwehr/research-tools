@@ -19,6 +19,8 @@ likely:
   details.
 - Stop trying to keep everything in your head.
 
+# http://sepwww.stanford.edu/data/media/public/sep/jon/reproducible.html
+
 * TODO HOMEWORK
   DEADLINE: <2011-10-04 Tue> by 5PM EDT
 

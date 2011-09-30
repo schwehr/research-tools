@@ -5,14 +5,37 @@
 
 * Introduction
 
-These chapters are being created for the 2011 Research Tools course.
-They are extremely rough.  If you give them a read, I would appreciate
-any kind of feedback that you are willing to offer.  The goal is to
+The goal of this UNH course is to
 give students skills that will help them conquer data throughout their
 career.  I am hoping to get this wrapped together as a book that
 people can take with them when they leave CCOM.  I am releasing all
 course material under a creative commons non-commercial license, so
-that you can pass copies to your co-workers.
+that you can pass copies to your co-workers.  2011 is the first year
+that the course is being taught in this style.  Please email me if you
+find any typos.
+
+* Lectures:
+
+#+ATTR_HTML: border="1" rules="all" frame="all"
+|   No. |       Date | Title/Notes                                                   | Audio/Podcast | Present     | Video        |
+|-------+------------+---------------------------------------------------------------+---------------+-------------+--------------|
+|  HW 3 | 2011-09-27 | [[http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/hw/hw-3-work-log.html][Homework 3: work log / journal]] due 2011-10-04 5PM EDT [ [[http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/hw/hw-3-work-log.org][org]] ] |               |             |              |
+| Vid 5 | 2011-09-30 | [[http://youtu.be/nv1HGsUsiJc][The bash shell 1: introduction]]                                |               |             | [[http://youtu.be/nv1HGsUsiJc][YouTube]]      |
+|    10 | 2011-09-29 | [[http://vislab-ccom.unh.edu/~schwehr/rt/10-qgis-bash-python.html][QGIS, Bash Script, Healy Movie, ipython+matplotlib]] [ [[http://vislab-ccom.unh.edu/~schwehr/rt/src/10-qgis-bash-python.org][org]] ]    | [[./audio/10-qgis-bash-python.mp3][mp3]] [[./audio/10-qgis-bash-python.m4a][m4a]] [[./audio/10-qgis-bash-python.ogg][ogg]]   | [[./present/10-qgis-bash-python.pdf][pdf]] [[./present/10-qgis-bash-python.key][key]] [[./present/10-qgis-bash-python.ppt][ppt]] |              |
+|     9 | 2011-09-27 | [[http://vislab-ccom.unh.edu/~schwehr/rt/9-bash-scripting.html][babel, bash, Google Earth]] [ [[http://vislab-ccom.unh.edu/~schwehr/rt/src/9-bash-scripting.org][org]] ]                             | [[./audio/9-babel-bash-scripting.mp3][mp3]] [[./audio/9-babel-bash-scripting.m4a][m4a]] [[./audio/9-babel-bash-scripting.ogg][ogg]]   | [[http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/present/9-babel-bash-scripting.pdf][pdf]] [[http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/present/9-babel-bash-scripting.key][key]] [[http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/present/9-babel-bash-scripting.ppt][ppt]] |              |
+| Vid 4 | 2011-09-26 | [[http://youtu.be/2Cl_aiUkkG0][Emacs part 4: yet more emacs]]                                  |               |             | [[http://youtu.be/2Cl_aiUkkG0][YouTube]]      |
+| Vid 3 | 2011-09-25 | [[http://youtu.be/ht4JtEbFtFI][Emacs part 3: org-mode and org-babel]]                          |               |             | [[http://youtu.be/ht4JtEbFtFI][YouTube]]      |
+| Vid 2 | 2011-09-25 | [[http://youtu.be/P2Q_WL0h-mY][Emacs part 2: more advanced emacs]]                             |               |             | [[http://youtu.be/P2Q_WL0h-mY][YouTube]]      |
+| Vid 1 | 2011-09-24 | [[http://youtu.be/16Rd46SE-20][Emacs part 1: emacs keyboard introduction]] and [[http://vislab-ccom.unh.edu/~schwehr/rt/video/video-1-intro-emacs.txt][sample text]]     |               |             | [[http://youtu.be/16Rd46SE-20][YouTube]] [[./video/video-1-emacs-keyboard.mov][H264]] |
+|     8 | 2011-09-22 | [[./8-more-emacs-and-script-files.html][More emacs and script files]] [ [[http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/src/8-more-emacs-and-script-files.org][org]] ]                           | [[./audio/8-more-emacs.mp3][mp3]] [[./audio/8-more-emacs.m4a][m4a]] [[./audio/8-more-emacs.ogg][ogg]]   | [[./present/8-more-emacs-and-script-files.pdf][pdf]] [[./present/8-more-emacs-and-script-files.key][key]] [[./present/8-more-emacs-and-script-files.ppt][ppt]] |              |
+|  HW 2 | 2011-09-20 | [[./hw/hw-2-shell-and-org-mode.html][Homework 2: shell and org-mode]] due 2011-09-22 5PM EDT [ [[http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/hw/hw-2-shell-and-org-mode.org][org]] ] |               |             |              |
+|     7 | 2011-09-20 | [[./7-emacs-and-org-mode.html][Emacs and org-mode]] [ [[http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/src/7-emacs-and-org-mode.org][org]] ]                                    | [[./audio/7-emacs-and-org-mode.mp3][mp3]] [[./audio/7-emacs-and-org-mode.m4a][m4a]] [[./audio/7-emacs-and-org-mode.ogg][ogg]]   |             |              |
+|     6 | 2011-09-15 | [[./6-keypassx-dropbox.html][KeyPassX and Dropbox]] [ [[http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/src/6-keypassx-dropbox.org][org]] ]                                  | [[./audio/6-keypassx-dropbox.mp3][mp3]] [[./audio/6-keypassx-dropbox.m4a][m4a]] [[./audio/6-keypassx-dropbox.ogg][ogg]]   |             |              |
+|     5 | 2011-09-13 | [[./5-filetypes-emacs.html][File types, Intro to Emacs, beginning scripts]] [ [[http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/src/5-filetypes-emacs.org][org]] ]         | [[./audio/5-identifying-file-types.mp3][mp3]] [[./audio/5-identifying-file-types.m4a][m4a]] [[./audio/5-identifying-file-types.ogg][ogg]]   |             |              |
+|     4 | 2011-09-08 | VMWare Ubuntu Image (*Coming soon*)                           | [[./audio/4-vmware-ubuntu-virtual-machine.mp3][mp3]] [[./audio/4-vmware-ubuntu-virtual-machine.m4a][m4a]] [[./audio/4-vmware-ubuntu-virtual-machine.ogg][ogg]]   |             |              |
+|     3 | 2011-09-06 | [[./3-basic-command-line.html][Wiki editing, Weather Demo, Basic Command Line]]  [ [[http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/src/3-basic-command-line.org][org]] ]       | [[./audio/3-wiki-weather-shell.mp3][mp3]] [[./audio/3-wiki-weather-shell.m4a][m4a]] [[./audio/3-wiki-weather-shell.ogg][ogg]]   |             |              |
+|     2 | 2011-09-01 | [[./2-irc-wiki-basic-shell.html][IRC, Wiki, Basic Shell]] [ [[http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/src/2-irc-wiki-basic-shell.org][org]] ]                                | [[./audio/2-irc-wiki-basic-shell.mp3][mp3]] [[./audio/2-irc-wiki-basic-shell.m4a][m4a]] [[./audio/2-irc-wiki-basic-shell.ogg][ogg]]   |             |              |
+|     1 | 2011-08-30 | [[./1-introduction.html][Introduction]] [ [[http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/src/1-introduction.org][org]] ]                                          | [[./audio/1-introduction.mp3][mp3]] [[./audio/1-introduction.m4a][m4a]] [[./audio/1-introduction.ogg][ogg]]   |             |              |
 
 * Short links
 
@@ -29,48 +52,3 @@ that you can pass copies to your co-workers.
 
 - user: researchtools
 - pass: !rt2011vm
-
-* Lectures:
-
-
-*NOTE:* The table has been re-ordered so that the newest items are at the top.
-
-#+ATTR_HTML: border="1" rules="all" frame="all"
-|   No. |       Date | Title/Notes                                                         | Audio/Podcast | Present     | Video        |
-|-------+------------+---------------------------------------------------------------------+---------------+-------------+--------------|
-|    10 | 2011-09-29 | [[http://vislab-ccom.unh.edu/~schwehr/rt/10-qgis-bash-python.html][QGIS, Bash Script, Healy Movie, ipython+matplotlib]] [ [[http://vislab-ccom.unh.edu/~schwehr/rt/src/10-qgis-bash-python.org][org]] ]          | [[./audio/10-qgis-bash-python.mp3][mp3]] [[./audio/10-qgis-bash-python.m4a][m4a]] [[./audio/10-qgis-bash-python.ogg][ogg]]   | [[./present/10-qgis-bash-python.pdf][pdf]] [[./present/10-qgis-bash-python.key][key]] [[./present/10-qgis-bash-python.ppt][ppt]] |              |
-|     9 | 2011-09-27 | [[http://vislab-ccom.unh.edu/~schwehr/rt/9-bash-scripting.html][babel, bash, Google Earth, QGIS, and a movie in Firefox]] [ [[http://vislab-ccom.unh.edu/~schwehr/rt/src/9-bash-scripting.org][org]] ]     | [[./audio/9-babel-bash-scripting.mp3][mp3]] [[./audio/9-babel-bash-scripting.m4a][m4a]] [[./audio/9-babel-bash-scripting.ogg][ogg]]   | [[http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/present/9-babel-bash-scripting.pdf][pdf]] [[http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/present/9-babel-bash-scripting.key][key]] [[http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/present/9-babel-bash-scripting.ppt][ppt]] |              |
-| Vid 4 | 2011-09-26 | [[http://youtu.be/2Cl_aiUkkG0][Emacs part 4: yet more emacs]]                                        |               |             | [[http://youtu.be/2Cl_aiUkkG0][YouTube]]      |
-| Vid 3 | 2011-09-25 | [[http://youtu.be/ht4JtEbFtFI][Emacs part 3: org-mode and org-babel]]                                |               |             | [[http://youtu.be/ht4JtEbFtFI][YouTube]]      |
-| Vid 2 | 2011-09-25 | [[http://youtu.be/P2Q_WL0h-mY][Emacs part 2: more advanced emacs]]                                   |               |             | [[http://youtu.be/P2Q_WL0h-mY][YouTube]]      |
-| Vid 1 | 2011-09-24 | [[http://youtu.be/16Rd46SE-20][Emacs part 1: emacs keyboard introduction]] and [[http://vislab-ccom.unh.edu/~schwehr/rt/video/video-1-intro-emacs.txt][sample text]]           |               |             | [[http://youtu.be/16Rd46SE-20][YouTube]] [[./video/video-1-emacs-keyboard.mov][H264]] |
-|     8 | 2011-09-22 | [[./8-more-emacs-and-script-files.html][More emacs and script files]] [ [[http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/src/8-more-emacs-and-script-files.org][org]] ]                                 | [[./audio/8-more-emacs.mp3][mp3]] [[./audio/8-more-emacs.m4a][m4a]] [[./audio/8-more-emacs.ogg][ogg]]   | [[./present/8-more-emacs-and-script-files.pdf][pdf]] [[./present/8-more-emacs-and-script-files.key][key]] [[./present/8-more-emacs-and-script-files.ppt][ppt]] |              |
-|  HW 2 | 2011-09-20 | [[./hw/hw-2-shell-and-org-mode.html][Homework 2: shell and org-mode]] due Thurs 2011-09-22 5PM EDT [ [[http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/hw/hw-2-shell-and-org-mode.org][org]] ] |               |             |              |
-|     7 | 2011-09-20 | [[./7-emacs-and-org-mode.html][Emacs and org-mode]] [ [[http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/src/7-emacs-and-org-mode.org][org]] ]                                          | [[./audio/7-emacs-and-org-mode.mp3][mp3]] [[./audio/7-emacs-and-org-mode.m4a][m4a]] [[./audio/7-emacs-and-org-mode.ogg][ogg]]   |             |              |
-|     6 | 2011-09-15 | [[./6-keypassx-dropbox.html][KeyPassX and Dropbox]] [ [[http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/src/6-keypassx-dropbox.org][org]] ]                                        | [[./audio/6-keypassx-dropbox.mp3][mp3]] [[./audio/6-keypassx-dropbox.m4a][m4a]] [[./audio/6-keypassx-dropbox.ogg][ogg]]   |             |              |
-|     5 | 2011-09-13 | [[./5-filetypes-emacs.html][File types, Intro to Emacs, beginning scripts]] [ [[http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/src/5-filetypes-emacs.org][org]] ]               | [[./audio/5-identifying-file-types.mp3][mp3]] [[./audio/5-identifying-file-types.m4a][m4a]] [[./audio/5-identifying-file-types.ogg][ogg]]   |             |              |
-|     4 | 2011-09-08 | VMWare Ubuntu Image (*Coming soon*)                                 | [[./audio/4-vmware-ubuntu-virtual-machine.mp3][mp3]] [[./audio/4-vmware-ubuntu-virtual-machine.m4a][m4a]] [[./audio/4-vmware-ubuntu-virtual-machine.ogg][ogg]]   |             |              |
-|     3 | 2011-09-06 | [[./3-basic-command-line.html][Wiki editing, Weather Demo, Basic Command Line]]  [ [[http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/src/3-basic-command-line.org][org]] ]             | [[./audio/3-wiki-weather-shell.mp3][mp3]] [[./audio/3-wiki-weather-shell.m4a][m4a]] [[./audio/3-wiki-weather-shell.ogg][ogg]]   |             |              |
-|     2 | 2011-09-01 | [[./2-irc-wiki-basic-shell.html][IRC, Wiki, Basic Shell]] [ [[http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/src/2-irc-wiki-basic-shell.org][org]] ]                                      | [[./audio/2-irc-wiki-basic-shell.mp3][mp3]] [[./audio/2-irc-wiki-basic-shell.m4a][m4a]] [[./audio/2-irc-wiki-basic-shell.ogg][ogg]]   |             |              |
-|     1 | 2011-08-30 | [[./1-introduction.html][Introduction]] [ [[http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/src/1-introduction.org][org]] ]                                                | [[./audio/1-introduction.mp3][mp3]] [[./audio/1-introduction.m4a][m4a]] [[./audio/1-introduction.ogg][ogg]]   |             |              |
-
-
-
-#1. [[./introduction.html][Introduction]] - outline only
-#1. [[./communication.html][Communications tools]] - outline only
-#1. [[./choosing-a-text-editor.html][Choosing a Text Editor]] - covers a little of emacs, rest is outlines
-#1. [[./choosing-a-programming-language.html][Choosing a Programming Language]] - outline only
-#1. [[./command-line.html][Command Line]] - rough draft written
-#1. [[./python-intro.html][Introduction to Python]] - rough draft written
-#1. [[./python-intro-from-matlab.html][Intro to Python for Matlab Programmers]] - barely started writing
-#1. [[./databases.html][Database basics]] - partial rough draft
-#1. [[./python-binary-files.html][Parsing binary data files with python]] - rough draft half done
-#
-#Yet to get started:
-#
-#- Octave (and Matlab)
-#- R for statistics
-#- Matplotlib - plotting from python
-#- Scipy - data analysis in python
-
-
