@@ -1,0 +1,34 @@
+#+STARTUP: showall
+
+# Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License.
+
+#+TITLE:     Homework 3: Journal / Work Log
+#+AUTHOR:    Kurt Schwehr
+#+EMAIL:     kurt@ccom.unh.edu
+#+DATE:      <2011-09-27 Tue>
+#+LINK_HOME: http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/
+
+* Introduction
+
+There are many reasons why you might keep a work log.  The most
+important reasons to capture what you have done and learned are
+likely:
+
+- Have it be easier to do the same task in the future
+- Document exactly how you did something.  The devil is in the
+  details.
+- Stop trying to keep everything in your head.
+
+* TODO HOMEWORK
+  DEADLINE: <2011-10-04 Tue> by 5PM EDT
+
+Note: These check boxes are just to help you.
+
+- [ ] Watch youtube videos:  [[http://youtu.be/16Rd46SE-20][1]]  [[http://youtu.be/P2Q_WL0h-mY][2]]  [[http://youtu.be/ht4JtEbFtFI][3]]  [[http://youtu.be/2Cl_aiUkkG0][4]]   
+  - [ ] Put any questions that you have into your org-mode log file
+- [ ] Make sure you have log entries for both <2011-09-27 Tue> and
+      <2011-09-29 Thu> for the Research Tools course
+- [ ] Turn in your log file on the researchtools server as this file
+      ~/hw/03/log-$USER-$(date +%Y%m%d).org
+- [ ] Email mailto:kurt@ccom.unh.edu the md5 sum of the log file.  Do
+      not make this an attachment.
