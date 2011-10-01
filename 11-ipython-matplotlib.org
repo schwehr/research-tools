@@ -1,0 +1,34 @@
+#+STARTUP: showall
+
+#+TITLE:     Class 11: ipython and matplotlib
+#+AUTHOR:    Kurt Schwehr
+#+EMAIL:     schwehr@ccom.unh.edu
+#+DATE:      <2011-10-04 Tue>
+#+DESCRIPTION: Marine Research Data Manipulation and Practices
+#+KEYWORDS: ipython matplotlib
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:nil toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   TeX:t LaTeX:nil skip:t d:nil todo:t pri:nil tags:not-in-toc
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+LINK_HOME: http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/
+
+* Introduction
+
+** TODO Homework 3 due today!
+
+- http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/hw/hw-3-work-log.html
+- I will be periodically be sending you org text with all of your assignment grades
+
+*** What was that strange command in the homework?
+
+Did you try it with an echo command?
+
+#+BEGIN_SRC sh
+echo ~/hw/03/log-$USER-$(date +%Y%m%d).org
+#+END_SRC
+
+On my Mac laptop, I get:
+
+#+results:
+: /Users/schwehr/hw/03/log-schwehr-20111001.org
+
