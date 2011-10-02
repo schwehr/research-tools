@@ -1,0 +1,18 @@
+#+TITLE: Research Tools Video 4 - yet more emacs
+#+DATE: <2011-09-26 Mon>
+#+AUTHOR: Kurt Schwehr
+# License: Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License.
+
+* task list
+
+- [X] editing your .bashrc
+- [X] M-x tetris
+- [X] M-x doctor
+- [X] M-x man
+- [X] M-x info
+- [ ] Looking at class 5:
+  - [X] Getting the org file for class 5:
+        http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/src/5-filetypes-emacs.org
+  - [X] Get the tar
+  - [X] Uncompress the tar
+  - [X] Look at some of the examples inside the tar

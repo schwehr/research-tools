@@ -1,0 +1,205 @@
+#+STARTUP: showall
+
+#+TITLE: Research Tools Video 4 - yet more emacs
+#+DATE: <2011-10-02 Sun>
+#+AUTHOR: Kurt Schwehr
+# License: Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License.
+
+* Introduction
+
+Because this video shows everything that I've done, I have not cleaned
+up these notes beyond the hints that I gave myself to have up while I
+was creating the video.
+
+* See Also
+
+- http://www.gnu.org/s/bash/manual/bash.html
+
+* Basic variables                                                 :variables:
+
+You must be *no* spaces around the "=" and you must quote strings that
+have spaces in them.
+
+#+BEGIN_SRC sh :results scalar :export both
+shipname=NancyFoster
+echo $shipname
+shipname=nancy foster  # Error
+shipname="Nancy Foster"
+#+END_SRC
+
+#+results:
+: NancyFoster
+
+Regular variables do not do into any "child" program that is run from
+this shell.
+
+#+BEGIN_SRC sh :results scalar :export both
+shipname="Rudy"
+bash
+echo "Shipname is gone: $shipname"
+exit
+#+END_SRC
+
+#+results:
+: Shipname is gone: 
+
+=export= causes all programs to inherit the "shipname" variable.
+
+#+BEGIN_SRC sh :results scalar :export both
+export shipname="RVIB Palmer"
+bash
+echo "Shipname is still with us: $shipname"
+exit
+#+END_SRC
+
+#+results:
+: Shipname is still with us: RVIB Palmer
+
+* The environment                                                       :env:
+
+http://www.gnu.org/s/bash/manual/bash.html#Shell-Variables
+
+#+BEGIN_SRC sh
+printenv | cut -d= -f1 | tail
+#+END_SRC
+
+#+results:
+| PATH                   |
+| _                      |
+| PWD                    |
+| EMACSLOADPATH          |
+| HOME                   |
+| SHLVL                  |
+| LOGNAME                |
+| DISPLAY                |
+| GL_ENABLE_DEBUG_ATTACH |
+| EMACSDOC               |
+
+#+BEGIN_SRC sh
+echo SHLVL: $SHLVL
+echo BASH_VERSION $BASH_VERSION
+echo HISTSIZE: $HISTSIZE
+echo USER: $USER
+echo Print_working_directory: $PWD
+echo Computer_name: $HOSTNAME
+echo Language_that_we_are_using: $LANG
+echo Shell: $SHELL  # We only have bash in our virtual machine
+#+END_SRC
+
+#+results:
+| SHLVL:                      | 2                                                           |
+| BASH_VERSION                | 3.2.48(1)-release                                           |
+| HISTSIZE:                   | 1000                                                        |
+| USER:                       | schwehr                                                     |
+| Print_working_directory:    | /Users/schwehr/projects/doc/Classes/2011esci-research-tools |
+| Computer_name:              | macmini                                                     |
+| Language_that_we_are_using: | en_US.UTF-8                                                 |
+| Shell:                      | /bin/bash                                                   |
+
+** Setting EDITOR to use emacs
+
+EDITOR and emacsclient --no-wait C-x #
+
+#+BEGIN_SRC sh :results scalar
+emacsclient --help
+#+END_SRC
+
+#+results:
+#+begin_example
+Usage: emacsclient [OPTIONS] FILE...
+Tell the Emacs server to visit the specified files.
+Every FILE can be either just a FILENAME or [+LINE[:COLUMN]] FILENAME.
+
+The following OPTIONS are accepted:
+-V, --version		Just print version info and return
+-H, --help    		Print this usage information message
+-nw, -t, --tty 		Open a new Emacs frame on the current terminal
+-c, --create-frame    	Create a new frame instead of trying to
+			use the current Emacs frame
+-e, --eval    		Evaluate the FILE arguments as ELisp expressions
+-n, --no-wait		Don't wait for the server to return
+-d DISPLAY, --display=DISPLAY
+			Visit the file in the given display
+-s SOCKET, --socket-name=SOCKET
+			Set filename of the UNIX socket for communication
+-f SERVER, --server-file=SERVER
+			Set filename of the TCP authentication file
+-a EDITOR, --alternate-editor=EDITOR
+			Editor to fallback to if the server is not running
+			If EDITOR is the empty string, start Emacs in daemon
+			mode and try connecting again
+
+Report bugs to bug-gnu-emacs@gnu.org.
+#+end_example
+
+* for loop                                                              :for:
+
+#+BEGIN_SRC sh
+for hour in 01 02 03 04
+do
+  echo $hour
+done
+#+END_SRC
+
+#+results:
+| 1 |
+| 2 |
+| 3 |
+| 4 |
+
+* if                                                   :if:true:false:bashrc:
+
+#+BEGIN_SRC sh
+/bin/true
+echo $?
+#+END_SRC
+
+#+BEGIN_SRC sh
+/bin/false
+echo $?
+#+END_SRC
+
+#+BEGIN_SRC sh
+if /bin/true
+then
+  echo "yup.  true"
+fi
+#+END_SRC
+
+[[file:~/.bashrc][~/.bashrc]]
+
+#+BEGIN_SRC sh
+if [ -f ~/.bash_aliases ]; then
+    . ~/.bash_aliases
+fi
+#+END_SRC
+
+* Command subsitution
+
+http://www.gnu.org/s/bash/manual/bash.html#Command-Substitution
+
+Using $(command) or `command`
+
+#+BEGIN_SRC sh
+date --utc +%Y%m%d-%H%M%S
+#+END_SRC
+
+#+results:
+: 20111002-144245
+
+* Simple math
+
+#+BEGIN_SRC sh
+echo $(( 1+3 ))
+#+END_SRC
+
+#+results:
+: 4
+
+* xdg-open
+
+How to view files in the "default" application
+
+#+BEGIN_SRC sh
+open *.png
+#+END_SRC
