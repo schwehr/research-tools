@@ -26,7 +26,6 @@ shipname = 'Nancy Foster' # Spaces inside of your statements is not a big deal
 type(myship) # Can ask python about a variable.
 #+END_SRC
 
-
 ** Strings are a sequence of characters:
 
 #+BEGIN_SRC python
