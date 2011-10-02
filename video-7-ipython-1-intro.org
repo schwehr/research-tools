@@ -1,0 +1,162 @@
+#+STARTUP: showall
+
+#+TITLE: Research Tools Video 7 - Bash part 1 - Intro to python/ipython
+#+DATE: <2011-10-02 Sun>
+#+AUTHOR: Kurt Schwehr
+# License: Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License.
+
+* Introduction
+
+A walk through of basic python.
+
+* Basic data types and commands
+
+This is *not* setup to be run as org-babel!  Do *not* expect C-c C-c to be useful.
+
+The best way to work through this is to open an ipython shell and try out the commands.
+
+** strings
+
+#+BEGIN_SRC python
+'this is a string'
+# The pound character starts a comment
+'Nancy' + ' ' + 'Foster' # is a NOAA research ship
+shipname='NancyFoster'
+shipname = 'Nancy Foster' # Spaces inside of your statements is not a big deal
+type(myship) # Can ask python about a variable.
+#+END_SRC
+
+
+** Strings are a sequence of characters:
+
+#+BEGIN_SRC python
+shipname='Coastal Surveyor'
+len(shipname)
+shipname[0] # Count from zero
+shipname[5:8]
+shipname.find('S') # returns 8
+shipname.find('x') # returns -1 ... not found
+shipname[8:] # from position 8 to the end
+shipname[-4:] # last 4 characters
+#+END_SRC
+
+** Numbers
+
+#+BEGIN_SRC python
+1
+type(1)
+1.1
+type(1.1)
+str(1.1)
+float('3.1415')
+import math
+math.pi
+math.sin(math.pi/2)
+math.radians(180)
+math.degrees(2*math.pi)
+math. # then press the <TAB> key to get a list
+#+END_SRC
+
+There was a huge concept in there... we brought in the math "module" with the import.
+There are many modules full of tools that are prebuilt for you.
+
+** Lists of items
+
+#+BEGIN_SRC python
+range(4)
+range(3,7)
+range(3,28,5)
+
+ships = [ 'tug','row boat', 303902000, 123456789 ]
+type(ships)
+ships.append(369970120)
+ships.sort()
+ships[0]
+ships[-1]
+ships.remove('row boat')
+ships. # press <TAB>
+#+END_SRC
+
+** Basic operations on strings
+
+#+BEGIN_SRC python
+shipname='Gulf Challenger, R/V'
+shipname.split()
+fields = shipname.split(',')
+len(fields)
+name = fields[0]
+name * 4
+' -- '.join(fields)
+#+END_SRC
+
+* Working with files
+
+Use emacs to create a file call [[file:~/data.csv][~/data.csv]].  Put this in it:
+
+#+BEGIN_EXAMPLE 
+1,2
+4,5
+9,-1
+#+END_EXAMPLE
+
+#+BEGIN_SRC python
+datafile = open('data.csv')
+type( datafile )
+datafile.readline()
+datafile.readline()
+datafile.readline()
+datafile.readline()
+del(datafile)
+
+datafile = open('data.csv')
+lines = datafile.readlines()
+len(lines)
+lines[0]
+lines[0].strip()
+lines[0].strip().split(',')  # yikes!  you can chain things together
+#+END_SRC
+
+* A for loop                                                            :for:
+
+#+BEGIN_SRC python
+  for number in [ 1, 3, 6, 'nine' ]:
+      print number
+#+END_SRC
+
+#+BEGIN_SRC python
+  for line in open('data.csv'):
+      print line.strip()
+#+END_SRC
+
+#+BEGIN_SRC python
+  data = []
+  for line in open('data.csv'):
+      fields = line.split(',')
+      x = int( fields[0] )
+      y = int( fields[1] )
+      data.append( [ x, y ] )
+  print data
+#+END_SRC
+
+#+BEGIN_SRC python
+import numpy
+numpy.loadtxt?
+data = numpy.loadtxt('data.csv', dtype=int, delimiter=',')
+type(data)
+data
+list( data )
+data[1]
+#+END_SRC
+
+* Making a function                                                :function:
+
+You will want to break you problem down into sections.  One way to do that
+is to write functions.
+
+#+BEGIN_SRC python
+  def add_one(number):
+      new_number = number + 1
+      return new_number
+  
+  add_one(9)
+#+END_SRC
