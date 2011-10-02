@@ -58,15 +58,12 @@ Both work quite well on recent computers.  I met with the CCOM IT team
 and we decided to use [[http://www.vmware.com/products/player/][VMWare Player]] for this class, but it would be
 possible to duplicate everything that we do on VirtualBox.
 
-
-
 * See Also
 
 ** VMWare
 
 - [[http://itunes.apple.com/us/podcast/vmware-communities-roundtable/id292461263][VMware Communities Roundtable By vmware]] on iTunes
 - http://blogs.vmware.com/
-
 
 ** VirtualBox
 
@@ -77,3 +74,24 @@ VMWare Virtual Machine.
 In [[http://twit.tv/show/floss-weekly/130][FLOSS Weekly 130 - Virtual Box]], [[http://wiki.twit.tv/wiki/Randal_Schwartz][Randal Schwartz]] interviews to key
 people in the Virtual Box project.  You will see these notes link to a
 number of his "Free Libre Open Source Software" podcasts.
+
+* Installing the virtual machine
+
+You need to have [[http://www.vmware.com/products/player/][VMWare Player]] to be able to run the virtual machine
+on Microsoft Windows.  Download two files from the class web site.  In
+the web browser, use right-click and save as to copy both files into a
+folder on your desktop (or the location of your choice).
+
+http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/virtual-machines/
+
+At this point in the class, we are using "vm-20110908", but there may
+be a newer virtual machine if you come back later.  Get the newest one
+by going into the directory and getting
+
+- ubuntu-rt-20110908.vmx
+- ubuntu-rt-20110908.vmdk
+
+The second file will take a long time, as it is a 4GB file.
+
+
+

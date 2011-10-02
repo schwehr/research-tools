@@ -32,3 +32,293 @@ On my Mac laptop, I get:
 #+results:
 : /Users/schwehr/hw/03/log-schwehr-20111001.org
 
+I talk through the details of that command in Video 6, Bash part 2: shell variables
+
+*** TODO FIX: create video 6!
+
+* Introduction to python and ipython                         :ipython:python:
+
+** Not Python 3
+
+In this class we are using Python 2.7.  You will want to avoid
+reference material for python 3.  While python 3 is even better than
+python 2.x, there is still work to be done to get all of the add ons
+ready for python 3 and you will have trouble with getting examples to
+work.  To reduce confusion, just avoid python 3 for now.  If you
+learn python 2.7, the switch to python 3 will be very easy and there
+is even a program to automatically make the number of small changes
+required for code to work with python 3.
+
+** See Also
+
+If you like the concept of a 1 double sided reference card, here some
+for python and ipython:
+
+- http://asd.gsfc.nasa.gov/Rodrigo.Nemmen/ipython_quickref.pdf
+# http://www.packtpub.com/matplotlib-python-development/book?utm_source=matplotlib.sourceforge.net&utm_medium=link&utm_content=pod&utm_campaign=mdb_002124
+
+There are a number of very good free books to get you started.  
+
+- [[http://diveintopython.org/][Dive Into Python]] by Mark Pilgram
+
+Books in Safari:
+
+FIX
+
+
+** Setting your editor                            :emacs:editor:bashvariable:
+
+Inside of ipython, we can ask to edit a file.  The default editor to
+use is called [[http://www.vim.org/][vim]] (or often refered to as just vi).  We just spent a 
+number of lectures learning [[http://www.gnu.org/s/emacs/][GNU Emacs]] and we would rather take
+advantage of that.  Without setting anything up, here is vi as the editor:
+
+#+BEGIN_EXAMPLE 
+ipython
+edit helloworld.py
+:q!
+Exit()
+#+END_EXAMPLE
+
+That ":q!" is the vi command to "quit without saving".  
+
+We can set the bash shell variable =EDITOR= to emacs, but then every
+time we want to edit a file, ipython is going to wait for us to
+"finish" editing and exit emacs.  We will loose our place each time.
+There is a special way to setup emacs as a "server" that can be told
+to open a file from somewhere else.  emacs will stay running and can
+get multiple requests.  Here is how to make it work!
+
+Start emacs.  =Applications -> Programming -> GNU Emacs 23=.
+
+In emacs, we need to start the server that will listen for requests to
+edit a file.
+
+#+BEGIN_EXAMPLE 
+M-x server-start
+#+END_EXAMPLE
+
+Now, open a terminal.  =Applications -> Accessories -> Terminal=
+Once we have a terminal, we can set the =EDITOR= variable to use the
+program called =emacsclient=.  Remember that you can read more about
+the program with =man emacsclient=.
+
+#+BEGIN_SRC sh
+export EDITOR=emacsclient
+#+END_SRC
+
+Now start ipython.  As ipython to edit a python script file:
+
+#+BEGIN_SRC python
+edit helloworld.py
+#+END_SRC
+
+Now you can finish editing the file with =C-x #=.  Unfortunately,
+a couple things are not yet correct.  First, emacs will close that file
+so we can't keep editing.  Second, this setup is not permanent.  It
+only exists as long as this copy of emacs and this terminal are
+running.  We need to fix both at the same time by editing two
+configuration files in our account.
+
+First, let us edit our [[file:~/.emacs][.emacs]] file and add two lines plus some
+comments. In emacs lisp, comments start with the ";" character. Please
+do not worry about trying to understand the lisp programming language.
+That is outside of the scope of this class. If you are interested,
+please talk to me and I can get you started.
+
+#+BEGIN_SRC emacs-lisp
+;;; Emacs server
+
+; Do not close the file that was being edited when C-x # is typed
+(setq server-kill-new-buffers nil)
+
+; Start the emacs server for emacsclient
+(server-start)
+#+END_SRC
+
+Now, add this line to the bottom of your [[~/.bashrc][.bashrc]]:
+
+#+BEGIN_SRC sh
+export EDITOR=emacsclient
+#+END_SRC
+
+Next time you log in to your virtual machine, everything should be
+setup for you!
+
+*NOTE:* remember to start emacs *before* using the edit command!
+Also, only start 1 emacs.  The way it is setup here, we can only have
+one emacs.  Any addition emacs instances will complain when they get
+to the =server-start= command and find there is already a server
+running.
+
+Now in ipython, editing a file should look like this.  When you use
+=C-x #= in emacs to let ipython know that you are done editing,
+ipython will try to run your code.
+
+#+BEGIN_EXAMPLE  
+In [1]: edit "helloworld.py"
+Editing...Waiting for Emacs...
+#+END_EXAMPLE
+
+In emacs, make the file look like this:
+
+#+BEGIN_SRC python
+print "hello world"
+#+END_SRC
+
+Now press =C-x #= in emacs.
+
+#+BEGIN_EXAMPLE 
+ done. Executing edited code...
+hello world
+#+END_EXAMPLE
+
+** Getting help                                          :help:documentation:
+
+The main web page for python documentation is: http://docs.python.org/
+
+Inside of python, there are a number of ways to get help.
+
+First, you can directly ask for help.  Here we are asking for help on
+the open "function":
+
+#+BEGIN_SRC python
+help open
+#+END_SRC
+
+You can also put a "?" after a bunch of text and it will try to tell
+you what it can about that string.  You can put the "?" before or
+after then word.
+
+#+BEGIN_SRC python
+open?
+#+END_SRC
+
+And to answer the question from class last time about the difference
+between exit() and Exit().  We just have to ask!
+
+#+BEGIN_SRC python
+?exit
+?Exit
+#+END_SRC
+
+The key is to read through all that and ignore most of it.  The last
+line of =?Exit= tells us the key detail: "Exit IPython without
+confirmation."  That can also be said: you will not be asked =yes/no=
+when you quit ipython with =Exit()=.
+
+Later on, we will see more about functions or "methods" on variables
+that are accessed with a ".".  Here I will create a string variable
+and ask it what I can do with a string by pressing <TAB>.
+
+#+BEGIN_EXAMPLE 
+In [1]: mystring = "hello world"
+
+In [2]: mystring.
+mystring.__add__                      mystring.decode
+mystring.__class__                    mystring.encode
+mystring.__contains__                 mystring.endswith
+mystring.__delattr__                  mystring.expandtabs
+mystring.__doc__                      mystring.find
+mystring.__eq__                       mystring.format
+mystring.__format__                   mystring.index
+mystring.__ge__                       mystring.isalnum
+mystring.__getattribute__             mystring.isalpha
+...
+#+END_EXAMPLE
+
+There is a lot of "noise" in that output, but you will learn to read
+that and often be able to recognize what you want to do with a string.
+
+** Examples with org-babel and ipython                     :orgbabel:ipython:
+
+Here we are faced with a little problem before we go on.  I would like
+the examples to be runnable both in org-mode with =C-c C-c= and as
+something you can paste into ipython without modification.  However,
+that is not possible.  The setup for python in org-babel is that it
+ignores what we will print.  So if I try a print statement in python
+and run it with org-babel:
+
+#+BEGIN_SRC python
+print 1
+#+END_SRC
+
+#+results:
+: None
+
+The results above are "None".  Say what?!?!  It turns out that we have
+to "return" what we want org-babel to print.
+
+#+BEGIN_SRC python
+return 1
+#+END_SRC
+
+#+results:
+: 1
+
+That is more like what we wanted.  If you just paste the text without
+the return, all will be well.  So, in ipython, it will look like this:
+
+#+BEGIN_EXAMPLE 
+ipython
+Python 2.7.1+ (r271:86832, Apr 11 2011, 18:05:24) 
+Type "copyright", "credits" or "license" for more information.
+
+IPython 0.10.1 -- An enhanced Interactive Python.
+?         -> Introduction and overview of IPython's features.
+%quickref -> Quick reference.
+help      -> Python's own help system.
+object?   -> Details about 'object'. ?object also works, ?? prints more.
+
+In [1]: 1
+Out[1]: 1
+#+END_EXAMPLE
+
+** Time to try some actual python!  Playing with strings             :string:
+
+Onwards to working with some strings!  The python documentation is
+here:
+
+http://docs.python.org/library/string.html
+
+Strings can be 'in single quotes' or "in double quotes".  I will stick
+with singles quotes.
+
+First just a basic string:
+
+#+BEGIN_SRC python
+return 'this is a string'
+#+END_SRC
+
+#+results:
+: this is a string
+
+We can ask python to manipulate a string a little bit:
+
+#+BEGIN_SRC python
+return 'this is a string'.capitalize()
+#+END_SRC
+
+#+results:
+: This is a string
+
+Or we can get fancier.  The title method for a string makes it have
+each word capitialized.
+
+#+BEGIN_SRC python
+return 'this is a string'.title()
+#+END_SRC
+
+#+results:
+: This Is A String
+
+We can add strings together.
+
+#+BEGIN_SRC python
+return 'this ' + 'is ' + 'a string'
+#+END_SRC
+
+#+results:
+: this is a string
+
+
