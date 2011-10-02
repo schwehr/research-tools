@@ -57,9 +57,17 @@ for python and ipython:
 - http://asd.gsfc.nasa.gov/Rodrigo.Nemmen/ipython_quickref.pdf
 # http://www.packtpub.com/matplotlib-python-development/book?utm_source=matplotlib.sourceforge.net&utm_medium=link&utm_content=pod&utm_campaign=mdb_002124
 
-There are a number of very good free books to get you started.  
+There are a number of very good free books to get you started.  I've
+sorted them in the order that I think you might want to approach them.
 
 - [[http://diveintopython.org/][Dive Into Python]] by Mark Pilgram
+- [[http://rgruet.free.fr/#QuickRef][Python Quick Reference]] by Richard Gruet
+- http://en.wikibooks.org/wiki/Python_Programming
+- [[http://greenteapress.com/thinkpython/thinkpython.html][Think Python]] by Allen Downey
+- [[http://www.swaroopch.com/notes/Python][Byte of Python]] by Swaroop C H.  Make sure to get the 2.x version.
+  Not 3!
+- [[http://www.brpreiss.com/books/opus7/][Data Structures and Algorithms with Object-Oriented Design Patterns in Python]] by Bruno R. Preiss
+
 
 Books in Safari:
 
@@ -321,4 +329,12 @@ return 'this ' + 'is ' + 'a string'
 #+results:
 : this is a string
 
+We can ask python the type of a variable.
+
+#+BEGIN_SRC python
+return type('my string')
+#+END_SRC
+
+#+results:
+: <type 'str'>
 
