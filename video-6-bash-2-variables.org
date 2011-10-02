@@ -1,6 +1,6 @@
 #+STARTUP: showall
 
-#+TITLE: Research Tools Video 4 - yet more emacs
+#+TITLE: Research Tools Video 6 - Bash part 2 - variables
 #+DATE: <2011-10-02 Sun>
 #+AUTHOR: Kurt Schwehr
 # License: Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License.
