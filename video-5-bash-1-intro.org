@@ -1,0 +1,29 @@
+* HW 3
+
+* What should I do in the next video?
+
+- dealing with buffers.  creating a new buffer and then later saving it
+- text-mode verses org-mode
+- auto-fill-mode M-q
+- walk through dir ed mode
+  - compressing/uncompressing
+- creating an org mode log entry
+  - tags and tag completion
+  - export
+- org babel usage with sh
+- inserting text... e.g. a template
+
+Agenda
+
+* After that?
+
+- intro to python?
+- org-babel python
+
+
+* Shell and firefox video
+
+- Ctrl R to reload in firefox
+- file
+- cd
+- word count, head, tail, tr, cut
