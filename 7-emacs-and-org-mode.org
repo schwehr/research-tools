@@ -37,6 +37,25 @@ in org-mode format.
 Thursday.  Please pay close attention to detail when doing the
 homework.
 
+* Emacs and org-mode reference cards
+
+Print these double sided:
+
+- http://orgmode.org/orgcard.pdf
+- [[http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/docs/emacs23-refcard.pdf][emacs23-refcard.pdf]]
+
+In the virtual machine, you can open either of these links:
+
+- [[file:/usr/share/emacs/23.2/etc/refcards/refcard.pdf][/usr/share/emacs/23.2/etc/refcards/refcard.pdf]]
+- [[/usr/share/doc/org-mode/org.pdf.gz]]
+
+Or run these commands:
+
+#+BEGIN_SRC sh
+xdg-open /usr/share/emacs/23.2/etc/refcards/refcard.pdf
+xdg-open /usr/share/doc/org-mode/org.pdf.gz
+#+END_SRC
+
 * Ubuntu man pages online                                               :man:
 
 Sometimes you have a second computer next to you when working. One of
@@ -375,7 +394,6 @@ an example, it will not show the normal formatting.  Try this:
 : #+BEGIN_EXAMPLE 
 : * This is a heading
 : #+END_EXAMPLE
-
 
 * Alternative strategies for note taking
 
