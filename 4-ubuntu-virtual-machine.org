@@ -93,5 +93,112 @@ by going into the directory and getting
 
 The second file will take a long time, as it is a 4GB file.
 
+* Starting the virtual machine
 
+Double click the ubuntu-rt-20110908.vmx file and VMWare Player should
+start.  When you see the login page, click on "research tools" to log
+in as that user.  The password is:
 
+#+BEGIN_EXAMPLE 
+!rt2011vm
+#+END_EXAMPLE
+
+Normally, having a password that everyone knows is a *very bad idea*.
+However, for the time you are in this class, it is okay to leave the
+password the way it is.  Once you are done with the class, you should
+change the password using this command from the terminal
+
+#+BEGIN_SRC sh
+passwd
+#+END_SRC
+
+* Keeping the virtual machine up-to-date                   :updates:sysadmin:
+
+With any operating system, it is important to keep the system
+up-to-date.  Having all the latest patches and versions of software
+will help to protect your system from troubles.  
+
+** From the command line
+
+You can do an update from the terminal command line like this:
+
+#+BEGIN_SRC sh
+sudo apt-get update
+sudo apt-get upgrade
+#+END_SRC
+
+The =sudo= command executes commands as another user.  The
+researchtools account is an "administrator" type account and running
+sudo without specifying a user runs a command as the super user
+otherwise known as "root".  With sudo, there is no actual password for
+root and every command run with sudo is logged by the system.
+
+** From the Graphical User Interface (GUI)
+
+System -> Administration -> Update Manager
+
+* When done for the day
+
+When you are done with a virtual machine for a time, there are several
+things you can do to leave it.
+
+** Leave it running
+
+The console of the virtual machine will be protected by the screen
+lock of the host operating system, so it should not hurt to leave
+Ubuntu running and your account logged in with the virtual machine.
+
+The downside of this is that the virtual machine will use system
+resources (RAM, CPU, etc) and will slightly slow down the rest of your
+system.  This is probably not important unless you are doing large
+computationally expensive tasks on your computer.
+
+** Suspend/Hypernate it from Ubuntu
+
+There is a circle icon with a vertical slash at the top.  Select that
+and then Suspend or Hibernate.  I have not tried either, but they
+should work.
+
+** Suspend from VMWare
+
+This will capture the state of the virtual machine and completely
+suspend it.  The one problem with this method is that the clock will
+be wrong in the virtual machine.   You will want to run this command
+when you un-suspend the virtual machine to set the clock:
+
+#+BEGIN_SRC sh
+sudo ntpdate ntp.ubuntu.com
+#+END_SRC
+
+** Shutdown from Ubuntu
+
+If you a full shutdown (next to the hibernate and suspend in the menu
+under the "power button" on the top right, the system will go through
+the full clean shutdown of all processes.  While I have had excellent
+experiences with leaving Ubuntu servers running in remote locations
+for up to 2 years without a reboot, I would recommend rebooting at
+least every week or two with a desktop Ubuntu environment.
+
+An example of a Linux server that has not been rebooted in almost a year:
+
+#+BEGIN_SRC sh :export both
+uptime
+#+END_SRC
+
+#+results:
+| 04:45:05 up 342 days | 16:56 |  1 user,  load average: 0.33, 0.17, 0.11 |
+
+* How was the virtual machine setup?
+
+See these notes, which are very much a work in progress:
+
+http://vislab-ccom.unh.edu/~schwehr/rt/virtual-machine.html
+
+* Other virtual machines
+
+You can make your own virtual machine or there are quite a few starter
+virtual machines.
+
+- For VMWare: http://www.vmware.com/appliances/
+- For Virtual Box.  *WARNING*: I do not know if this site is trustworthy
+  - http://virtualboximages.com/
