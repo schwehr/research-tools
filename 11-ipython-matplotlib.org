@@ -19,6 +19,54 @@
 - http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/hw/hw-3-work-log.html
 - I will be periodically be sending you org text with all of your assignment grades
 
+** More videos online                                :videos:howto:videocast:
+
+There are 3 more videos online since the last class.  Make sure you
+watch them before the next class.  Runtime is 71 minutes for all 3.
+
+[[http://www.youtube.com/playlist?list%3DPL7E11B34616530F5E][Playlist of extra class videos on YouTube]]
+
+** Mathematica technical talk at UNH                :mathematica:proprietary:
+    SCHEDULED: <2011-10-10 Mon 14:00> 
+
+I forgot to announce a matlab session last week.  Next Monday, you may
+want to check out:
+
+- "Mathematica in Education and Research"
+- 2-3pm, including Q&A
+- Kingsbury Hall room N101
+
+#+BEGIN_EXAMPLE
+My talk is given 100% in Mathematica, and a big part of what I
+want to discuss is the exciting new free-form input in
+Mathematica 8. 
+#+END_EXAMPLE
+
+Here's a quick video preview:
+http://www.wolfram.com/common/includes/m8videos/quicktour.html
+
+** UNH Signals                                                          :unh:
+
+UNH has an Information Technology (IT) newsletter called [[http://signals.unh.edu/][Signals]].
+
+[[http://signals.unh.edu/2011/09/28/vantagepoint-inside-unh-it-with-chief-information-officer-joanna-young/][Vantagepoint: Inside UNH IT with Chief Information Officer Joanna Young]]
+
+You can meet our CIO.  If you read her answers to questions, you will
+see that I think she missed something *huge* with passwords: all your
+passwords should be different.  I worry less about people changing
+their passwords and more about each password being unrelated to
+compartmentalize any damage.  If someone grabbed your password for a
+site requiring your password, there is a non-zero chance that if you
+change your password that they will get that new password the same way
+Unless it is you that gave your password to a bad guy you thought was
+a good guy... and hopefully you learned never to give your password to
+*anyone* Do not have that stop you from changing your passwords, but
+it is important to understand the overall situation.
+
+Never give your password to *anyone*.  Period.  Full stop.  
+
+And do not get me started on "security questions".
+
 *** What was that strange command in the homework?
 
 Did you try it with an echo command?
@@ -32,9 +80,7 @@ On my Mac laptop, I get:
 #+results:
 : /Users/schwehr/hw/03/log-schwehr-20111001.org
 
-I talk through the details of that command in Video 6, Bash part 2: shell variables
-
-*** TODO FIX: create video 6!
+I talk through the details of that command in [[http://youtu.be/BgPCGecN3FI][Video 6, Bash part 2: shell variables]]
 
 * Introduction to python and ipython                         :ipython:python:
 
@@ -67,6 +113,8 @@ sorted them in the order that I think you might want to approach them.
 - [[http://www.swaroopch.com/notes/Python][Byte of Python]] by Swaroop C H.  Make sure to get the 2.x version.
   Not 3!
 - [[http://www.brpreiss.com/books/opus7/][Data Structures and Algorithms with Object-Oriented Design Patterns in Python]] by Bruno R. Preiss
+- [[http://niche-canada.org/programming-historian][The Programming Historian]] by William J. Turkel and Alan MacEachern
+  (for a research area focused take on python)
 
 
 Books in Safari:

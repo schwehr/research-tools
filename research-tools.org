@@ -106,3 +106,7 @@ Possible addition if someone could provide it and there is time:
 - Quick introduction to statistical analysis
   - Using http://cran.R-project.org/
   - Accessing R from python
+
+Other courses at UNH or elsewhere
+
+- Ernst Linder.  Math 944 - Spatial Statistics using R at UNH
