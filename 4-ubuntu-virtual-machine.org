@@ -1,6 +1,6 @@
 #+STARTUP: showall
 
-#+TITLE:     Class 4: VMWare Ubuntu Virtual Machine (DRAFT)
+#+TITLE:     Class 4: VMWare Ubuntu Virtual Machine
 #+AUTHOR:    Kurt Schwehr
 #+EMAIL:     schwehr@ccom.unh.edu
 #+DATE:      <2011-09-08 Thu>
@@ -202,3 +202,9 @@ virtual machines.
 - For VMWare: http://www.vmware.com/appliances/
 - For Virtual Box.  *WARNING*: I do not know if this site is trustworthy
   - http://virtualboximages.com/
+
+* TODO Suggestions for what else should be in the lecture notes?
+
+I am looking for community feedback, but especially on this class.  If
+you are not at CCOM and followed along, I am looking for feedback
+and/or contributions for the content.

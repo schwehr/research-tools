@@ -1,42 +1,46 @@
 #+STARTUP: showall
 
+#+TITLE: Virtual Machine - notes on creating the VM Ware appliance
+#+DATE: Fall 2011.  Updated <2011-10-03 Mon>
+#+AUTHOR: Kurt Schwehr
+# License: Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License.
+
 * WARNING
 
 This is a very rough document at the moment!
 
-* to do
+Plus, not all of these packages are in the vm-20110908 virtual machine.
 
-- [X] qgis
-- [X] grass
+* TODO not yet done and I can at least think of them
+
 - [ ] qgis-grass-plugin
-- [X] gpsd
-- [X] libkml
-- [ ] pykml
-- [ ] do I want flight gear?
-- [ ] r
-- [X] octave
-- [ ] password manager
-- [ ] pyproj, 
-- [X] ipython
-- [X] matplotlib
 - [ ] mapserver
 - [ ] mapnik
-- [ ] socat
-- [ ] wireshark
-- [ ] remove libreoffice
+- [ ] package mbsystem as a debian .deb
+- [ ] Notes from mbsystem mailing list / poseidonlinux on how to build a really small vm
 
 * Introduction
 
 - https://help.ubuntu.com/community/UbuntuScience
 - http://www.poseidonlinux.org/
 
-
 * Installing packages via built in deb
+
+** Account utilities - file and password management
+
+#+BEGIN_SRC sh
+sudo apt-get install keepassx
+#+END_SRC
+
+For dropbox, see [[http://vislab-ccom.unh.edu/~schwehr/rt/6-keypassx-dropbox.html][Lecture 6: KeePassX and Dropbox]]
 
 ** Misc Science
 
 #+BEGIN_SRC sh
-sudo apt-get install octave3.2
+sudo apt-get install octave3.2  # Similar syntax to matlab
+sudo apt-get r-base r-cran-maptools # GNU R statistical computation and graphics system
+sudo apt-get install libkml0
+sudo apt-get install gnudatalanguage # aka gdl.  Compatible with Interactive Data Lanuage (IDL)
 #+END_SRC
 
 ** Emacs text editor
@@ -73,6 +77,7 @@ sudo apt-get install worldwind
 
 #+BEGIN_SRC sh
 sudo apt-get install python-shapely
+sudo apt-get install python-pyproj
 sudo apt-get install python-kml
 sudo apt-get install ipython
 sudo apt-get install python-scitools python-matplotlib python-matplotlib-data
@@ -99,7 +104,7 @@ sudo apt-get -f install  # may not be required
 sudo dpkg -i google-earth-stable_current_i386.deb 
 #+END_SRC
 
-* Shrinking
+* Shrinking - removing packages
 
 #+BEGIN_SRC sh
 # list installed packages
@@ -107,8 +112,11 @@ dpkg --get-selections | grep -i libre
 sudo apt-get remove libreoffice-core
 #+END_SRC
 
+Need to see what I can do with this:
 
+#+BEGIN_SRC sh
 sudo apt-get install fslint
+#+END_SRC
 
 
 * Shrinking
@@ -133,8 +141,8 @@ sudo apt-get upgrade # seems to have done right thing.
 
 http://www.howtoforge.com/how-to-shrink-vmware-virtual-disk-files-vmdk
 
-
-s -lSr *.vmdk
+#+BEGIN_EXAMPLE
+ls -lSr *.vmdk
 -rw-------@ 1 schwehr  staff        1016 Aug 26 16:06 Ubuntu-11.04-32bit.vmdk
 -rw-------@ 1 schwehr  staff       65536 Aug 26 16:25 Ubuntu-11.04-32bit-s011.vmdk
 -rw-------@ 1 schwehr  staff    12058624 Aug 26 16:25 Ubuntu-11.04-32bit-s010.vmdk
@@ -183,6 +191,7 @@ ls -lSr *.vmdk
 
 # schwehr@Catbox4-MBAir.local 90 $ cd && du -hs
 5.8G	.
+#+END_EXAMPLE
 
 Not really shrinking...
 
@@ -231,6 +240,13 @@ shrink
 # This made no difference
 #+END_EXAMPLE
 
+* Networking helpers
+
+#+BEGIN_SRC sh
+sudo apt-get install wireshark nmap tcpdump
+sudo apt-get socat
+#+END_SRC
+
 * Tweaking the setup of a virtual machine
 
 ** Graphics
@@ -243,3 +259,4 @@ svga.vramSize = "<num bytes>"
 The default for all VMs is 16MB.  The VM has to be restarted in order
 for the change to take effect.
 #+END_EXAMPLE
+
