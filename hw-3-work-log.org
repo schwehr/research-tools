@@ -8,6 +8,21 @@
 #+DATE:      <2011-09-27 Tue>
 #+LINK_HOME: http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/
 
+* TODO Updates for 2012
+
+- Be explicit about the form of the log entries with:
+  - A top level entry
+  - An active day stamp without time
+  - At least a day tag
+- org file must have you name in the title
+- must have org header entries for author and emacs
+- md5sum email must include the full path or ~${USER}/ in it.  e.g.
+
+#+BEGIN_SRC sh
+md5sum ~/hw/03/log-schwehr-20111002.org 
+7e7c11f26c24536fc20154ff2188dfeb  /home/CCOMNH/schwehr/hw/03//log-$USER-$(date +%Y%m%d).org
+#+END_SRC
+
 * Introduction
 
 There are many reasons why you might keep a work log.  The most

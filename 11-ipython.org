@@ -1,6 +1,6 @@
 #+STARTUP: showall
 
-#+TITLE:     Class 11: ipython and matplotlib
+#+TITLE:     Class 11: ipython
 #+AUTHOR:    Kurt Schwehr
 #+EMAIL:     schwehr@ccom.unh.edu
 #+DATE:      <2011-10-04 Tue>
@@ -20,7 +20,7 @@ Here is what I suggest
 #+BEGIN_SRC sh
 mkdir -p ~/class/11
 cd ~/class/11
-wget http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/11-ipython-matplotlib.org
+wget http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/src/11-ipython-matplotlib.org
 #+END_SRC
 
 Make sure you have this org file for class open in emacs from 
