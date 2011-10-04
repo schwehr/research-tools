@@ -12,6 +12,22 @@
 #+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
 #+LINK_HOME: http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/
 
+* Setup
+
+Before you start class, make sure you have your environment set up.
+Here is what I suggest
+
+#+BEGIN_SRC sh
+mkdir -p ~/class/11
+cd ~/class/11
+wget http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/11-ipython-matplotlib.org
+#+END_SRC
+
+Make sure you have this org file for class open in emacs from 
+[[file:~/class/11/11-ipython-matplotlib.org][~/class/11/11-ipython-matplotlib.org]]
+
+Open a terminal and =cd ~/class/11=.
+
 * Introduction
 
 ** TODO Homework 3 due today!
@@ -67,7 +83,7 @@ Never give your password to *anyone*.  Period.  Full stop.
 
 And do not get me started on "security questions".
 
-*** What was that strange command in the homework?
+** What was that strange command in the homework?
 
 Did you try it with an echo command?
 
@@ -82,8 +98,11 @@ On my Mac laptop, I get:
 
 I talk through the details of that command in [[http://youtu.be/BgPCGecN3FI][Video 6, Bash part 2: shell variables]]
 
-* Introduction to python and ipython                         :ipython:python:
+* Today's class has an associated video                       :youtube:video:
 
+[[http://youtu.be/v_3NjQB3q-Q][RT - Video 7 - Python/ipython part 1 - Introduction]]
+
+* Introduction to python and ipython                         :ipython:python:
 ** Not Python 3
 
 In this class we are using Python 2.7.  You will want to avoid
@@ -120,7 +139,6 @@ sorted them in the order that I think you might want to approach them.
 Books in Safari:
 
 FIX
-
 
 ** Setting your editor                            :emacs:editor:bashvariable:
 
@@ -386,3 +404,341 @@ return type('my string')
 #+results:
 : <type 'str'>
 
+* Data types in python                                   :int:float:str:list:
+
+There are several basic data types in python.
+
+- =str= - a character or string --> 'a'  'hello'  "world"
+  '''lists with three quote characters
+  can span multiple lines'''
+- numbers
+  - =int= - integers (aka whole numbers)  1, 2, -1, 0
+  - =float= - real numbers  3.1415, 0.0, -9e20
+  - =complex= - imaginary numbers.  complex(1,4)
+- =bool= - Booleans.    True or False
+- sequences of items
+  - =list= - ordered sequence of items that can change.  
+     [1, -3, 1.3, 'hello', ['list', 'inside', 'a', 'list']
+  - =tuple= - ordered sequence that can *not* change.  (1,-3,'hi')
+  - =set= - only one of each item
+    set( [1,4,1,1] )  -> set([1, 4])
+- =dict= - a fast lookup table or "dictionary"
+  { 1: 2, 99: 'second', 'third': 333 }
+- =file= - you can read and write to files
+- =None= - A special case
+
+Note that =str=, =dict= and =file= also act as sequences of items.  For
+example...  Jumping ahead and using a for loop before I've explained the
+concept of a for loop.  Sorry!
+
+#+BEGIN_SRC python
+  for c in 'geology':
+      print c
+#+END_SRC
+
+Gives this as it steps through each letter in the string:
+
+#+BEGIN_EXAMPLE 
+g
+e
+o
+l
+o
+g
+y
+#+END_EXAMPLE
+
+* A little ipython before we go on                                  :ipython:
+
+We need to learn a little bit about ipython before we try out those
+data types.  If you have ipython open, use =exit()= to quit and start
+a new ipython shell.
+
+#+BEGIN_SRC python
+who  # List interactive variables
+whos # Like who, but give the values
+#+END_SRC
+
+#+BEGIN_SRC python
+who
+Interactive namespace is empty.
+
+In [15]: shipname='R/V Cocheco'
+
+In [16]: who
+shipname	
+
+In [17]: whos
+Variable   Type    Data/Info
+----------------------------
+shipname   str     R/V Cocheco
+#+END_SRC
+
+We can also ask ipython to create a log file of our session.
+
+#+BEGIN_SRC python
+logstart
+a = 1+2
+b = 3+4
+who
+logstop
+less ipython_log.py
+#+END_SRC
+
+For the logging commands, type "%log" in ipython and then press <TAB>
+
+#+BEGIN_EXAMPLE 
+In [1]: %log
+%logoff    %logon     %logstart  %logstate  %logstop   
+
+In [2]: %logoff?
+#+END_EXAMPLE
+
+The 2nd command is asking for help with =logoff=.  You don't need to
+type the "%" with ipython commands.
+
+* Trying out the data types                         :str:list:int:float:list:
+
+** str - strings
+
+#+BEGIN_SRC python
+shipname='Coastal Surveyor'
+len(shipname)
+shipname[0] # Count from zero
+shipname[5:8]
+shipname.find('S') # returns 8
+shipname.find('x') # returns -1 ... not found
+shipname[8:] # from position 8 to the end
+shipname[-4:] # last 4 characters
+#+END_SRC
+
+As sequence of characters:
+
+#+BEGIN_SRC python
+shipname='Coastal Surveyor'
+len(shipname)
+shipname[0] # Count from zero
+shipname[5:8]
+shipname.find('S') # returns 8
+shipname.find('x') # returns -1 ... not found
+shipname[8:] # from position 8 to the end
+shipname[-4:] # last 4 characters
+#+END_SRC
+
+** =int= and =float= numbers
+
+#+BEGIN_SRC python
+1
+type(1)
+1.1
+type(1.1)
+str(1.1)
+float('3.1415')
+import math
+math.pi
+math.sin(math.pi/2)
+math.radians(180)
+math.degrees(2*math.pi)
+math. # then press the <TAB> key to get a list
+
+complex(1,4j)
+4j * (2 + 9j)
+#+END_SRC
+
+** =list= of items 
+
+#+BEGIN_SRC python
+range(4)
+range(3,7)
+range(3,28,5)
+
+ships = [ 'tug','row boat', 303902000, 123456789 ]
+type(ships)
+ships.append(369970120)
+ships.sort()
+ships[0]
+ships[-1]
+ships.remove('row boat')
+ships. # press <TAB>
+#+END_SRC
+
+** Basic operations on strings
+
+#+BEGIN_SRC python
+shipname='Gulf Challenger, R/V'
+shipname.split()
+fields = shipname.split(',')
+len(fields)
+name = fields[0]
+name * 4
+' -- '.join(fields)
+#+END_SRC
+
+* Working with files                                                   :file:
+
+We could use emacs to create a file called [[file:~/class/11/data.csv][~/class/11/data.csv]] by
+putting this in it the file, but *do not do this*!
+
+#+BEGIN_EXAMPLE 
+1,2
+4,5
+9,-1
+#+END_EXAMPLE
+
+Instead, we can use python to create the file.  You can use =C-c C-c=
+to execute the file in this file or you can paste this into your
+ipython shell.
+
+#+BEGIN_SRC python
+out = open('data.csv','w')
+out.write('1,2\n')
+out.write('4,5\n')
+out.write('9,-1\n')
+out.close()
+#+END_SRC
+
+Open up the file in emacs:  [[file:~/class/11/data.csv][~/class/11/data.csv]]
+
+We can now read that data from python!
+
+#+BEGIN_SRC python
+datafile = open('data.csv')
+type( datafile )
+datafile.readline()
+datafile.readline()
+datafile.readline()
+datafile.readline()
+del(datafile)
+
+datafile = open('data.csv')
+lines = datafile.readlines()
+len(lines)
+lines[0]
+lines[0].strip()
+lines[0].strip().split(',')  # yikes!  you can chain things together
+#+END_SRC
+
+* A for loop                                                            :for:
+
+#+BEGIN_SRC python
+  for number in [ 1, 3, 6, 'nine' ]:
+      print number
+#+END_SRC
+
+#+BEGIN_SRC python
+  for line in open('data.csv'):
+      print line.strip()
+#+END_SRC
+
+#+BEGIN_SRC python
+  data = []
+  for line in open('data.csv'):
+      fields = line.split(',')
+      x = int( fields[0] )
+      y = int( fields[1] )
+      data.append( [ x, y ] )
+  print data
+#+END_SRC
+
+#+BEGIN_SRC python
+import numpy
+numpy.loadtxt?
+data = numpy.loadtxt('data.csv', dtype=int, delimiter=',')
+type(data)
+data
+list( data )
+data[1]
+#+END_SRC
+
+* Making a function                                                :function:
+
+You will want to break you problem down into sections.  One way to do that
+is to write functions.
+
+#+BEGIN_SRC python
+def add_one(number):
+    new_number = number + 1
+    return new_number
+
+# Calling our function
+add_one(9)
+#+END_SRC
+
+* Checking your code with pylint                                     :pylint:
+
+I don't agree with all of the checks that pylint does on python code,
+but if your code scores well with pylint, then it is likely to be
+easier to read by others and less likely to have bugs.  Here is some
+terribly written python to put into a file: [[file:~/forpylint.py][~/forpylint.py]]
+
+#+BEGIN_SRC python
+
+# This line is really long and pylint does not like really long lines by default.  Really!
+
+def MYFUCTION(FOO):
+      # pylint is not going to like the capitization of the above
+      # it will not like how I indented this
+
+      return 123
+
+MYFUNCTION('hello')
+#+END_SRC
+
+That code is *BAD*.  Let's ask pylint about it, but first we have to
+install pylint.
+
+#+BEGIN_SRC sh
+sudo apt-get install pylint
+#+END_SRC
+
+Now run pylint:
+
+#+BEGIN_SRC sh
+pylint forpylint.py
+#+END_SRC
+
+It will return this.  Some of the beginning detail has been left out.
+
+#+BEGIN_EXAMPLE 
+Global evaluation
+-----------------
+Your code has been rated at -22.50/10
+
+Statistics by type
+------------------
+
++---------+-------+-----------+-----------+------------+---------+
+|type     |number |old number |difference |%documented |%badname |
++=========+=======+===========+===========+============+=========+
+|module   |1      |NC         |NC         |0.00        |0.00     |
++---------+-------+-----------+-----------+------------+---------+
+|class    |0      |NC         |NC         |0           |0        |
++---------+-------+-----------+-----------+------------+---------+
+|method   |0      |NC         |NC         |0           |0        |
++---------+-------+-----------+-----------+------------+---------+
+|function |1      |NC         |NC         |0.00        |100.00   |
++---------+-------+-----------+-----------+------------+---------+
+#+END_EXAMPLE
+
+Our code scored -22.5 out of 10.  Ouch!  We can tell pylint that we
+don't believe in all the warnings that it has.  For example, I do not
+mind longer lines in the code.  Add these 3 lines to the very
+beginning of the file:
+
+#+BEGIN_SRC python
+# pylint: disable-msg=W0142
+# pylint: disable-msg=C0301
+# pylint: disable-msg=W0622
+#+END_SRC
+
+Running pylint again will tell us that it thinks our code is better,
+but still terrible.
+
+#+BEGIN_EXAMPLE 
+Global evaluation
+-----------------
+Your code has been rated at -20.00/10 (previous run: -22.50/10)
+#+END_EXAMPLE
+
+It is not worth trying to get a perfect 10 out of 10, but reading 
+through pylint's warnings will help you to write better code.
