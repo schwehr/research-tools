@@ -1,6 +1,6 @@
 #+STARTUP: showall
 
-#+TITLE:     Class 11: ipython
+#+TITLE:     Class 11: ipython and python data types
 #+AUTHOR:    Kurt Schwehr
 #+EMAIL:     schwehr@ccom.unh.edu
 #+DATE:      <2011-10-04 Tue>
@@ -20,11 +20,11 @@ Here is what I suggest
 #+BEGIN_SRC sh
 mkdir -p ~/class/11
 cd ~/class/11
-wget http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/src/11-ipython-matplotlib.org
+wget http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/src/11-ipython.org
 #+END_SRC
 
 Make sure you have this org file for class open in emacs from 
-[[file:~/class/11/11-ipython-matplotlib.org][~/class/11/11-ipython-matplotlib.org]]
+[[file:~/class/11/11-ipython.org][~/class/11/11-ipython.org]]
 
 Open a terminal and =cd ~/class/11=.
 
@@ -103,6 +103,7 @@ I talk through the details of that command in [[http://youtu.be/BgPCGecN3FI][Vid
 [[http://youtu.be/v_3NjQB3q-Q][RT - Video 7 - Python/ipython part 1 - Introduction]]
 
 * Introduction to python and ipython                         :ipython:python:
+
 ** Not Python 3
 
 In this class we are using Python 2.7.  You will want to avoid
@@ -609,136 +610,4 @@ datafile.readline()
 datafile.readline()
 datafile.readline()
 del(datafile)
-
-datafile = open('data.csv')
-lines = datafile.readlines()
-len(lines)
-lines[0]
-lines[0].strip()
-lines[0].strip().split(',')  # yikes!  you can chain things together
 #+END_SRC
-
-* A for loop                                                            :for:
-
-#+BEGIN_SRC python
-  for number in [ 1, 3, 6, 'nine' ]:
-      print number
-#+END_SRC
-
-#+BEGIN_SRC python
-  for line in open('data.csv'):
-      print line.strip()
-#+END_SRC
-
-#+BEGIN_SRC python
-  data = []
-  for line in open('data.csv'):
-      fields = line.split(',')
-      x = int( fields[0] )
-      y = int( fields[1] )
-      data.append( [ x, y ] )
-  print data
-#+END_SRC
-
-#+BEGIN_SRC python
-import numpy
-numpy.loadtxt?
-data = numpy.loadtxt('data.csv', dtype=int, delimiter=',')
-type(data)
-data
-list( data )
-data[1]
-#+END_SRC
-
-* Making a function                                                :function:
-
-You will want to break you problem down into sections.  One way to do that
-is to write functions.
-
-#+BEGIN_SRC python
-def add_one(number):
-    new_number = number + 1
-    return new_number
-
-# Calling our function
-add_one(9)
-#+END_SRC
-
-* Checking your code with pylint                                     :pylint:
-
-I don't agree with all of the checks that pylint does on python code,
-but if your code scores well with pylint, then it is likely to be
-easier to read by others and less likely to have bugs.  Here is some
-terribly written python to put into a file: [[file:~/forpylint.py][~/forpylint.py]]
-
-#+BEGIN_SRC python
-
-# This line is really long and pylint does not like really long lines by default.  Really!
-
-def MYFUCTION(FOO):
-      # pylint is not going to like the capitization of the above
-      # it will not like how I indented this
-
-      return 123
-
-MYFUNCTION('hello')
-#+END_SRC
-
-That code is *BAD*.  Let's ask pylint about it, but first we have to
-install pylint.
-
-#+BEGIN_SRC sh
-sudo apt-get install pylint
-#+END_SRC
-
-Now run pylint:
-
-#+BEGIN_SRC sh
-pylint forpylint.py
-#+END_SRC
-
-It will return this.  Some of the beginning detail has been left out.
-
-#+BEGIN_EXAMPLE 
-Global evaluation
------------------
-Your code has been rated at -22.50/10
-
-Statistics by type
-------------------
-
-+---------+-------+-----------+-----------+------------+---------+
-|type     |number |old number |difference |%documented |%badname |
-+=========+=======+===========+===========+============+=========+
-|module   |1      |NC         |NC         |0.00        |0.00     |
-+---------+-------+-----------+-----------+------------+---------+
-|class    |0      |NC         |NC         |0           |0        |
-+---------+-------+-----------+-----------+------------+---------+
-|method   |0      |NC         |NC         |0           |0        |
-+---------+-------+-----------+-----------+------------+---------+
-|function |1      |NC         |NC         |0.00        |100.00   |
-+---------+-------+-----------+-----------+------------+---------+
-#+END_EXAMPLE
-
-Our code scored -22.5 out of 10.  Ouch!  We can tell pylint that we
-don't believe in all the warnings that it has.  For example, I do not
-mind longer lines in the code.  Add these 3 lines to the very
-beginning of the file:
-
-#+BEGIN_SRC python
-# pylint: disable-msg=W0142
-# pylint: disable-msg=C0301
-# pylint: disable-msg=W0622
-#+END_SRC
-
-Running pylint again will tell us that it thinks our code is better,
-but still terrible.
-
-#+BEGIN_EXAMPLE 
-Global evaluation
------------------
-Your code has been rated at -20.00/10 (previous run: -22.50/10)
-#+END_EXAMPLE
-
-It is not worth trying to get a perfect 10 out of 10, but reading 
-through pylint's warnings will help you to write better code.
