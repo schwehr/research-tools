@@ -1,0 +1,375 @@
+#+STARTUP: showall
+
+#+TITLE:     Class 12: python and control structures
+#+AUTHOR:    Kurt Schwehr
+#+EMAIL:     schwehr@ccom.unh.edu
+#+DATE:      <2011-10-04 Tue>
+#+DESCRIPTION: Marine Research Data Manipulation and Practices
+#+KEYWORDS: ipython matplotlib
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:nil toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   TeX:t LaTeX:nil skip:t d:nil todo:t pri:nil tags:not-in-toc
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+LINK_HOME: http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/
+
+* Introduction
+
+** Google Group
+
+I have set up a google group for the class.  Feel free to discuss anything related to the class there.   It is open to the public, so there might end up being more than just the people you see in the classroom.
+
+http://groups.google.com/group/researchtools2011
+
+** Comments per class
+
+I will try to make a post per class on my blog as a place to comment on a specific class.
+I leave it up to you to decide if you want to decide to comment on the Google Group or
+as a comment to a blog post on blogspot/blogger (Google's blog service)
+
+- http://schwehr.blogspot.com/2011/10/research-tools-lecture-11-ipython-and.html
+- http://schwehr.blogspot.com/2011/10/research-tools-lecture-10-qgis-bash.html
+- http://schwehr.blogspot.com/2011/10/research-tools-lecture-9-babel-bash.html
+- http://schwehr.blogspot.com/2011/10/research-tools-lecture-8-more-emacs-and.html
+- http://schwehr.blogspot.com/2011/10/research-tools-lecture-7-emacs-and-org.html
+- http://schwehr.blogspot.com/2011/10/research-tools-lecture-6-keepassx-and.html
+- http://schwehr.blogspot.com/2011/10/research-tools-lecture-5-filetypes.html
+- http://schwehr.blogspot.com/2011/10/research-tools-lecture-4-vmware-ubuntu.html
+- http://schwehr.blogspot.com/2011/10/research-tools-lecture-3-wiki-editing.html
+- http://schwehr.blogspot.com/2011/10/research-tools-lecture-2-irc-mediawiki.html
+- http://schwehr.blogspot.com/2011/10/research-tools-lecture-1-introduction.html
+
+** Slashdot and Steve Jobs                                  :apple:stevejobs:
+
+If you haven't heard, Steve Jobs, co-founder of Apple Computers, passed away yesterday.
+
+http://apple.slashdot.org/story/11/10/06/000211/steve-jobs-dead-at-56
+
+* Setup
+
+Before you start class, make sure you have your environment set up.
+Here is what I suggest
+
+#+BEGIN_SRC sh
+mkdir -p ~/class/12
+cd ~/class/12
+wget http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/src/12-python.org
+touch first.py
+#+END_SRC
+
+** Setting your editor                            :emacs:editor:bashvariable:
+
+We can set the bash shell variable =EDITOR= to emacs, but then every
+time we want to edit a file, ipython is going to wait for us to
+"finish" editing and exit emacs.  We will loose our place each time.
+There is a special way to setup emacs as a "server" that can be told
+to open a file from somewhere else.  emacs will stay running and can
+get multiple requests.  Here is how to make it work!
+
+Start emacs.  =Applications -> Programming -> GNU Emacs 23=.
+
+In emacs, we need to start the server that will listen for requests to
+edit a file.
+
+#+BEGIN_EXAMPLE 
+M-x server-start
+#+END_EXAMPLE
+
+Now, open a terminal.  =Applications -> Accessories -> Terminal=
+Once we have a terminal, we can set the =EDITOR= variable to use the
+program called =emacsclient=.  Remember that you can read more about
+the program with =man emacsclient=.
+
+#+BEGIN_SRC sh
+export EDITOR=emacsclient
+#+END_SRC
+
+Now start ipython.  As ipython to edit a python script file:
+
+#+BEGIN_SRC python
+edit helloworld.py
+#+END_SRC
+
+Now you can finish editing the file with =C-x #=.  Unfortunately,
+a couple things are not yet correct.  First, emacs will close that file
+so we can't keep editing.  Second, this setup is not permanent.  It
+only exists as long as this copy of emacs and this terminal are
+running.  We need to fix both at the same time by editing two
+configuration files in our account.
+
+First, let us edit our [[file:~/.emacs][.emacs]] file and add two lines plus some
+comments. In emacs lisp, comments start with the ";" character. Please
+do not worry about trying to understand the lisp programming language.
+That is outside of the scope of this class. If you are interested,
+please talk to me and I can get you started.
+
+#+BEGIN_SRC emacs-lisp
+;;; Emacs server
+
+; Do not close the file that was being edited when C-x # is typed
+(setq server-kill-new-buffers nil)
+
+; Start the emacs server for emacsclient
+(server-start)
+#+END_SRC
+
+Now, add this line to the bottom of your [[~/.bashrc][.bashrc]]:
+
+#+BEGIN_SRC sh
+export EDITOR=emacsclient
+#+END_SRC
+
+Next time you log in to your virtual machine, everything should be
+setup for you!
+
+*NOTE:* remember to start emacs *before* using the edit command!
+Also, only start 1 emacs.  The way it is setup here, we can only have
+one emacs.  Any addition emacs instances will complain when they get
+to the =server-start= command and find there is already a server
+running.
+
+Now in ipython, editing a file should look like this.  When you use
+=C-x #= in emacs to let ipython know that you are done editing,
+ipython will try to run your code.
+
+#+BEGIN_EXAMPLE  
+In [1]: edit "helloworld.py"
+Editing...Waiting for Emacs...
+#+END_EXAMPLE
+
+In emacs, make the file look like this:
+
+#+BEGIN_SRC python
+print "hello world"
+#+END_SRC
+
+Now press =C-x #= in emacs.
+
+#+BEGIN_EXAMPLE 
+ done. Executing edited code...
+hello world
+#+END_EXAMPLE
+
+** Setting a shortcut in emacs                                        :emacs:
+
+Emacs has a lot of great keybinding, but I like to add three new ones.  Open 
+your [[file:~/.emacs][~/.emacs]] and add these lines to the bottom of the file:
+
+#+BEGIN_SRC emacs-lisp
+; Setup custom shortcuts
+(global-set-key "\C-x\C-g" 'goto-line)
+(global-set-key [f1] 'compile)
+(global-set-key [f2] 'next-error)
+#+END_SRC
+
+These will become active if you restart emacs.
+
+Or... you can put the cursor after the ")" on each line and
+type =C-x C-e= to run that line.  You are running a lisp command
+when you do this and changing the way emacs works while it is running.
+
+In the mini buffer, it will print the last "word".  For example, when you run it on the goto-line line, the mini buffer will say "goto-line".
+
+Pretty crazy concept.
+
+* Creating a python script and running it from python :compile:script:python:ipython:
+
+Start ipython:
+
+#+BEGIN_SRC sh
+cd ~/class/12
+ipython --pylab
+#+END_SRC
+
+Check that your EDITOR variable is set correctly.
+
+#+BEGIN_SRC python
+import os
+os.environ['EDITOR']
+#+END_SRC
+
+It should respond with:
+
+#+BEGIN_EXAMPLE 
+'emacsclient'
+#+END_EXAMPLE
+
+Ask ipython to start editing a file.  It will look at your EDITOR variable and call emacsclient:
+
+#+BEGIN_EXAMPLE
+edit first.py
+Editing...Waiting for Emacs...
+#+END_EXAMPLE
+
+You can now start editing the file.  Put this in your first.py:
+
+#+BEGIN_SRC python
+#!/usr/bin/env python
+
+print 'hello world'
+#+END_SRC
+
+Now let ipython know you are done editing with =C-x #=
+
+You can keep editing first.py.  If you save in emacs and want to try the program again from 
+ipython, you can "run" the code from ipython:
+
+#+BEGIN_SRC python
+run first.py
+#+END_SRC
+
+You can also run the code from inside of emacs with =M-x compile=.  It will prompt "Compile command: make".  You do not want it to run make, but instead our python program.  Change make to "./first.py".  You will get this error:
+
+#+BEGIN_EXAMPLE 
+-*- mode: compilation; default-directory: "/home/researchtools/class/12/" -*-
+Compilation started at Thu Oct  6 06:22:11
+
+./first.py
+/bin/bash: ./first.py: Permission denied
+
+Compilation exited abnormally with code 126 at Thu Oct  6 06:22:11
+#+END_EXAMPLE
+
+
+* Reading a file with python
+
+#+BEGIN_SRC python
+datafile = open('data.csv')
+type( datafile )
+datafile.readline()
+datafile.readline()
+datafile.readline()
+datafile.readline()
+del(datafile)
+
+datafile = open('data.csv')
+lines = datafile.readlines()
+len(lines)
+lines[0]
+lines[0].strip()
+lines[0].strip().split(',')  # yikes!  you can chain things together
+#+END_SRC
+
+* A for loop                                                            :for:
+
+#+BEGIN_SRC python
+  for number in [ 1, 3, 6, 'nine' ]:
+      print number
+#+END_SRC
+
+#+BEGIN_SRC python
+  for line in open('data.csv'):
+      print line.strip()
+#+END_SRC
+
+#+BEGIN_SRC python
+  data = []
+  for line in open('data.csv'):
+      fields = line.split(',')
+      x = int( fields[0] )
+      y = int( fields[1] )
+      data.append( [ x, y ] )
+  print data
+#+END_SRC
+
+#+BEGIN_SRC python
+import numpy
+numpy.loadtxt?
+data = numpy.loadtxt('data.csv', dtype=int, delimiter=',')
+type(data)
+data
+list( data )
+data[1]
+#+END_SRC
+
+* Making a function                                                :function:
+
+You will want to break you problem down into sections.  One way to do that
+is to write functions.
+
+#+BEGIN_SRC python
+def add_one(number):
+    new_number = number + 1
+    return new_number
+
+# Calling our function
+add_one(9)
+#+END_SRC
+
+* Checking your code with pylint                                     :pylint:
+
+I don't agree with all of the checks that pylint does on python code,
+but if your code scores well with pylint, then it is likely to be
+easier to read by others and less likely to have bugs.  Here is some
+terribly written python to put into a file: [[file:~/forpylint.py][~/forpylint.py]]
+
+#+BEGIN_SRC python
+
+# This line is really long and pylint does not like really long lines by default.  Really!
+
+def MYFUCTION(FOO):
+      # pylint is not going to like the capitization of the above
+      # it will not like how I indented this
+
+      return 123
+
+MYFUNCTION('hello')
+#+END_SRC
+
+That code is *BAD*.  Let's ask pylint about it, but first we have to
+install pylint.
+
+#+BEGIN_SRC sh
+sudo apt-get install pylint
+#+END_SRC
+
+Now run pylint:
+
+#+BEGIN_SRC sh
+pylint forpylint.py
+#+END_SRC
+
+It will return this.  Some of the beginning detail has been left out.
+
+#+BEGIN_EXAMPLE 
+Global evaluation
+-----------------
+Your code has been rated at -22.50/10
+
+Statistics by type
+------------------
+
++---------+-------+-----------+-----------+------------+---------+
+|type     |number |old number |difference |%documented |%badname |
++=========+=======+===========+===========+============+=========+
+|module   |1      |NC         |NC         |0.00        |0.00     |
++---------+-------+-----------+-----------+------------+---------+
+|class    |0      |NC         |NC         |0           |0        |
++---------+-------+-----------+-----------+------------+---------+
+|method   |0      |NC         |NC         |0           |0        |
++---------+-------+-----------+-----------+------------+---------+
+|function |1      |NC         |NC         |0.00        |100.00   |
++---------+-------+-----------+-----------+------------+---------+
+#+END_EXAMPLE
+
+Our code scored -22.5 out of 10.  Ouch!  We can tell pylint that we
+don't believe in all the warnings that it has.  For example, I do not
+mind longer lines in the code.  Add these 3 lines to the very
+beginning of the file:
+
+#+BEGIN_SRC python
+# pylint: disable-msg=W0142
+# pylint: disable-msg=C0301
+# pylint: disable-msg=W0622
+#+END_SRC
+
+Running pylint again will tell us that it thinks our code is better,
+but still terrible.
+
+#+BEGIN_EXAMPLE 
+Global evaluation
+-----------------
+Your code has been rated at -20.00/10 (previous run: -22.50/10)
+#+END_EXAMPLE
+
+It is not worth trying to get a perfect 10 out of 10, but reading 
+through pylint's warnings will help you to write better code.
