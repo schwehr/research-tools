@@ -1,0 +1,421 @@
+#+STARTUP: showall
+
+#+TITLE:     Class 12: python and control structures
+#+AUTHOR:    Kurt Schwehr
+#+EMAIL:     schwehr@ccom.unh.edu
+#+DATE:      <2011-10-04 Tue>
+#+DESCRIPTION: Marine Research Data Manipulation and Practices
+#+KEYWORDS: ipython matplotlib
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:nil toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   TeX:t LaTeX:nil skip:t d:nil todo:t pri:nil tags:not-in-toc
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+LINK_HOME: http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/
+
+* Possible topics
+
+- http://stackoverflow.com/questions/304049/emacs-23-and-ipython
+
+* Introduction
+
+
+
+** Setting a shortcut in emacs                                        :emacs:
+
+Emacs has a lot of great keybinding, but I like to add three new ones.
+Open your [[file:~/.emacs][~/.emacs]] and add these lines to the bottom of the file:
+
+#+BEGIN_SRC emacs-lisp
+; Setup custom shortcuts
+(global-set-key "\C-x\C-g" 'goto-line)
+(global-set-key [f1] 'compile)
+(global-set-key [f2] 'next-error)
+#+END_SRC
+
+These will become active if you restart emacs.
+
+Or... you can put the cursor after the ")" on each line and
+type =C-x C-e= to run that line.  You are running a lisp command
+when you do this and changing the way emacs works while it is running.
+
+In the mini buffer, it will print the last "word". For example, when
+you run it on the goto-line line, the mini buffer will say
+"goto-line".
+
+Pretty crazy concept.
+
+
+** Running a python script from emacs
+
+You can also run the code from inside of emacs with =M-x compile=. It
+will prompt "Compile command: make". You do not want it to run "make
+-k", but instead our python program. Change "make -k" to "./first.py".
+You will get this error:
+
+#+BEGIN_EXAMPLE 
+-*- mode: compilation; default-directory: "/home/researchtools/class/12/" -*-
+Compilation started at Thu Oct  6 06:22:11
+
+./first.py
+/bin/bash: ./first.py: Permission denied
+
+Compilation exited abnormally with code 126 at Thu Oct  6 06:22:11
+#+END_EXAMPLE
+
+We need to make the file executable.  There are a number of ways to do that.
+
+From the plain old bash shell:
+
+#+BEGIN_SRC sh
+chmod +x first.py
+#+END_SRC
+
+From ipython.  Remember that putting a "!" as the first character on a line
+lets you run plain old bash shell commands.
+
+#+BEGIN_SRC python
+!chmod +x first.py
+#+END_SRC
+
+From emacs, you can do this from the directory editor ("dired").
+
+- Open the directory with the script: =C-x C-f .= while editing the script.  
+  Or =C-x C-f ~/class/12/= from anywhere
+- Put the point ("cursor", but not the mouse) on the line with first.py
+- Operate -> Change Mode  or press =M=  <--- that's a capital M
+- When prompted with "Change mode of first.py to: " type in =755=
+
+=M-x man chmod= for more on changing file permissions.
+
+Now run the program with the compile command:  =M-x compile= 
+
+It should save you last compile command. You can use the arrow keys to
+scroll through the compile history.
+
+#+BEGIN_EXAMPLE 
+-*- mode: compilation; default-directory: "/home/researchtools/class/12/" -*-
+Compilation started at Thu Oct  6 07:03:52
+
+./first.py
+hello world
+
+Compilation finished at Thu Oct  6 07:03:52
+#+END_EXAMPLE
+
+You also have an a short cut now available. Typing =M-x compile=
+really takes too much work. With the change you made to your .emacs,
+you can now just press the F1 function key and it will be just like
+you typed =M-x compile=
+
+** Dealing with syntax errors (typos) with emacs            :nexterror:emacs:
+
+Change your script to have a problem:
+
+#+BEGIN_SRC python
+#!/usr/bin/env python
+
+print 'hello world'
+
+print my mistake
+#+END_SRC
+
+Now press F1 to compile. Note that emacs knows if you have not saved
+the file. It will ask you if you want to save your file before it
+tries to run it. Say 'y' and you will be all set.
+
+#+BEGIN_EXAMPLE 
+-*- mode: compilation; default-directory: "/home/researchtools/class/12/" -*-
+Compilation started at Thu Oct  6 07:07:58
+
+./first.py
+  File "./first.py", line 5
+    print my mistake
+                   ^
+SyntaxError: invalid syntax
+
+Compilation exited abnormally with code 1 at Thu Oct  6 07:07:58
+#+END_EXAMPLE
+
+Python is telling us that it does not like our 2nd print line. If you
+run =M-x next-error= (or the F2 alias we also created when we added
+the F1 alias), emacs will put your cursor where python thought your
+problem was. This is the same thing that we did with =M-x grep=.
+
+You can then put quotes around the text after the print and rerun the
+script. Is should now work.
+
+** Running the whole buffer
+
+You can also run the whole buffer in python. In the python buffer,
+press =C-c C-c= like you are in an org-mode SRC block. It will
+immediately run the whole file that you are in. If there is an error,
+it will take you right to that line.
+
+* for loops
+
+We can shorten that:
+
+#+BEGIN_SRC python
+for line in open('data.csv'):
+    print line.strip()
+#+END_SRC
+
+We can print the line number with it using the enumerate operation.
+
+#+BEGIN_SRC python
+for line in enumerate(open('data.csv')):
+    print line.strip()
+#+END_SRC
+
+Yuck:
+
+#+BEGIN_EXAMPLE 
+(0, '1,2\n')
+(1, '4,5\n')
+(2, '9,-1\n')
+#+END_EXAMPLE
+
+What we really want is to use the fact that we can set multiple
+variables at the same time.
+
+#+BEGIN_SRC python
+x,y = 4,9
+print x,y
+#+END_SRC
+
+#+BEGIN_SRC python
+for linenumber,line in enumerate(open('data.csv')):
+    print linenumber, '--->', line.strip()
+#+END_SRC
+
+Which gives something a lot more useful:
+
+#+BEGIN_EXAMPLE 
+0 ---> 1,2
+1 ---> 4,5
+2 ---> 9,-1
+#+END_EXAMPLE
+
+I recommend switching from ipython to using emacs to edit first.py for
+this next bit of code:
+
+#+BEGIN_SRC python
+data = []
+for line in open('data.csv'):
+    fields = line.split(',')
+    x = int( fields[0] )
+    y = int( fields[1] )
+    data.append( [ x, y ] )
+print data
+#+END_SRC
+
+#+BEGIN_SRC python
+import numpy
+numpy.loadtxt?  # q to quit
+data = numpy.loadtxt('data.csv', dtype=int, delimiter=',')
+type(data)
+data
+list( data )
+data[1]
+#+END_SRC
+
+* Separating groups of code                                        :comments:
+
+One easy way to to put a line of comments.  Try this emacs command:
+
+=C-u 50 #=
+
+You should see:
+
+#+BEGIN_SRC python
+##################################################
+#+END_SRC
+
+=C-u= and a number before pressing a character will repeat that
+character that many times.
+
+* What if you do not want to run some of the code in your file?
+
+** Executing a region in python
+
+Highlight a region of python code. Start the mark with C-space. Then
+scroll to the end of the block. Now run that region with =C-x |=. That
+is the vertical bar (in bash, that is the "pipe" character).
+
+* More getting help
+
+In emacs, you can ask for information about some of the word that you
+see in a python file. Move your cursor to this line and have the point
+on the word "print".
+
+#+BEGIN_SRC python
+print 'hello world'
+#+END_SRC
+
+Now do =M-x python-describe-symbol=
+
+* Using =if=                                                             :if:
+
+#+BEGIN_SRC python
+if True:
+    print 'yes'
+#+END_SRC
+
+#+BEGIN_SRC python
+if False:
+    print 'yes'
+#+END_SRC
+
+** =else=
+
+#+BEGIN_SRC python
+if True:
+    print 'yes'
+else:
+    print 'no'
+#+END_SRC
+
+#+BEGIN_SRC python
+if False:
+    print 'yes'
+else:
+    print 'no'
+#+END_SRC
+
+** A special one line =if=
+
+#+BEGIN_SRC python
+'equal' if 1==0 else 'really not-equal'
+#+END_SRC
+
+#+BEGIN_SRC python
+print 'equal' if 1==0 else 'really not-equal'
+#+END_SRC
+
+#+BEGIN_SRC python
+answer = 'equal' if 1==0 else 'really not-equal'
+#+END_SRC
+
+* Making a function                                                :function:
+
+You will want to break you problem down into sections. One way to do
+that is to write functions.
+
+#+BEGIN_SRC python
+def hello():
+    print 'hello world function'
+
+# Call it
+hello()
+#+END_SRC
+
+
+#+BEGIN_SRC python
+def add_one(number):
+    new_number = number + 1
+    return new_number
+
+# Calling our function.  Pass in the number 9
+add_one(9)
+#+END_SRC
+
+* IM-Python menu in emacs
+
+Emacs knows some about your code.  Now that you have functions,
+do the following with the menus:
+
+#+BEGIN_EXAMPLE 
+IM-Python -> *rescan*
+#+END_EXAMPLE
+
+Now if you look under IM-Python, it should have your functions. If you
+go to:
+
+Tools -> Source Code Parsers (Semantic)
+
+Select it so that there is a check next to it and do another rescan.
+You will see other options under the IM-Python menu for variables and
+other parts of your code.
+
+* Checking your code with pylint                                     :pylint:
+
+We would like to write the best code possible.
+
+I don't agree with all of the checks that pylint does on python code,
+but if your code scores well with pylint, then it is likely to be
+easier to read by others and less likely to have bugs.  Here is some
+terribly written python to put into a file: 
+
+~/class/12/pyforlint.py
+
+#+BEGIN_SRC python
+
+# This line is really long and pylint does not like really long lines by default.  Really!
+
+def MYFUCTION(FOO):
+      # pylint is not going to like the capitization of the above
+      # it will not like how I indented this
+
+      return 123
+
+MYFUNCTION('hello')
+#+END_SRC
+
+That code is *BAD*.  Let's ask pylint about it, but first we have to
+install pylint.
+
+#+BEGIN_SRC sh
+sudo apt-get install pylint
+#+END_SRC
+
+Now run pylint:
+
+#+BEGIN_SRC sh
+pylint forpylint.py
+#+END_SRC
+
+It will return this.  Some of the beginning detail has been left out.
+
+#+BEGIN_EXAMPLE 
+Global evaluation
+-----------------
+Your code has been rated at -22.50/10
+
+Statistics by type
+------------------
+
++---------+-------+-----------+-----------+------------+---------+
+|type     |number |old number |difference |%documented |%badname |
++=========+=======+===========+===========+============+=========+
+|module   |1      |NC         |NC         |0.00        |0.00     |
++---------+-------+-----------+-----------+------------+---------+
+|class    |0      |NC         |NC         |0           |0        |
++---------+-------+-----------+-----------+------------+---------+
+|method   |0      |NC         |NC         |0           |0        |
++---------+-------+-----------+-----------+------------+---------+
+|function |1      |NC         |NC         |0.00        |100.00   |
++---------+-------+-----------+-----------+------------+---------+
+#+END_EXAMPLE
+
+Our code scored -22.5 out of 10.  Ouch!  We can tell pylint that we
+don't believe in all the warnings that it has.  For example, I do not
+mind longer lines in the code.  Add these 3 lines to the very
+beginning of the file:
+
+#+BEGIN_SRC python
+# pylint: disable-msg=W0142
+# pylint: disable-msg=C0301
+# pylint: disable-msg=W0622
+#+END_SRC
+
+Running pylint again will tell us that it thinks our code is better,
+but still terrible.
+
+#+BEGIN_EXAMPLE 
+Global evaluation
+-----------------
+Your code has been rated at -20.00/10 (previous run: -22.50/10)
+#+END_EXAMPLE
+
+It is not worth trying to get a perfect 10 out of 10, but reading 
+through pylint's warnings will help you to write better code.

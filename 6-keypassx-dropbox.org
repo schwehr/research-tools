@@ -1,6 +1,9 @@
 #+STARTUP: showall
 
-#+TITLE:     Class 6: KeyPassX and Cloud storage with DropBox (DRAFT)
+# FIX: the filename should be 6-keepassx-dropbox.org.  I will change
+# that after the semester.
+
+#+TITLE:     Class 6: KeePassX and Cloud storage with DropBox (DRAFT)
 #+AUTHOR:    Kurt Schwehr
 #+EMAIL:     schwehr@ccom.unh.edu
 #+DATE:      <2011-09-15 Thu>
