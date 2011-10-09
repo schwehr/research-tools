@@ -1,0 +1,372 @@
+#+STARTUP: showall
+#+TITLE: Configuring your environment for bash, python, and emacs
+
+
+* Initial setup of "dot files"                                   :emacs:bashrc:
+** bashrc so that the editor in ipython is emacs
+
+For ipython, we need to tell it to use emacs as the editor.
+
+You can add the line to your ~/.bashrc by running this command if your
+.emacs file is already setup for doing =C-c C-c= for sh.  But you can
+also copy this to a shell and run it.
+
+#+BEGIN_SRC sh
+cat <<EOF >> ~/.bashrc
+# The default editor will be to use emacsclient to talk to emacs
+# emacs must already be running for this to work correctly
+export EDITOR='emacsclient'
+EOF
+#+END_SRC
+
+Or you can just edit your ~/.bashrc and put this as the last line:
+
+#+BEGIN_SRC sh
+export EDITOR='emacsclient'
+#+END_SRC
+
+** Configuring emacs
+
+#+BEGIN_SRC emacs-lisp
+; Must have org-mode loaded before we can configure org-babel
+(require 'org-install)
+  
+; Some initial langauges we want org-babel to support
+(org-babel-do-load-languages
+ 'org-babel-load-languages
+ '(
+   (sh . t)
+   (python . t)
+  ))
+#+END_SRC
+
+I recommend that you add these languages too, as you might want them
+later.
+
+#+BEGIN_SRC emacs-lisp
+   (R . t)
+   (ruby . t)
+   (ditaa . t)
+   (dot . t)
+   (octave . t)
+   (sqlite . t)
+   (perl . t)
+#+END_SRC
+ 
+
+#+BEGIN_SRC emacs-lisp
+;;; Emacs server
+
+; Do not close the file that was being edited when C-x # is typed
+(setq server-kill-new-buffers nil)
+
+; Start the emacs server for emacsclient
+(server-start)
+#+END_SRC
+
+** Shortcuts for emacs
+
+Setup the org-mode short cuts for agenda:
+
+#+BEGIN_SRC emacs-lisp
+; Add short cut keys for the org-agenda
+(global-set-key "\C-cl" 'org-store-link)
+(global-set-key "\C-cc" 'org-capture)
+(global-set-key "\C-ca" 'org-agenda)
+#+END_SRC
+
+Short cuts for running programs and going to the next problem (or grep)
+
+#+BEGIN_SRC emacs-lisp
+; Setup custom shortcuts
+(global-set-key "\C-x\C-g" 'goto-line)
+(global-set-key [f1] 'compile)
+(global-set-key [f2] 'next-error)
+#+END_SRC
+
+* Restart emacs to load the .emacs
+
+If you do not restart emacs right after making the changes to the
+.emacs file, you will not see the changes that we have made.
+
+- Stop emacs -> C-x C-c
+- Start emacs again
+
+* Running python
+
+There are many many ways that you can run python.  I will walk through
+a good number of them so that you can see what is going on.
+
+** First, python from the bash command line
+
+*** In the python "shell"
+
+Type just =python= and press enter.  Type some math like "1+2", but
+without the quotes.  Type =exit()= and enter when done to get out.
+
+#+BEGIN_EXAMPLE
+researchtools@ubuntu:~$ python
+Python 2.7.1+ (r271:86832, Apr 11 2011, 18:05:24) 
+[GCC 4.5.2] on linux2
+Type "help", "copyright", "credits" or "license" for more information.
+>>> 1+2
+3
+>>> exit()
+researchtools@ubuntu:~$ 
+#+END_EXAMPLE
+
+*** As a "one-liner"
+
+#+BEGIN_EXAMPLE 
+researchtools@ubuntu:~$ python -c 'print 1+2'
+3
+researchtools@ubuntu:~$ 
+#+END_EXAMPLE
+
+*** Have python run what is in a file
+
+You can also tell python to run the code in a file.  This will create
+a file called hello.py in the bash shell:
+
+#+BEGIN_SRC sh
+cat << EOF > hello.py
+print 'hello world'
+EOF
+#+END_SRC
+
+Now run it like this:
+
+#+BEGIN_EXAMPLE 
+researchtools@ubuntu:~$ python hello.py
+hello world
+researchtools@ubuntu:~$
+#+END_EXAMPLE
+
+*** Make a script file
+
+#+BEGIN_SRC sh
+cat <<EOF > hello2.py
+#!/usr/bin/env python
+
+print 'hello world2'
+EOF
+
+# Make the file "executable"
+chmod +x hello2.py
+
+./hello2.py
+#+END_SRC
+
+** *ipython*
+
+start =ipython= (not "python")
+
+*** typing directly into ipython
+
+#+BEGIN_EXAMPLE 
+In [1]: 1+2
+Out[1]: 3
+#+END_EXAMPLE
+
+*** Run a script (with or without the .py)
+
+#+BEGIN_EXAMPLE
+In [2]: ls -l
+total 8
+-rw-r--r-- 1 researchtools researchtools 44 2011-10-09 10:46 hello2.py
+-rw-r--r-- 1 researchtools researchtools 20 2011-10-09 10:46 hello.py
+
+In [3]: run hello
+hello world
+
+In [4]: run hello.py
+hello world
+
+In [5]: run hello2
+hello world2
+#+END_EXAMPLE
+
+*** "import" a file
+
+Note that the 7 entry does not print hello world.  The "module" hello
+was already loaded.  We have to ask for it to be "reloaded."
+
+#+BEGIN_EXAMPLE 
+In [6]: import hello
+hello world
+
+In [7]: import hello
+
+In [8]: reload hello
+------> reload(hello)
+hello world
+Out[8]: <module 'hello' from 'hello.pyc'>
+#+END_EXAMPLE
+
+
+** From emacs                                                         :emacs:
+
+Start emacs.  Create a file, video8.py, that looks like this:
+
+#+BEGIN_SRC python
+print 'start of my script'
+
+print 'more stuff'
+print 3+8
+#+END_SRC
+
+*** Run the whole file: C-c C-c
+
+Press =C-c C-c= in the file (aka buffer).  You should now see a new
+buffer appear called:
+
+#+BEGIN_EXAMPLE 
+*Python Output*
+#+END_EXAMPLE
+
+In that buffer you should see the output of the 3 commands that were
+run.
+
+#+BEGIN_EXAMPLE 
+start of my script
+more stuff
+11
+#+END_EXAMPLE
+
+*** Run part of a file: C-c |
+
+Highlight a region of the code:
+
+- Move to the beginning of the file:  M-<
+- Start marking a region: C-space
+- Move down a line: C-n
+- Run the region: C-c |
+
+Your Python Output buffer should contain the results for just the part
+you ran:
+
+#+BEGIN_EXAMPLE 
+start of my script
+#+END_EXAMPLE
+
+*** Switch to the python shell inside of emacs: C-c !
+
+- Start the python shell inside of emacs
+- Type 1+2 inside the buffer after the ">>>"
+
+#+BEGIN_EXAMPLE 
+Python 2.7.1+ (r271:86832, Apr 11 2011, 18:05:24) 
+[GCC 4.5.2] on linux2
+Type "help", "copyright", "credits" or "license" for more information.
+>>> 1+3
+4
+>>>
+#+END_EXAMPLE
+
+Go back to your code window, select a region and run it with =C-c |=.
+You will see that run in that python shell:
+
+#+BEGIN_EXAMPLE 
+>>> ## working on region in file /tmp/python-2213Oe2.py...
+start of my script
+>>>
+#+END_EXAMPLE
+
+
+*** Using compile to run a script: M-x compile
+
+Type =M-x compile=.  You will be prompted with "make -k".  Delete that
+text and put in:
+
+#+BEGIN_EXAMPLE 
+python hello.py
+#+END_EXAMPLE
+
+Press enter and you should see python run:
+
+#+BEGIN_EXAMPLE 
+-*- mode: compilation; default-directory: "/home/researchtools/video/8/" -*-
+Compilation started at Sun Oct  9 11:05:46
+
+python hello.py
+hello world
+
+Compilation finished at Sun Oct  9 11:05:46
+#+END_EXAMPLE
+
+Try it again with the script that does not need the =python= in
+front.  Replace =python hello.py= with =./hello2.py=:
+
+#+BEGIN_EXAMPLE 
+-*- mode: compilation; default-directory: "/home/researchtools/video/8/" -*-
+Compilation started at Sun Oct  9 11:07:50
+
+./hello2.py
+hello world2
+
+Compilation finished at Sun Oct  9 11:07:50
+#+END_EXAMPLE
+
+We have made an alias for compile.  Try pressing the =F1= function
+key.  This will also bring up the compile command.  Try using the
+arrow keys to scroll up and down through previous compile commands.
+
+*** Experiment with an error in python
+
+Add a line like this to the end of video8.py.  This is not valid
+python code.
+
+#+BEGIN_SRC python
+print nothing good
+#+END_SRC
+
+Use =C-c C-c= to run the file.  You should see this in the python
+output buffer and your cursor will be sitting on the line where the
+computer thinks your proble is located:
+
+#+BEGIN_EXAMPLE 
+  File "<stdin>", line 6
+    print nothing good
+                     ^
+SyntaxError: invalid syntax
+#+END_EXAMPLE
+
+Move your cursor to the beginning of the file with =M-<=
+Try it again but with the compile command: =F1= or =M-x compile=.
+
+#+BEGIN_EXAMPLE 
+python video8.py
+#+END_EXAMPLE
+
+You will now see an error:
+
+#+BEGIN_EXAMPLE 
+-*- mode: compilation; default-directory: "/home/researchtools/video/8/" -*-
+Compilation started at Sun Oct  9 11:12:46
+
+python video8.py
+  File "video8.py", line 6
+    print nothing good
+                     ^
+SyntaxError: invalid syntax
+
+Compilation exited abnormally with code 1 at Sun Oct  9 11:12:46
+#+END_EXAMPLE
+
+But your cursor has not moved.  You need to run the command =M-x
+next-error= or =F2= (the alias we created) to have emacs move your
+cursor to the line where it thinks the problem occured.
+
+** Running python inside of org-mode: C-c C-c                     :org:babel:
+
+Move the cursor inside of this SRC block and press =C-c C-c=
+
+#+BEGIN_SRC python
+print 'hello org-babel'
+#+END_SRC
+
+Nothing happens.
+
+#+BEGIN_SRC python
+return 'hello org-babel try 2' 
+#+END_SRC
