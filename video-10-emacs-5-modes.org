@@ -1,0 +1,54 @@
+#+STARTUP: showall
+#+TITLE: Research Tools Video 10 - emacs part 5 - modes
+#+DATE: <2011-10-10 Mon>
+#+AUTHOR: Kurt Schwehr
+# License: Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License.
+
+* Introduction
+
+- http://jeremy.zawodny.com/emacs/emacs-3.html
+- Things like ERC for IRC chat are major modes.  Only one major mode can be active at a time.
+- Minor modes modify major modes.
+
+* Major modes
+
+http://www.gnu.org/s/libtool/manual/emacs/Major-Modes.html#Major-Modes
+
+- Fundamental
+- Text Mode -> M-x text-mode
+- org-mode -> M-x org-mode
+- C/C++/Python
+- HTML/XML
+- etc
+
+* Minor mode
+
+http://www.gnu.org/s/libtool/manual/emacs/Minor-Modes.html
+
+- Flyspell
+- auto-fill-mode 
+  - C-x f set fill column
+  - M-o M-s - center
+  - M-x fill-region
+  - M-q   <-- fill paragraph
+- yasnippets - add the ability to paste in repeating chunks of code
+- overwrite mode
+
+* Help
+
+- C-h m - display mode summary
+
+* Specifying modes
+
+** Extension
+
+** mode definition
+
+Like this: -*- mode: Lisp; -*-  on the 1st or 2nd line
+
+** By the magic definition on the first line
+
+#+BEGIN_EXAMPLE 
+#!/usr/bin/env python
+#+END_EXAMPLE
+
