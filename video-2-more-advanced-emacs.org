@@ -1,0 +1,186 @@
+#+STARTUP: showall
+
+#+TITLE: Research Tools Video 2 - Emacs part - More advanced emacs
+#+DATE: <2011-09-25 Sun>
+#+AUTHOR: Kurt Schwehr
+# License: Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License.
+
+* Introduction
+
+http://youtu.be/P2Q_WL0h-mY
+
+These notes are not complete.
+
+* Directory Edit Mode                                                 :dired:
+
+At 0:40
+
+http://www.gnu.org/s/libtool/manual/emacs/Dired.html
+
+=C-x C-f= to open a file.  That file can be a directory.
+
+- =d= - flag for deletion
+- =x= - delete all marked for deletion
+- =+= - create a directory
+- =<RET>= - Enter or return will open a file or go into the directory which the pointer is on
+- =C-x 2= - Split window
+- =C-x b= - switch buffers At 3:30
+- =C-x o= - jump to other buffer
+
+* M-x shell                                                           :shell:
+
+At 4:20
+
+Open up a terminal.  Meta can be had by holding =Alt= or hitting ESC once.
+
+- =ls -la= - List all the files with a long listing
+- =g= - dired update directory
+- Signals -> BREAK or =C-c C-c=  at 6:25
+- Signals -> KILL
+
+* General buffer stuff
+
+At 6:38
+
+- =C-x 1= - hide all other buffers
+- =C-s= - search
+- =C-g= - quit
+- =M-x query-replace= or =M-%= Swap text with new text, but ask each time
+- =M-x replace-string= - Change text without asking
+
+Completing with a tab key.  Typing partial commands and being lazy
+
+Capitalization at 8:45 
+
+- =M-u= - upper case
+- =M-l= - lower case
+- =M-c= - Capitalize a word
+- =M-%= - Spell check a word
+- C-space - start marking region
+- =M-x ispell-region= - check the spelling of just a small region
+- =M-x ispell-buffer= - check the whole file / buffer
+
+* ERC IRC client for internet chat                             :irc:erc:chat:
+
+At 11:30
+
+Install the ERC chat client (for ubuntu 11.04)
+
+#+BEGIN_SRC sh
+sudo apt-get install erc
+#+END_SRC
+
+The research tools password: !rt2011vm
+
+- =M-x erc= - start IRC inside of emacs
+- irc.freenode.net is a common channel server
+- in our the researchtools class, use: researchtools.ccom.nh
+- Use port number 6667
+- Make sure your username aka "nickname" is *not* researchtools!!!!
+- No password, so press <RETURN>
+- =/join #unhresearchtools= - Enter a chat channel
+- Now just type text and press enter
+
+For long pastes, use http://pastebin.com and put in the URL to a chunk of text you want others to see.
+
+* Using the menu to select a buffer
+
+* Writing a shell script                                  :script:bash:shell:
+
+At 15:50
+
+- =C-x C-f sample.sh= - You can have either ".sh" or ".bash".  ".bash" would have been better!
+
+The first line of a script.  This makes sure that a copy of the bash shell gets started and then the rest of the file is passed to bash.
+
+#+BEGIN_SRC sh
+#!/bin/bash
+#+END_SRC
+
+The full initial script:
+
+#+BEGIN_SRC sh
+#!/bin/bash
+
+# this is a comment
+
+echo "Hello World"
+#+END_SRC
+
+17:20
+
+File permissions - we need to make the script executable.
+
+#+BEGIN_SRC sh
+chmod +x sample.sh
+#+END_SRC
+
+You will now see the file marked as executable:
+
+#+BEGIN_EXAMPLE 
+-rwxr-xr-x
+#+END_EXAMPLE
+
+We need to try running the script:
+
+18:45
+
+#+BEGIN_SRC sh
+./sample.sh
+#+END_SRC
+
+** Running a script inside of emacs with M-x compile
+
+Try =M-x compile=.  Replace "make -k" with "./sample.sh"
+
+- =C-a= - go to the beginning of the line
+
+** Creating a python script                                          :python:
+
+25:30
+
+sample.py:
+
+#+BEGIN_SRC python
+#!/usr/bin/env python
+
+print "Hello World from Python"
+#+END_SRC
+
+Save with =C-x C-s=
+=C-x b *sh<TAB>= 
+
+#+BEGIN_SRC sh
+chmod +x sample.py
+
+./sample.py
+#+END_SRC
+
+and also try:
+
+=M-x compile= then C-a C-k ./sample.py
+
+* Speedbar
+
+=M-x speedbar=
+
+A helper to jump between files easily.  Speed bar will update on its own unlike 
+dired mode.
+
+* Running python inside emacs
+
+24:00
+
+For chmod,  setting the mode to 755 is the same as setting the file with +x.
+
+=M-x compile=
+
+* Searching across files with grep
+
+=M-x grep=
+
+#+BEGIN_EXAMPLE
+grep -nH -e print *
+#+END_EXAMPLE
+
+Then =C-x `= to jump to the next error.  (or M-x next-error)

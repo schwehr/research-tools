@@ -1,3 +1,16 @@
+#+STARTUP: showall
+
+#+TITLE: Research Tools Video 2 - more advanced emacs
+#+DATE: <2011-09-25 Sun>
+#+AUTHOR: Kurt Schwehr
+# License: Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License.
+
+* Introduction
+
+These video notes might not actually match the video.  Please let me
+know how they compare if you use them while watching the video.
+They are also pretty terse and could use some extra text.
+
 * What is org-mode?
 
 - note taking system, todo lists, project planning, repeatable research platform
