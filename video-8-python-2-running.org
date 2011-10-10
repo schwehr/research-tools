@@ -1,5 +1,8 @@
 #+STARTUP: showall
-#+TITLE: Configuring your environment for bash, python, and emacs
+#+TITLE: Research Tools Video 8 - Python part 2 - running python
+#+DATE: <2011-10-09 Sun>
+#+AUTHOR: Kurt Schwehr
+# License: Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License.
 
 
 * Initial setup of "dot files"                                   :emacs:bashrc:
