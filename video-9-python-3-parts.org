@@ -1,0 +1,115 @@
+#+STARTUP: showall
+#+TITLE: Research Tools Video 9 - Python part 3 - structure
+#+DATE: <2011-10-09 Sun>
+#+AUTHOR: Kurt Schwehr
+# License: Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License.
+
+* Introduction
+
+This video describes the parts that we will use to construct software with Python.
+
+http://www.rvdata.us/operators/profiles
+
+* Assignment statements
+  
+#+BEGIN_SRC python>
+depth = 25.2 # meters
+shipname = 'R/V Flip'
+#+END_SRC
+
+* Dictionaries
+
+#+BEGIN_SRC python
+  calibration_parameters = {
+      'soundspeed': [ 1509, 1498, 1501.1, ],
+      'shipname':'R/V Revelle',
+      'sonar':'EM122',
+      'adcp':'NB-150',
+      'length' : 83.5,
+      'width' : 16
+      }
+#+END_SRC
+
+#+results:
+: None
+
+- Lookup values with [key]
+- List all the keys with .keys()
+- Add key with value:  some_dict[key] = value
+
+* Function
+
+#+BEGIN_SRC python
+def hello():
+    print 'hello'
+#+END_SRC
+
+#+BEGIN_SRC python
+  # Function with return
+  def soundspeed():
+      return 1501.01 + 0.12
+#+END_SRC
+
+#+BEGIN_SRC python
+  def get_area(length, width):
+      return length * width
+#+END_SRC
+
+#+BEGIN_SRC python
+import math
+def distance(x1,y1, x2,y2):
+    'coordinates must be in a rectancular coordinate frame for this to work'
+    return math.sqrt( (x1-x2)**2 + (y1-y2)**2 )
+#+END_SRC
+
+* classes
+
+containers that work together
+
+#+BEGIN_SRC python
+import math
+
+class Circle(object):
+    def __init__(self, radius):
+        self.radius = radius
+
+    def get_area(self):
+        return 2 * math.pi * self.radius
+
+    def __str__(self):
+        return 'Circle of radius ' + str(self.radius)
+        
+a_circle = Circle(10.2)
+print 'area is:', a_circle.get_area()
+print str(a_circle)
+#+END_SRC
+
+* modules
+
+composed of
+
+- variables
+- functions
+- classes
+ 
+* The final code
+
+#+BEGIN_SRC python
+import math
+
+shipname = 'R/V Flip'
+
+def distance(x1,y1, x2,y2):
+    'coordinates must be in a rectancular coordinate frame for this to work'
+    return math.sqrt( (x1-x2)**2 + (y1-y2)**2 )
+
+class Circle(object):
+    def __init__(self, radius):
+        self.radius = radius
+
+    def get_area(self):
+        return 2 * math.pi * ( self.radius ** 2 )
+
+    def __str__(self):
+        return 'Circle of radius ' + str(self.radius)
+#+END_SRC
