@@ -1,6 +1,6 @@
 #+STARTUP: showall
 
-#+TITLE:     Class 12: python and control structures
+#+TITLE:     Class 13: python and control structures
 #+AUTHOR:    Kurt Schwehr
 #+EMAIL:     schwehr@ccom.unh.edu
 #+DATE:      <2011-10-04 Tue>
@@ -17,8 +17,6 @@
 - http://stackoverflow.com/questions/304049/emacs-23-and-ipython
 
 * Introduction
-
-
 
 ** Setting a shortcut in emacs                                        :emacs:
 

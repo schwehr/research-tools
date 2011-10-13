@@ -14,36 +14,81 @@
 
 * Introduction
 
+
+
 #+BEGIN_SRC python
-  count = 0
-  while count < 5:
-      count = count + 2
-      print count
-      
-  while count < 10:
-  count = 0
-  while count < 10:
-      print count
-      count += 3
-      
-  for count in range(0,10,3):
-      print count
-  
+count = 0
+while count < 5:
+    print count
+    count = count + 1
+    
+count = 0
+while count < 10:
+    print count
+    count += 3
+    
+for count in range(0,10,3):
+    print count
 #+END_SRC
 
+
+* Code
+
+mydaemon.py
 
 #+BEGIN_SRC python
 #!/usr/bin/env python
 
-from time import sleep
+import time # use sleep
 
-count = 0 
-
-while True:
-    sleep(.1)
+count = 0
+running = True
+while running:
     print count
     count += 1
-    if count > 50:
-        break
+    time.sleep( 0.2 )
+
+    if count > 20:
+        running = False
+
+print 'Cleaning up and exiting'
 #+END_SRC
 
+data.dat:
+
+#+BEGIN_EXAMPLE 
+# header 1
+# This file contains sample junk data
+1 2 3
+123 45 12
+123 432 88
+#+END_EXAMPLE
+
+readdata.py
+
+#+BEGIN_SRC python
+#!/usr/bin/env python
+
+infile = open('data.dat', 'r')
+
+line = infile.readline()
+while line[0] == '#':
+    line = infile.readline()
+    # Skip comments
+    pass
+
+for line in infile:
+    print line
+#+END_SRC
+
+readdata2.py:
+
+#+BEGIN_SRC python
+#!/usr/bin/env python
+
+def loaddata():
+    for line in open('data.dat'):
+        if '#' in line:
+            continue
+        print line
+#+END_SRC

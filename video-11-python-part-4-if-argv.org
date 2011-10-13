@@ -1,0 +1,219 @@
+#+STARTUP: showall
+
+#+TITLE:     Video 11: python part 4 - if
+#+AUTHOR:    Kurt Schwehr
+#+EMAIL:     schwehr@ccom.unh.edu
+#+DATE:      <2011-10-04 Tue>
+#+DESCRIPTION: Marine Research Data Manipulation and Practices
+#+KEYWORDS: ipython matplotlib
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:nil toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   TeX:t LaTeX:nil skip:t d:nil todo:t pri:nil tags:not-in-toc
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+LINK_HOME: http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/
+
+* Introduction
+
+* Using =if=                                                             :if:
+
+#+BEGIN_SRC python
+if True:
+    print 'yes'
+#+END_SRC
+
+#+BEGIN_SRC python
+if False:
+    print 'yes'
+#+END_SRC
+
+** =else=
+
+#+BEGIN_SRC python
+if True:
+    print 'yes'
+else:
+    print 'no'
+#+END_SRC
+
+#+BEGIN_SRC python
+if False:
+    print 'yes'
+else:
+    print 'no'
+#+END_SRC
+
+** A special one line =if=
+
+#+BEGIN_SRC python
+'equal' if 1==0 else 'really not-equal'
+#+END_SRC
+
+#+BEGIN_SRC python
+print 'equal' if 1==0 else 'really not-equal'
+#+END_SRC
+
+#+BEGIN_SRC python
+answer = 'equal' if 1==0 else 'really not-equal'
+#+END_SRC
+
+* Making a function                                                :function:
+
+You will want to break you problem down into sections. One way to do
+that is to write functions.
+
+#+BEGIN_SRC python
+def hello():
+    print 'hello world function'
+
+# Call it
+hello()
+#+END_SRC
+
+#+BEGIN_SRC python
+def add_one(number):
+    new_number = number + 1
+    return new_number
+
+# Calling our function.  Pass in the number 9
+add_one(9)
+#+END_SRC
+
+* IM-Python menu in emacs
+
+Emacs knows some about your code.  Now that you have functions,
+do the following with the menus:
+
+#+BEGIN_EXAMPLE 
+IM-Python -> *rescan*
+#+END_EXAMPLE
+
+Now if you look under IM-Python, it should have your functions. If you
+go to:
+
+Tools -> Source Code Parsers (Semantic)
+
+Select it so that there is a check next to it and do another rescan.
+You will see other options under the IM-Python menu for variables and
+other parts of your code.
+
+* Separating groups of code                                        :comments:
+
+One easy way to to put a line of comments.  Try this emacs command:
+
+=C-u 50 #=
+
+You should see:
+
+#+BEGIN_SRC python
+##################################################
+#+END_SRC
+
+=C-u= and a number before pressing a character will repeat that
+character that many times.
+
+* Doc strings
+
+* Final code
+
+#+BEGIN_SRC python
+import sys
+
+########################################
+mylist = [1,10,'hi']
+
+########################################
+def hello_world():
+    'Print hello world.  Pretty boring'
+    print 'hello world'
+
+def end_of_world():
+    print 'good bye'
+
+########################################
+def main():
+    '''
+    This is a multiline description.
+
+    Write lots and lots about the function here.
+    '''
+    print 'start of main'
+    print 'sys.argv:', sys.argv
+    for arg_number, argument in enumerate(sys.argv):
+        if 'hell' in argument:
+            print '----> skip hell'
+            continue
+        if '2' in argument:
+            print '----> give up'
+            break
+        print 'an argument:', argument, 'is arg num:', arg_number
+    print 'done with for'
+
+######################################################################
+if __name__ == '__main__':
+    # Act like a program
+    main()
+#+END_SRC
+
+* History
+
+The ipython history from the video:
+
+#+BEGIN_SRC python
+  if True:
+       print 'yes'
+  
+  if False:
+       print 'yes'
+  
+  if True:
+       print 'yes'
+  else:
+       print 'no'
+  
+  if False:
+      print 'yes'
+  else:
+      print 'no'
+  
+  type (False)
+  type (True)
+  
+  1==1
+  1!=1
+  1>1
+  1>=1
+  
+  # (1==1 && 2==2) # Nope!  This line is not python
+  (1==1 and 2==2)
+  (1==1 or 2==2)
+  (1!=1 or 2!=2)
+  'hell' in 'hello world'
+  4 in [1,2,6,7]
+  4 in [1,2,6,7,4]
+  'equal' if 1==0 else 'not really equal to'
+  print '1==0 is ', 'equal' if 1==0 else 'not really equal to', ' and more text'
+  print '1==1 is ', 'equal' if 1==1 else 'not really equal to', ' and more text'
+  answer = 'yes' if True else 'no'
+  answer
+  answer = 'yes' if 10 in (1,4,5,6) else 'no'
+  answer
+  print __name__
+  run try_args.py
+  import try_args
+  run try_args.py
+  reload(try_args)
+  reload(try_args)
+  try_args.main()
+  import sys
+  ?sys.argv
+  sys.argv
+  run try_args.py
+  run try_args.py hello world
+  run try_args.py hello world 1 2 1000
+  help(sys)
+  reload(try_args)
+  ?try_args.hello_world
+#+END_SRC
+
+#+results:
+
