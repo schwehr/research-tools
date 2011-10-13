@@ -1,0 +1,49 @@
+#+STARTUP: showall
+
+#+TITLE:     Video 12: python part 5 - while
+#+AUTHOR:    Kurt Schwehr
+#+EMAIL:     schwehr@ccom.unh.edu
+#+DATE:      <2011-10-04 Tue>
+#+DESCRIPTION: Marine Research Data Manipulation and Practices
+#+KEYWORDS: ipython matplotlib
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:nil toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   TeX:t LaTeX:nil skip:t d:nil todo:t pri:nil tags:not-in-toc
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+LINK_HOME: http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/
+
+* Introduction
+
+#+BEGIN_SRC python
+  count = 0
+  while count < 5:
+      count = count + 2
+      print count
+      
+  while count < 10:
+  count = 0
+  while count < 10:
+      print count
+      count += 3
+      
+  for count in range(0,10,3):
+      print count
+  
+#+END_SRC
+
+
+#+BEGIN_SRC python
+#!/usr/bin/env python
+
+from time import sleep
+
+count = 0 
+
+while True:
+    sleep(.1)
+    print count
+    count += 1
+    if count > 50:
+        break
+#+END_SRC
+
