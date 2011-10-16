@@ -3,7 +3,7 @@
 #+TITLE:     Video 13: python part 6 - processing gps data
 #+AUTHOR:    Kurt Schwehr
 #+EMAIL:     schwehr@ccom.unh.edu
-#+DATE:      <2011-10-04 Tue>
+#+DATE:      <2011-10-15 Sat>
 #+DESCRIPTION: Marine Research Data Manipulation and Practices
 #+KEYWORDS: ipython matplotlib
 #+LANGUAGE:  en
@@ -13,6 +13,16 @@
 #+LINK_HOME: http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/
 
 * Introduction
+
+This video covers a first pass at converted a NMEA log from an Airmar
+weather station into a plot of the wander of the GPS position.  The 
+python code is not what I would want to have in the long run, but it
+is similar to what I might write as a first pass to make sure I know 
+how parse the data and that my results make sense.
+
+The notes for this video are not very polished.  You might want to
+take a look at the bottom section that is a dump of the history from
+ipython after I produced the video.
 
 * Setup
 
@@ -112,6 +122,8 @@ One NMEA GPS location message looks like this:
 #+BEGIN_EXAMPLE
 $GPGGA,000000,4308.1250,N,07056.3750,W,2,9,1.1,35.7,M,,,,*04
 #+END_EXAMPLE
+
+Start ipython with *ipython --pylab*
 
 #+BEGIN_SRC python
 !head -20000 ccom-airmar-2011-10-11 | tail 
@@ -214,14 +226,76 @@ def load_gga(filename):
 #+END_SRC
 
 #+BEGIN_SRC python
-x,y = wx4.load_gga('ccom-airmar-2011-10-11')
+x,y = wx2.load_gga('ccom-airmar-2011-10-11')
 plot
 #+END_SRC
 
-* Switching to meters - UTM
+* history
 
-http://upload.wikimedia.org/wikipedia/commons/e/ed/Utm-zones.jpg
+#+BEGIN_SRC python
+ls -F -l
+run wx1
+head ccom-airmar-2011-10-11
+head -15 ccom-airmar-2011-10-11
 
-#+BEGIN_SRC 
+line = '$GPGGA,000000,4308.1250,N,07056.3750,W,2,9,1.1,35.7,M,,,,*04,rccom-airmar,1318291200.53'
+line
+'GGA' in line 
+'MWD' in line 
 
+junk = '$WIMWD,338.0,T,353.4,M,0.6,N,0.3,M*56,rccom-airmar,1318291200.61'
+'GGA' in junk
+'MWD' in junk
+'GGA' in line
+'GGA' not in line
+'GGA' not in junk
+
+line
+line = '$GPGGA,000000,4308.1250,N,07056.3750,W,2,9,1.1,35.7,M,,,,*04,rccom-airmar,1318291200.53'
+
+line.split(',')
+fields[2]
+fields = line.split(',')
+whos
+
+# Latitude
+fields[2]
+fields[2][:2]
+int(fields[2][:2])
+fields[2][2:]
+float(fields[2][2:])
+float(fields[2][2:])/60.
+int(fields[2][:2]) + float(fields[2][2:])/60.
+fields
+run wx1.py
+
+# Longitude
+fields
+fields[4]
+fields[4][:3]
+int(fields[4][:3])
+fields[4][3:]
+float(fields[4][3:])
+float(fields[4][3:]) / 60.
+int(fields[4][:3]) + float(fields[4][3:]) / 60.
+
+run wx1.py
+
+import wx2
+?wx2.load_gga
+wx2.load_gga('ccom-airmar-2011-10-11')
+_ip.magic("whos")
+reload(wx2)
+wx2.load_gga('ccom-airmar-2011-10-11')
+
+x,y = wx2.load_gga('ccom-airmar-2011-10-11')
+len(x)
+print x
+plot(x,y)
+average(x)
+average(y)
 #+END_SRC
+
+* The plot
+
+file:./figures/v13-gps-wander.png
