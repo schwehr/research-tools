@@ -1,0 +1,227 @@
+#+STARTUP: showall
+
+#+TITLE:     Video 13: python part 6 - processing gps data
+#+AUTHOR:    Kurt Schwehr
+#+EMAIL:     schwehr@ccom.unh.edu
+#+DATE:      <2011-10-04 Tue>
+#+DESCRIPTION: Marine Research Data Manipulation and Practices
+#+KEYWORDS: ipython matplotlib
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:nil toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   TeX:t LaTeX:nil skip:t d:nil todo:t pri:nil tags:not-in-toc
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+LINK_HOME: http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/
+
+* Introduction
+
+* Setup
+
+#+BEGIN_SRC sh
+wget http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/examples/ccom-airmar-2011-10-11.bz2
+bunzip2 ccom-airmar-2011-10-11.bz2
+#+END_SRC
+
+* Inspect what we have got
+
+#+BEGIN_EXAMPLE
+wc -l ccom-airmar-2011-10-11 
+881046 ccom-airmar-2011-10-11
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE 
+head ccom-airmar-2011-10-11 
+# START LOGGING UTC seconds since the epoch: 1318291200.14
+# SPEED:       4800
+# PORT:        /dev/ttyS0
+# TIMEOUT:     300.0
+# STATIONID:   ccom-airmar
+# DAEMON MODE: False
+$PNTZNT,1318291200.14,127.0.0.1,148.167.132.201,3,1318289568.2,0.000034,-20,0.086365,0.052994*12,ccom-airmar,1318291200.14
+$GPVTG,277.9,T,293.3,M,0.1,N,0.1,K,D*26,rccom-airmar,1318291200.14
+$WIMWV,307.3,R,0.7,N,A*23,rccom-airmar,1318291200.17
+$GPZDA,000000,11,10,2011,00,00*4B,rccom-airmar,1318291200.27
+#+END_EXAMPLE
+
+What types of NMEA strings do we have?
+
+#+BEGIN_EXAMPLE 
+grep '^\$' ccom-airmar-2011-10-11 | cut -d, -f1 | sort -u
+$GPGGA
+$GPVTG
+$GPZDA
+$HCHDT
+$PNTZNT
+$WIMDA
+$WIMWD
+$WIMWV
+#+END_EXAMPLE
+
+We can look up the NMEA sentences here:
+
+http://gpsd.berlios.de/NMEA.html
+
+#+BEGIN_EXAMPLE 
+=== GGA - Global Positioning System Fix Data ===
+
+Time, Position and fix related data for a GPS receiver.
+
+------------------------------------------------------------------------------
+                                                      11
+        1         2       3 4        5 6 7  8   9  10 |  12 13  14   15
+        |         |       | |        | | |  |   |   | |   | |   |    |
+ $--GGA,hhmmss.ss,llll.ll,a,yyyyy.yy,a,x,xx,x.x,x.x,M,x.x,M,x.x,xxxx*hh<CR><LF>
+------------------------------------------------------------------------------
+
+Field Number: 
+
+1. Universal Time Coordinated (UTC)
+2. Latitude
+3. N or S (North or South)
+4. Longitude
+5. E or W (East or West)
+6. GPS Quality Indicator,
+     - 0 - fix not available,
+     - 1 - GPS fix,
+     - 2 - Differential GPS fix
+           (values above 2 are 2.3 features)
+     - 3 = PPS fix
+     - 4 = Real Time Kinematic
+     - 5 = Float RTK
+     - 6 = estimated (dead reckoning)
+     - 7 = Manual input mode
+     - 8 = Simulation mode
+7. Number of satellites in view, 00 - 12
+8. Horizontal Dilution of precision (meters)
+9. Antenna Altitude above/below mean-sea-level (geoid) (in meters)
+10. Units of antenna altitude, meters
+11. Geoidal separation, the difference between the WGS-84 earth
+     ellipsoid and mean-sea-level (geoid), "-" means mean-sea-level
+     below ellipsoid
+12. Units of geoidal separation, meters
+13. Age of differential GPS data, time in seconds since last SC104
+     type 1 or 9 update, null field when DGPS is not used
+14. Differential reference station ID, 0000-1023
+15. Checksum
+#+END_EXAMPLE
+
+
+* Can we load in the GPS GGA messages?
+
+One NMEA GPS location message looks like this:
+
+#+BEGIN_EXAMPLE
+$GPGGA,000000,4308.1250,N,07056.3750,W,2,9,1.1,35.7,M,,,,*04
+#+END_EXAMPLE
+
+#+BEGIN_SRC python
+!head -20000 ccom-airmar-2011-10-11 | tail 
+$HCHDT,26.2,T*1F,rccom-airmar,1318293159.77
+$WIMWV,214.5,T,0.3,N,A*24,rccom-airmar,1318293159.84
+$WIMWV,218.9,R,0.3,N,A*22,rccom-airmar,1318293159.89
+$HCHDT,26.1,T*1C,rccom-airmar,1318293160.17
+$GPVTG,268.5,T,283.9,M,0.1,N,0.1,K,D*2F,rccom-airmar,1318293160.25
+$WIMWV,211.9,R,0.4,N,A*2C,rccom-airmar,1318293160.3
+$GPZDA,003240,11,10,2011,00,00*4E,rccom-airmar,1318293160.39
+$WIMDA,30.1915,I,1.0224,B,17.6,C,,,,,,,229.0,T,244.4,M,0.3,N,0.2,M*2E,rccom-airmar,1318293160.52
+$GPGGA,003240,4308.1263,N,07056.3750,W,2,9,1.1,41.3,M,,,,*06,rccom-airmar,1318293160.65
+$WIMWD,228.9,T,244.3,M,0.3,N,0.2,M*5B,rccom-airmar,1318293160.74
+
+line = '$GPGGA,003240,4308.1263,N,07056.3750,W,2,9,1.1,41.3,M,,,,*06,rccom-airmar,1318293160.65'
+'GGA' in line
+'VTG' in line
+#+END_SRC
+
+
+#+BEGIN_SRC python
+#!/usr/bin/env python
+
+num_gga = 0
+
+for line in open('ccom-airmar-2011-10-11'):
+    if 'GGA' not in line:
+        # Skip all lines that are not GPS position messages
+        continue
+    num_gga += 1
+
+print num_gga
+#+END_SRC
+
+#+BEGIN_SRC python
+  line = '$GPGGA,003240,4308.1263,N,07056.3750,W,2,9,1.1,41.3,M,,,,*06,rccom-airmar,1318293160.65'
+  fields = line.split(',')
+  y = int(fields[2][:2]) + float(fields[2][2:])/ 100.
+  if fields[3] == 'S':
+      y = -y
+  x = int(fields[4][:3]) + float(fields[4][3:]) / 100.
+  if fields[5] == 'W':
+      x = -x
+  return '%f, %f' % (x,y)
+  
+#+END_SRC
+
+#+BEGIN_SRC python
+#!/usr/bin/env python
+
+num_gga = 0
+
+X = []
+Y = []
+
+for line_num, line in enumerate(open('ccom-airmar-2011-10-11')):
+    if line_num > 100:
+        break
+    if 'GGA' not in line:
+        # Skip all lines that are not GPS position messages
+        continue
+    fields = line.split(',')
+    y = int(fields[2][:2]) + float(fields[2][2:])/ 100.
+    if fields[3] == 'S':
+        y = -y
+    x = int(fields[4][:3]) + float(fields[4][3:]) / 100.
+    if fields[5] == 'W':
+        x = -x
+    #print x,y
+    X.append(x)
+    Y.append(y)
+#+END_SRC
+
+#+BEGIN_SRC python
+#!/usr/bin/env python
+
+def load_gga(filename):
+    num_gga = 0
+
+    X = []
+    Y = []
+
+    for line_num, line in enumerate(open(filename)):
+        #if line_num > 100:
+        #    break
+        if 'GGA' not in line:
+            # Skip all lines that are not GPS position messages
+            continue
+        fields = line.split(',')
+        y = int(fields[2][:2]) + float(fields[2][2:])/ 100.
+        if fields[3] == 'S':
+            y = -y
+        x = int(fields[4][:3]) + float(fields[4][3:]) / 100.
+        if fields[5] == 'W':
+            x = -x
+        X.append(x)
+        Y.append(y)
+
+    return X, Y
+#+END_SRC
+
+#+BEGIN_SRC python
+x,y = wx4.load_gga('ccom-airmar-2011-10-11')
+plot
+#+END_SRC
+
+* Switching to meters - UTM
+
+http://upload.wikimedia.org/wikipedia/commons/e/ed/Utm-zones.jpg
+
+#+BEGIN_SRC 
+
+#+END_SRC

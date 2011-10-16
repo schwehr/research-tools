@@ -1,6 +1,6 @@
 #+STARTUP: showall
 
-#+TITLE:     Class 13: python and control structures
+#+TITLE:     Class 13: python - if, while, def functions, classes
 #+AUTHOR:    Kurt Schwehr
 #+EMAIL:     schwehr@ccom.unh.edu
 #+DATE:      <2011-10-13 Thu>
@@ -57,10 +57,22 @@ print 'equal' if 1==0 else 'really not-equal'
 answer = 'equal' if 1==0 else 'really not-equal'
 #+END_SRC
 
+#+BEGIN_SRC python
+if False:
+    print 'case 1'
+elif 1==2:
+    print 'case 2'
+elif 2==2:
+    print 'case 3'
+else:
+    print 'default at the end'
+#+END_SRC
+
 * While loops
 
 #+BEGIN_SRC python
   count = 0
+
   while count < 10:
       print count
       count += 2
