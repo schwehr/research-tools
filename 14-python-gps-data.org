@@ -1,0 +1,53 @@
+#+STARTUP: showall
+
+#+TITLE:     Class 14: python - processing GPS data
+#+AUTHOR:    Kurt Schwehr
+#+EMAIL:     schwehr@ccom.unh.edu
+#+DATE:      <2011-10-18 Tue>
+#+DESCRIPTION: Marine Research Data Manipulation and Practices
+#+KEYWORDS: ipython matplotlib
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:nil toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   TeX:t LaTeX:nil skip:t d:nil todo:t pri:nil tags:not-in-toc
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+LINK_HOME: http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/
+
+
+* TODO Outside reading                                              :reading:
+
+http://oceanservice.noaa.gov/podcast.html
+
+#+BEGIN_VERSE 
+Figuring out the exact location of a point on the Earth's surface in
+three dimensions is what the science of geodesy is all about. Thanks
+to the network of satellites in space known as the Global Positioning
+System, we can determine latitude and longitude with great
+accuracy. Heights, however, are a trickier business to nail down. 
+
+In this episode, we talk with NOAA Chief Geodesist Dru Smith to learn
+how scientists are using measurements of gravity to refine a complex
+mathematical model of the Earth's shape known as the geoid. Once the
+new model is deployed, the hope is that we'll be able to use GPS
+receivers to figure out our current elevation in most places across
+the nation within an accuracy of two centimeters or less.
+#+END_VERSE
+
+- http://oceanservice.noaa.gov/podcast/oct11/mw101311.mp3
+- http://oceanservice.noaa.gov/podcast/oct11/mw101311transcript.html
+
+
+* Introduction
+
+Today we will work on parsing GPS data
+
+My normal log files have extra metadata on the end.  Let's start with
+a file that does not include this metadata.
+
+#+BEGIN_SRC sh
+mkdir ~/class/14
+cd ~/class/14
+wget http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/examples/nmea.log.bz2
+bunzip2 nmea.log.bz2
+#+END_SRC
+
+more notes will follow later.  This class is very similar to video 13.
