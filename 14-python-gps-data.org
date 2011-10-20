@@ -51,3 +51,117 @@ bunzip2 nmea.log.bz2
 #+END_SRC
 
 more notes will follow later.  This class is very similar to video 13.
+
+* Parsing NMEA with python
+
+http://gpsd.berlios.de/NMEA.txt
+
+* Final code
+
+#+BEGIN_SRC python
+#!/usr/bin/env python
+
+test_gga = '$GPGGA,024634,4308.1268,N,07056.3761,W,2,7,1.1,39.9,M,,,,*06'
+
+def decode_gga(line):
+    fields = line.split(',')
+    time_string = fields[1]
+    hour = int (  time_string[:2]  )
+    minute = int ( time_string[2:4] )
+    sec = int ( time_string[4:] )
+    print 'hour:', hour, 'minute:', minute, 'sec:', sec
+
+    # Latitude
+    lat_str = fields[2]
+    y = int ( lat_str[:2] ) + float(lat_str[2:]) / 60.
+
+    if fields[3] == 'S':
+        y = -y
+
+    print 'latitude (y):', y
+
+    # Longitude
+    lon_str = fields[4]
+    x = int ( lon_str[:3] ) + float ( lon_str[3:] ) / 60.
+    if fields[5] == 'W':
+        x = -x
+
+    print 'longitude (x):', x
+
+decode_gga('$GPGGA,024634,4308.1268,N,07056.3761,W,2,7,1.1,39.9,M,,,,*06')
+#+END_SRC
+
+* History
+
+#+BEGIN_SRC python
+1 : _ip.system("ls -F ")
+2 : import gga
+3 : dir(gga)
+4 : _ip.system("ls -F ")
+5 : _ip.system("ls -F ")
+6 : _ip.system("ls -F -l")
+7 : import gga
+8 : reload(gga)
+9 : dir(gga)
+10: gga.test_gga
+13: #?gga.test_gga.split
+14: gga.test_gga.split(',')
+15: Out[14]
+16: fields = gga.test_gga.split(',')
+17: who 
+18: _ip.magic("who ")
+19: _ip.magic("whos ")
+20: _ip.magic("whos ")
+21: fields
+22: fields[0]
+23: fields[1]
+24: fields = gga.test_gga.split(',')
+25: fields[-1]
+26: fields
+27: fields[1]
+28: fields = gga.test_gga.split(',')
+29: time_string = fields[1]
+30: _ip.magic("whos ")
+31: hour = time_string[:2]
+32: hour
+33: type(hour)
+34: int(hour)
+35: hour = int (  time_string[:2]  )
+36: hour
+37: type(hour)
+38: _ip.magic("history ")
+39: reload(gga)
+40: gga.decode_gga( gga.test_gga  )
+41: _ip.magic("run gga")
+42: time_string
+43: minute = time_string[2:4]
+44: print minute
+45: minute
+46: minute = int ( time_string[2:4] )
+47: minute
+48: type (minute)
+49: sec = int ( time_string[4:] )
+50: print sec
+51: _ip.magic("run gga")
+52: reload(gga)
+54: gga.decode_gga( gga.test_gga  )
+56: _ip.magic("run gga")
+57: fields
+58: lat_str = fields[2]
+59: lat_str
+60: lat_str[:2]
+61: int ( lat_str[:2] )
+62: lat_str[2:]
+63: int(lat_str[2:])
+64: float(lat_str[2:])
+65: float(lat_str[2:]) / 60.
+66: 59/60
+67: 59/60.
+68: _ip.magic("history ")
+69: int ( lat_str[:2] ) + float(lat_str[2:]) / 60.
+70: y = int ( lat_str[:2] ) + float(lat_str[2:]) / 60.
+71: fields
+72: _ip.magic("run gga")
+74: fields[4]
+75: _ip.magic("run gga")
+#+END_SRC

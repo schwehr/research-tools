@@ -1,0 +1,286 @@
+#+STARTUP: showall
+
+#+TITLE:     Class 15: matplotlib - graphing
+#+AUTHOR:    Kurt Schwehr
+#+EMAIL:     schwehr@ccom.unh.edu
+#+DATE:      <2011-10-20 Thu>
+#+DESCRIPTION: Marine Research Data Manipulation and Practices
+#+KEYWORDS: ipython matplotlib
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:nil toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   TeX:t LaTeX:nil skip:t d:nil todo:t pri:nil tags:not-in-toc
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+LINK_HOME: http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/
+
+* Introduction
+
+This class is about starting to plot data!  Matplotlib is a *super*
+powerful plotting system.  I am definitely not an expert.  Check out
+the range of examples:
+
+http://matplotlib.sourceforge.net/
+
+* Setup
+
+I have pre-parsed the data for you.
+
+#+BEGIN_SRC sh
+mkdir -p ~/class/15
+cd ~/class/15
+wget http://vislab-ccom.unh.edu/~schwehr/rt/examples/2011-10-11.gga.dat.bz2
+#+END_SRC
+
+There is no need to uncompress the data!
+
+#+BEGIN_SRC sh
+bzcat 2011-10-11.gga.dat.bz2 | head
+# x y z quality satellites hdop
+-70.9395833333 43.1354166667 35.7 2 9 1.1
+-70.9395766667 43.135415 36.1 2 9 1.1
+-70.93957 43.1354133333 36.5 2 9 1.1
+-70.9395666667 43.1354133333 37.0 2 9 1.1
+-70.9395633333 43.1354133333 37.4 2 9 1.1
+-70.9395633333 43.1354133333 37.8 2 9 1.1
+-70.9395616667 43.1354133333 38.3 2 9 1.1
+-70.9395616667 43.135415 38.7 2 9 1.1
+-70.93956 43.1354133333 39.1 2 9 1.1
+#+END_SRC
+
+* Loading the data
+
+Start ipython with pylab loaded
+
+#+BEGIN_SRC sh
+ipython --pylab
+#+END_SRC
+
+We can load the data using numpy's [[http://docs.scipy.org/doc/numpy/reference/generated/numpy.loadtxt.html][loadtxt]] function.  It knows how to
+handle gzip and bzip2 compressed data!
+
+#+BEGIN_SRC python
+loadtxt?
+# q to quit out of the pager
+
+data = loadtxt('2011-10-11.gga.dat.bz2')
+
+data
+
+# The results
+array([[-70.93958333,  43.13541667,  35.7       ,   2.        ,
+          9.        ,   1.1       ],
+       [-70.93957667,  43.135415  ,  36.1       ,   2.        ,
+          9.        ,   1.1       ],
+       [-70.93957   ,  43.13541333,  36.5       ,   2.        ,
+          9.        ,   1.1       ],
+       ..., 
+       [-70.93955167,  43.13545667,  43.        ,   2.        ,
+          8.        ,   1.2       ],
+       [-70.93955167,  43.13545667,  43.3       ,   2.        ,
+          8.        ,   1.2       ],
+       [-70.93955167,  43.13545833,  43.5       ,   2.        ,
+          8.        ,   1.2       ]])
+#+END_SRC
+
+That's not really what we want.  We would like an array for each variable.
+There is a "unpack" option for loadtxt that will let us assign each of the 
+6 columns separately.
+
+#+BEGIN_SRC python
+x,y,z,quality,satellites,hdop = np.loadtxt('2011-10-11.dat', unpack=True)
+
+average(x)
+# -70.939601490675187
+
+average(y)
+#: 43.135434976022353
+
+min(x)
+# -70.939716666699994
+
+max(x)
+# -70.939486666700006
+#+END_SRC
+
+* Simple plots
+
+That's nice, but can we plot those?
+
+#+BEGIN_SRC python
+plot(x)
+#+END_SRC
+
+Ugly units, but it does give us a sense of what is going on.  It looks
+pretty random.  How about latitude?
+
+#+BEGIN_SRC python
+plot(y)
+#+END_SRC
+
+Uh oh!  Having both on the same plot is not what we want.  Time to
+learn how to manage "figures".
+
+#+BEGIN_SRC python
+cla() # wipe what is in the "current" figure
+figure(1)
+plot(x)
+figure(2) # make a new figure
+plot(y)
+figure(3)
+plot(x,y)
+#+END_SRC
+
+* Can we lable the hair ball?
+
+You bet!
+
+#+BEGIN_SRC python
+title('GPS wander for 1 day')
+xlabel('Longitude')
+ylabel('Latitude')
+#+END_SRC
+
+We can also put a dot at each point:
+
+#+BEGIN_SRC python
+plot(x,y,'ro')  # Yuck!  too many points
+#+END_SRC
+
+Try something nicer - the lines with the average of x and y marked:
+
+#+BEGIN_SRC python
+cla()
+plot(x,y)
+annotate('Center', xy = (average(x),average(y)))
+plot(average(x),average(y), 'ro')
+#+END_SRC
+
+* Using pyproj to calculate distances and directions
+
+pyproj can reproject data, but it also has functions for calculating
+distances and bearings on great circles.  We can use this to plot
+the direction and distance of the GPS wander during a day in the xy
+plane.  Let's give it a try with two points:
+
+#+BEGIN_SRC python
+import pyproj
+
+geod = pyproj.Geod(ellps='WGS84')
+
+geod.inv(-70.93957666666667, 43.135415, -70.939585, 43.135403333333336)
+# (-152.38532556888342, 27.614668733409243, 1.464169686122718)
+#+END_SRC
+
+The results are the direction from pt 1 to pt 2, the reverse
+direction, and the distance in meters.
+
+Let's make a script that will use pyproj to give us two lists: the
+direction and the distance.  We will use the average of x and y as our
+reference point.  Call is "wander.py":
+
+#+BEGIN_SRC python
+  import pyproj
+  
+  def wander_list():
+  
+      geod = pyproj.Geod(ellps='WGS84')
+  
+      x,y,z,quality,satellites,hdop = np.loadtxt('2011-10-11.dat', unpack=True)
+  
+      x_ave = np.average(x)
+      y_ave = np.average(y)
+  
+      delta_m = []
+      delta_dir = []
+      for i in range(len(x)):
+          d = geod.inv(x_ave,y_ave, x[i], y[i])
+          delta_dir.append(d[0])
+          delta_m.append(d[2])
+  
+      return delta_dir, delta_m
+#+END_SRC
+
+What????
+
+#+BEGIN_EXAMPLE
+ValueError: undefined inverse geodesic (may be an antipodal point)
+#+END_EXAMPLE
+
+If the values are too close together, it can't calculate a direction.
+We have not talked about exceptions up to this point.  We now need to
+learn a little about them.  In python, when things go wrong, well
+designed code will often "raise" an exception.  It is saying "hey!
+this is what is wrong".  The hope is that some of the code above
+that problem will know what to do.  If no part of the program "catches" 
+the exception and handles it, the program has to stop.  Here is a little
+example to use in ipython:
+
+#+BEGIN_SRC python
+  try:
+      raise Exception
+      # Never get to here
+  except:
+      # Do what is necessary to get things back on track
+      print 'Opps!'
+#+END_SRC
+
+Modify the code in your for loop to look like this:
+
+#+BEGIN_SRC python
+        try:
+            d = geod.inv(x_ave,y_ave, x[i],y[i])
+            delta_dir.append(d[0])
+            delta_m.append(d[2])
+        except:
+            delta_dir.append(0) # just pick north
+            delta_m.append(0) # No distance
+#+END_SRC
+
+Now it should work!
+
+
+#+BEGIN_SRC python
+reload wander
+dir, m = wander.wander_list('2011-10-11.gga.dat.bz2')
+
+cla()
+plot dir
+#+END_SRC
+
+Errr... dir runs -180 to +180.  Let's make that 0..360:
+
+#+BEGIN_SRC python
+dir360 = [ d if d>0 else d+360 for d in dir ]
+#+END_SRC
+
+Didn't get that last line?  I'll explain it more in a video.
+
+* Fancier plotting - histograms and subplots
+
+It would be nice to be able to make a figure with multiple plots and
+maybe have a histogram.  Let's try making a histogram first.
+
+#+BEGIN_SRC python
+cla()
+hist(m)
+hist(m, bins=30)
+hist(m, bins=100)
+#+END_SRC
+
+Which is a reminder that you are warned that histograms are not a
+stable concept.  How they look depends heavily on the number of bins.
+
+*Warning:* matplotlib is designed to follow how matlab does plotting.  That
+means that subplots start counting from 1, not 0.  Bummer.
+
+#+BEGIN_SRC python
+cla()
+subplot (411)
+plot(dir360)
+plot(x)
+subplot (412)
+plot(y)
+subplot (413)
+plot(m)
+subplot (414)
+hist(m, bins=200)
+#+END_SRC
