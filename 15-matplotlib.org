@@ -46,6 +46,8 @@ bzcat 2011-10-11.gga.dat.bz2 | head
 -70.93956 43.1354133333 39.1 2 9 1.1
 #+END_SRC
 
+** Making sure that you have numpy, scipy, and matplotlib installed
+
 * Loading the data
 
 Start ipython with pylab loaded
@@ -86,7 +88,7 @@ There is a "unpack" option for loadtxt that will let us assign each of the
 6 columns separately.
 
 #+BEGIN_SRC python
-x,y,z,quality,satellites,hdop = np.loadtxt('2011-10-11.dat', unpack=True)
+x,y,z,quality,satellites,hdop = loadtxt('2011-10-11.gga.dat.bz2', unpack=True)
 
 average(x)
 # -70.939601490675187
@@ -177,14 +179,17 @@ Let's make a script that will use pyproj to give us two lists: the
 direction and the distance.  We will use the average of x and y as our
 reference point.  Call is "wander.py":
 
+FIX: add explanation of =import as=
+
 #+BEGIN_SRC python
   import pyproj
+  import numpy as np
   
   def wander_list():
   
       geod = pyproj.Geod(ellps='WGS84')
   
-      x,y,z,quality,satellites,hdop = np.loadtxt('2011-10-11.dat', unpack=True)
+      x,y,z,quality,satellites,hdop = np.loadtxt('2011-10-11.gga.dat.bz2', unpack=True)
   
       x_ave = np.average(x)
       y_ave = np.average(y)
@@ -284,3 +289,9 @@ plot(m)
 subplot (414)
 hist(m, bins=200)
 #+END_SRC
+
+* TODO Questions
+
+- What is "interactive mode" for matplotlib?
+- Switching figures
+- Splitting 15 into 15 & 16
