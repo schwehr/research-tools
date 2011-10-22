@@ -1,0 +1,92 @@
+* Overview
+
+#+BEGIN_SRC python
+file
+
+bzcat 2011-10-11.gga.dat.bz2 | head
+ipython --pylab
+data = loadtxt('2011-10-11.gga.dat.bz2')
+
+type (data)
+del (data)
+x,y,z,quality,satellites,hdop = np.loadtxt('2011-10-11.dat', unpack=True)
+
+average(x)
+average(y)
+min(x)
+max(x)
+
+plot (x)
+plot(y)
+
+cla()
+figure(1)
+plot(x)
+figure(2)
+plot(y)
+figure(3)
+plot(x,y)
+
+title('GPS wander for 1 day')
+xlabel('Longitude')
+ylabel('Latitude')
+
+cla()
+plot(x,y)
+annotate('Center', xy = (average(x),average(y)))
+plot(average(x),average(y), 'ro')
+
+import pyproj
+geod = pyproj.Geod(ellps='WGS84')
+geod.inv(-70.93957666666667, 43.135415, -70.939585, 43.135403333333336)
+
+  import pyproj
+  import numpy as np
+  def wander_list():
+  
+      geod = pyproj.Geod(ellps='WGS84')
+  
+      x,y,z,quality,satellites,hdop = np.loadtxt('2011-10-11.dat', unpack=True)
+  
+      x_ave = np.average(x)
+      y_ave = np.average(y)
+  
+      delta_m = []
+      delta_dir = []
+      for i in range(len(x)):
+          d = geod.inv(x_ave,y_ave, x[i], y[i])
+          delta_dir.append(d[0])
+          delta_m.append(d[2])
+  
+      return delta_dir, delta_m
+
+  try:
+      raise Exception
+      # Never get to here
+  except:
+      # Do what is necessary to get things back on track
+      print 'Opps!'
+
+reload wander
+dir, m = wander.wander_list('2011-10-11.gga.dat.bz2')
+
+cla()
+plot dir
+
+cla()
+hist(m)
+hist(m, bins=30)
+hist(m, bins=100)
+
+cla()
+subplot (411)
+plot(dir360)
+plot(x)
+subplot (412)
+plot(y)
+subplot (413)
+plot(m)
+subplot (414)
+hist(m, bins=200)
+
+#+END_SRC
