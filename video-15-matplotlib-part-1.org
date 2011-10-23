@@ -1,7 +1,27 @@
+#+STARTUP: showall
+
+#+TITLE:     Video 15: python part 8 - matplotlib - part 1
+#+AUTHOR:    Kurt Schwehr
+#+EMAIL:     schwehr@ccom.unh.edu
+#+DATE:      <2011-10-23 Sun>
+#+DESCRIPTION: Marine Research Data Manipulation and Practices
+#+KEYWORDS: ipython matplotlib
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:nil toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   TeX:t LaTeX:nil skip:t d:nil todo:t pri:nil tags:not-in-toc
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+LINK_HOME: http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/
+
+
+* Introduction
+
+A first introduction to plotting with matplotlib in python.
+
+
 * Overview
 
 #+BEGIN_SRC python
-file
+file 2011-10-11.gga.dat.bz2
 
 bzcat 2011-10-11.gga.dat.bz2 | head
 ipython --pylab
@@ -89,4 +109,120 @@ plot(m)
 subplot (414)
 hist(m, bins=200)
 
+#+END_SRC
+
+* history
+
+#+BEGIN_SRC python
+In [81]: history 1 79
+1 : _ip.magic("pwd ")
+2 : _ip.system("ls -F ")
+3 : #?loadtxt
+4 : data = loadtxt('2011-10-11.gga.dat.bz2')
+5 : type (data)
+6 : len(data)
+7 : _ip.system("bzcat 2011-10-11.gga.dat.bz2 | wc -l")
+8 : data[0]
+9 : _ip.magic("whos ")
+10: del(data)
+11: _ip.magic("whos ")
+12: #?loadtxt
+13: x,y,z,quality,satellite,hdop = loadtxt('2011-10-11.gga.dat.bz2',unpack=True)
+14: type(x)
+15: len(x)
+16: x[0]
+17: x
+18: y
+19: average(x)
+20: average(y)
+21: min(x)
+22: max(x)
+23: max(x)-min(x)
+24: plot(x)
+25: plot(y)
+26: cla()
+27: plot(x)
+28: figure(2)
+29: plot(y)
+30: figure(3)
+31: plot(x,y)
+32: title('GPS Wander for 1 day')
+33: xlabel('Longitude')
+34: ylabel('Latitude')
+35: figure(1)
+36: title('X axis')
+37: annotate('Center', xy = (average(x), average(y)))
+38: plot(average(x),average(y), 'ro')
+39: import pyproj
+40: #?pyproj.Geod
+41: geod = pyproj.Geod(ellps='WGS84')
+42: dir(geod)
+43: #?geod.inv
+44: geod.inv(x[0],y[0], x[-1],y[-1])
+45: _ip.magic("history ")
+46: geod.inv(x[0],y[0], x[-1],y[-1])
+47: import wander
+48: dir(wander)
+49: #wander.wander_list(
+50: reload(wander)
+51: distances = wander.wander_list('2011-10-11.gga.dat.bz2')
+52: reload(wander)
+53: distances = wander.wander_list('2011-10-11.gga.dat.bz2')
+54:
+try:
+    print 'hello'
+    raise Exception
+    print 'never gets here'
+except:
+    print 'oops'
+    
+
+55: reload(wander)
+56: distances = wander.wander_list('2011-10-11.gga.dat.bz2')
+57: cla()
+58: plot(distances)
+59: average(distances)
+60: cla()
+61: subplot (411)
+62: plot(x)
+63: subplot (412)
+64: plot(y)
+65: subplot (413)
+66: plot(distance)
+67: plot(distances)
+68: subplot (414)
+69: #?hist
+70: hist(distances)
+71: hist(distances,bins=30)
+72: hist(distances,bins=300)
+73: cla()
+74: hist(distances,bins=100)
+75: subplot(111)
+76: hist(distances, bins=100)
+77: xlabel('Dist(m)')
+78: ylabel('Number of samples')
+#+END_SRC
+
+* Source from the final video
+
+#+BEGIN_SRC python
+import pyproj
+import numpy as np
+
+def wander_list(filename):
+    geod = pyproj.Geod(ellps='WGS84')
+    x,y,z,quality,satellite,hdop = np.loadtxt(filename,unpack=True)
+
+    x_ave = np.average(x)
+    y_ave = np.average(y)
+
+    m = [ ]
+    for i in range(len(x)):
+        try:
+            results = geod.inv(x_ave,y_ave, x[i], y[i])
+            m.append(results[2])
+        except:
+            m.append(0)
+
+    return m
 #+END_SRC
