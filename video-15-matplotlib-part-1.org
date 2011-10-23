@@ -17,7 +17,6 @@
 
 A first introduction to plotting with matplotlib in python.
 
-
 * Overview
 
 #+BEGIN_SRC python
