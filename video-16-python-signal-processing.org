@@ -1,0 +1,45 @@
+#+STARTUP: showall
+
+#+TITLE:     Video 16: python part 9 - signal processing with numpy arrays
+#+AUTHOR:    Kurt Schwehr
+#+EMAIL:     schwehr@ccom.unh.edu
+#+DATE:      <2011-10-24 Mon>
+#+DESCRIPTION: Marine Research Data Manipulation and Practices
+#+KEYWORDS: ipython matplotlib
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:nil toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   TeX:t LaTeX:nil skip:t d:nil todo:t pri:nil tags:not-in-toc
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+LINK_HOME: http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/
+
+* Introduction
+
+Just a basic convolve of a filter and an fft of random data
+
+* History
+
+#+BEGIN_SRC python
+1 : #?zeros
+2 : zeros(200)
+3 : ones(100)
+4 : #?concatenate
+5 : concatenate( (zeros(1000), ones(200), zeros(1000)) )
+6 : data = concatenate( (zeros(1000), ones(200), zeros(1000)) )
+7 : plot(data)
+8 : hamming(30)
+9 : plot(hamming(30))
+10: plot(hamming(30))
+11: sum(hamming(30))
+12: a_filter = hamming(30) / sum(hamming(30))
+13: sum(a_filter)
+14: plot(a_filter)
+15: #?convolve
+16: convolve (data, a_filter)
+17: plot(convolve (data, a_filter))
+18: plot(data)
+19: randn(1000)
+20: plot(randn(1000))
+21: fft(randn(1024))
+23: plot(fft (randn(1024)))
+24: _ip.magic("history ")
+#+END_SRC
