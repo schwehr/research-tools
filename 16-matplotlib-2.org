@@ -1,0 +1,87 @@
+#+STARTUP: showall
+
+#+TITLE:     Class 16: matplotlib 2 - graphing
+#+AUTHOR:    Kurt Schwehr
+#+EMAIL:     schwehr@ccom.unh.edu
+#+DATE:      <2011-10-25 Tue>
+#+DESCRIPTION: Marine Research Data Manipulation and Practices
+#+KEYWORDS: ipython matplotlib
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:nil toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   TeX:t LaTeX:nil skip:t d:nil todo:t pri:nil tags:not-in-toc
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+LINK_HOME: http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/
+
+* Introduction
+
+This is part 2 of the matplotlib introduction.  The material in classes 15 and 16 is
+covered in a video:
+
+http://youtu.be/zwzR0z0_Gn0
+
+* Matplotlib continued
+
+#+BEGIN_SRC python
+reload wander
+dir, m = wander.wander_list('2011-10-11.gga.dat.bz2')
+
+cla()
+plot dir
+#+END_SRC
+
+Errr... dir runs -180 to +180.  Let's make that 0..360:
+
+#+BEGIN_SRC python
+dir360 = [ d if d>0 else d+360 for d in dir ]
+#+END_SRC
+
+Didn't get that last line?  I'll explain it more in a video.
+
+* Fancier plotting - histograms and subplots
+
+It would be nice to be able to make a figure with multiple plots and
+maybe have a histogram.  Let's try making a histogram first.
+
+#+BEGIN_SRC python
+cla()
+hist(m)
+hist(m, bins=30)
+hist(m, bins=100)
+#+END_SRC
+
+Which is a reminder that you are warned that histograms are not a
+stable concept.  How they look depends heavily on the number of bins.
+
+*Warning:* matplotlib is designed to follow how matlab does plotting.  That
+means that subplots start counting from 1, not 0.  Bummer.
+
+#+BEGIN_SRC python
+cla()
+subplot (411)
+plot(dir360)
+plot(x)
+subplot (412)
+plot(y)
+subplot (413)
+plot(m)
+subplot (414)
+hist(m, bins=200)
+#+END_SRC
+
+* Working with arrays
+
+We can start building up capabilities
+
+#+BEGIN_SRC python
+zeros(30)
+ones(10)
+concatonate( (zeros(100), ones(100), zeros(100) ) )
+#+END_SRC
+
+
+* TODO Questions
+
+- What is "interactive mode" for matplotlib?
+- Switching figures
+- Splitting 15 into 15 & 16
+
