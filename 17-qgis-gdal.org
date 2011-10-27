@@ -1,0 +1,382 @@
+#+STARTUP: showall
+
+#+TITLE:     Class 17: qgis and gdal
+#+AUTHOR:    Kurt Schwehr
+#+EMAIL:     schwehr@ccom.unh.edu
+#+DATE:      <2011-10-27 Thu>
+#+DESCRIPTION: Marine Research Data Manipulation and Practices
+#+KEYWORDS: gdal qgis
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:nil toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   TeX:t LaTeX:nil skip:t d:nil todo:t pri:nil tags:not-in-toc
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+LINK_HOME: http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/
+
+* Introduction
+
+It's time to go for some more traditional style GIS and take a short
+break from python.
+
+* Setup
+
+#+BEGIN_SRC sh
+mkdir -p ~/class/17
+cd ~/class/17
+wget 
+#+END_SRC
+
+* Getting NOAA charts
+
+- What is an S57?  What is a BSB?
+- Why is proprietary bad?
+- S10x standards
+
+http://www.nauticalcharts.noaa.gov/mcd/enc/
+
+"Download NOAA ENCs" - Registered trade mark - hmmm.
+
+http://www.nauticalcharts.noaa.gov/mcd/enc/download_agreement.htm
+
+"Permitted Use":  This is US Government data, so we can use it for
+what ever we want, but if you are navigating with this data you are
+stuck will all kinds of archaic rules.  Sorry.  But for the class,
+it's use and abuse!
+
+#+BEGIN_EXAMPLE
+Copying of the NOAA ENCs to any other server or location for further
+distribution is discouraged unless the following guidelines are
+followed:
+
+    this User Agreement is displayed and accepted by anyone accessing
+    the NOAA ENCs
+
+    a reference to this Web site is included so that anyone accessing
+    the NOAA ENCs is advised of their origin.
+
+If these NOAA ENC's are incorporated into any other product in a form
+other than as provided by NOAA, the producer of that product assumes
+full liability.
+#+END_EXAMPLE
+
+* Getting an S57 chart
+
+http://www.charts.noaa.gov/ENCs/ENCs.shtml
+
+Get the New Hampshire charts under ENCs by State
+
+http://www.charts.noaa.gov/ENCs/Agreement.shtml?NH_ENCs
+
+#+BEGIN_EXAMPLE
+NOAA ENCs may be redistributed, but redistributed NOAA ENCs are NOT
+considered official NOAA ENCs, and do not meet federal chart carriage
+regulations for regulated vessels unless redistributed by a "Certified
+NOAA ENC Distributor" or by a "Certified NOAA ENC Value Added
+Distributor". Click
+http://chartmaker.ncd.noaa.gov/mcd/enc/fedreg_encrule.htm for further
+information on ENC Distributorships.
+#+END_EXAMPLE
+
+Insert commentary on rules that do not make sense.  It would better to
+have cryptographic signatures and published checksums!
+
+So let's just skip all the CYA stuff and get the data!
+
+#+BEGIN_SRC sh
+wget http://www.charts.noaa.gov/ENCs/NH_ENCs.zip
+md5sum NH_ENCs.zip
+# 8b942e2f3b240a8529851e22cbc11395  NH_ENCs.zip
+sha256sum NH_ENCs.zip 
+# 3e57084aac502cc1f1060b8213225ebe8dbeea82f0776f4be004f9fcb3eec634  NH_ENCs.zip
+#+END_SRC
+
+Note that their zip files do not have version numbers or checksums.
+Not good.
+
+#+BEGIN_SRC sh
+man unzip
+unzip --help
+unzip -l -v NH_ENCs.zip 
+#+END_SRC
+
+#+BEGIN_EXAMPLE
+Archive:  NH_ENCs.zip
+ Length   Method    Size  Cmpr    Date    Time   CRC-32   Name
+--------  ------  ------- ---- ---------- ----- --------  ----
+   13698  Defl:N     2711  80% 2011-10-25 18:19 4b571cc5  ENC_ROOT/CATALOG.031
+    3673  Defl:N     1717  53% 2011-10-25 18:19 b84cdd56  ENC_ROOT/README.TXT
+    5172  Defl:N     2126  59% 2011-10-25 18:19 a6832ba0  ENC_ROOT/USERAGREEMENT.TXT
+     516  Defl:N      285  45% 2011-10-25 18:19 12ff4111  ENC_ROOT/US2EC03M/US000089.TXT
+     247  Defl:N      171  31% 2011-10-25 18:19 578dbc67  ENC_ROOT/US2EC03M/US001241.TXT
+...
+     247  Defl:N      173  30% 2011-10-25 18:19 137e8a5a  ENC_ROOT/US5NH02M/US003711.TXT
+ 2647896  Defl:N   829049  69% 2011-10-25 18:19 3ce575f3  ENC_ROOT/US5NH02M/US5NH02M.000
+    2351  Defl:N     1061  55% 2011-10-25 18:19 e06156e0  ENC_ROOT/US5NH02M/US5NH02M.001
+--------          -------  ---                            -------
+20450545          7564547  63%                            103 files
+#+END_EXAMPLE
+
+#+BEGIN_SRC sh
+unzip NH_ENCs.zip 
+ls -l
+du ENC_ROOT
+cd ENC_ROOT
+ls -l
+find . | xargs file | less
+clear
+find . | xargs file | cut -d: -f2- | sort -u
+du -ks *  | sort -n
+cd US5NH01M
+less US5NH01.M.000
+#+END_SRC
+
+Ouch!! "ISO/IEC 8211".  The 000 file is the master and *.00? are the
+update files.
+
+#+BEGIN_SRC sh
+find .. -name \*.00\?
+#+END_SRC
+
+* Using GDAL's ogr2ogr
+
+#+BEGIN_SRC sh
+ogrinfo US5NH01M.000
+ogr2ogr -f KML US5NH01M.kml US5NH01M.000
+ogr2ogr -f csv US5NH01M.csv US5NH01M.000
+cd US5NH01M.csv
+ls -l
+wc -l *
+less 
+head LNDRGN.csv 
+cd ..
+#+END_SRC
+
+#+BEGIN_EXAMPLE
+RCID,PRIM,GRUP,OBJL,RVER,AGEN,FIDN,FIDS,LNAM,LNAM_REFS,FFPT_RIND,CATLND,NATQUA,NATSUR,NOBJNM,OBJNAM,WATLEV,INFORM,NINFOM,NTXTDS,SCAMAX,SCAMIN,TXTDSC,RECDAT,RECIND,SORDAT,SORIND
+1723,3,2,73,1,550,3800572,4536,02260039FDFC11B8,,,,,,,Dover Neck,,,,,,349999,,,,20001104,"US,US,graph,Chart 13285"
+1724,3,2,73,1,550,3800613,4536,02260039FE2511B8,,,2,,,,,,,,,,349999,,,,20001104,"US,US,graph,Chart 13285"
+1725,3,2,73,1,550,3800651,4536,02260039FE4B11B8,,,2,,,,,,,,,,349999,,,,20001104,"US,US,graph,Chart 13285"
+1726,3,2,73,1,550,3800662,4536,02260039FE5611B8,,,2,,,,,,,,,,349999,,,,20001104,"US,US,graph,Chart 13285"
+1727,3,2,73,1,550,3800813,4536,02260039FEED11B8,,,2,,,,,,,,,,349999,,,,20001104,"US,US,graph,Chart 13285"
+1728,3,2,73,1,550,3800693,4536,02260039FE7511B8,,,2,,,,,,,,,,349999,,,,20001104,"US,US,graph,Chart 13285"
+1729,3,2,73,1,550,3800721,4536,02260039FE9111B8,,,2,,,,,,,,,,349999,,,,20001104,"US,US,graph,Chart 13285"
+1730,3,2,73,1,550,3800741,4536,02260039FEA511B8,,,2,,,,,,,,,,349999,,,,20001104,"US,US,graph,Chart 13285"
+1731,3,2,73,1,550,3800829,4536,02260039FEFD11B8,,,2,,,,,,,,,,349999,,,,20001104,"US,US,graph,Chart 13285"
+#+END_EXAMPLE
+
+* Start QGIS and view the data
+
+- Applications -> Science -> Quantum GIS
+- Layer -> Add Vector Layer.  Browse
+  - researchtools/class/17/ENC_ROOT/US5NH01M
+  - Change the type selection to "All Files"
+  - Select US5NH01M.000
+  - From the "Sub layers list", select Layer id 19, LNDARE.
+- Repeat opening the S57 chart and select "5 BOYLAT"
+- Use the Arrow-i "Identify Feature" button to select buoys
+- Right click on the "BOYLAT" layer and select properties.
+  - change the symbol
+- Right click on LNDARE and select properties
+  - change the color
+
+* Getting a raster navigation chart (RNC) - BSB
+
+- The dangers of proprietary formats and what NOAA had to go through.  Yuck.
+
+- http://www.charts.noaa.gov/RNCs/RNCs.shtml
+- http://www.charts.noaa.gov/RNCs/Download
+
+#+BEGIN_SRC sh
+cd ~/class/17
+wget http://www.charts.noaa.gov/RNCs/NH_RNCs.zip
+ls -l NH_RNCs.zip 
+
+md5sum NH_RNCs.zip 
+# 52193d8561302805b35af2da62149502  NH_RNCs.zip
+sha256sum NH_RNCs.zip 
+# ca996f7958026fc7d1c26f27bb8dbb8f887a998892b1d9b369bfb9adc86dfe78 NH_RNCs.zip
+
+unzip -l -v NH_RNCs.zip 
+#+END_SRC
+
+#+BEGIN_EXAMPLE
+Archive:  NH_RNCs.zip
+ Length   Method    Size  Cmpr    Date    Time   CRC-32   Name
+--------  ------  ------- ---- ---------- ----- --------  ----
+    5897  Defl:N     2437  59% 2011-10-20 14:47 9be45534  BSB_ROOT/USERAGREEMENT.TXT
+    7415  Defl:N     2242  70% 2011-10-20 14:47 3402ab97  BSB_ROOT/13003/13003.BSB
+ 4192925  Defl:N  2107464  50% 2011-10-20 14:47 574cd605  BSB_ROOT/13003/13003_1.KAP
+...
+  224950  Defl:N   100454  55% 2011-10-20 14:48 fdb54538  BSB_ROOT/13286/13286_4.KAP
+  272820  Defl:N   138472  49% 2011-10-20 14:48 66f51788  BSB_ROOT/13286/13286_5.KAP
+--------          -------  ---                            -------
+48872578         26857326  45%                            31 files
+#+END_EXAMPLE
+
+Note how short a CRC-32 is.  Much higher chance of accidentally
+getting the same CRC from corrupted data.
+
+#+BEGIN_SRC sh
+unzip NH_RNCs.zip
+du -h BSB_ROOT
+cd BSB_ROOT
+find . | xargs file | cut -d: -f2- | sort -u
+du -ks * | sort -n
+ls -l 13274
+#+END_SRC
+
+KAP is the actual image.  The BSB is metadata.
+
+#+BEGIN_SRC sh
+ls -l 13274
+less 13274/*.BSB
+grep CHT */*.BSB
+#+END_SRC
+
+#+BEGIN_EXAMPLE
+13003/13003.BSB:CHT/NA=CAPE SABLE TO CAPE HATTERAS,NU=13003
+13006/13006.BSB:CHT/NA=WEST QUODDY HEAD TO NEW YORK-EAST COAST,NU=13006
+13009/13009.BSB:CHT/NA=GULF OF MAINE AND GEORGES BANK,NU=13009
+13260/13260.BSB:CHT/NA=BAY OF FUNDY - CAPE COD ME-NH-MA,NU=13260
+13274/13274.BSB:CHT/NA=CAPE ANN TO HAMPTON HARBOR SIDE A LEFT,NU=13274
+13278/13278.BSB:CHT/NA=PORTSMOUTH TO CAPE ANN  NH-MA-ME,NU=13278
+13283/13283.BSB:CHT/NA=PORTSMOUTH HBR CAPE NEDDICK HBR TO ISLES OF SHOALS,NU=13283
+13285/13285.BSB:CHT/NA=PORTSMOUTH TO DOVER AND EXETER,NU=13285
+13286/13286.BSB:CHT/NA=CAPE ELIZABETH TO PORTSMOUTH,NU=13286
+#+END_EXAMPLE
+
+* gdalinfo and gdal
+
+#+BEGIN_SRC sh
+cd 13274
+gdalinfo 13274_1.KAP
+gdal_translate -of PNG 13274_1.KAP 13274_1.png
+gdal_translate -of PNG 13274_2.KAP 13274_2.png
+gdal_translate -of PNG 13274_3.KAP 13274_3.png
+display *.png
+less *.xml
+#+END_SRC
+
+* Open a BSB RNC in QGIS
+
+File -> New Project
+
+- Layer -> Open Raster Layer
+  - Navigate to ~/class/17/BSB_ROOT/
+
+* Bathymetric Attributed Grid (BAG)
+
+- http://www.ngdc.noaa.gov/mgg/bathymetry/hydro.html
+
+I am not sure how to go from the above to this:
+
+- http://surveys.ngdc.noaa.gov/mgg/
+- http://surveys.ngdc.noaa.gov/mgg/NOS/coast/H12001-H14000/H12263/BAG/
+
+#+BEGIN_SRC sh
+cd ~/class/17
+mkdir bags
+cd bags
+wget http://surveys.ngdc.noaa.gov/mgg/NOS/coast/H12001-H14000/H12263/BAG/H12263_MB_1m_MLLW_1of4.bag.gz
+wget http://surveys.ngdc.noaa.gov/mgg/NOS/coast/H12001-H14000/H12263/BAG/H12263_MB_8m_MLLW_combined.bag.gz
+
+ls -l
+
+file *.bag.gz
+# H12263_MB_1m_MLLW_1of4.bag.gz:     gzip compressed data, was "H12263_MB_1m_MLLW_1of4.bag", from Unix, last modified: Wed May 25 20:31:52 2011
+# H12263_MB_8m_MLLW_combined.bag.gz: gzip compressed data, was "H12263_MB_8m_MLLW_combined.bag", from Unix, last modified: Wed May 25 20:50:56 2011
+
+md5sum *.bag.gz
+# da017d513457ec242c5e7df29ff13a6e  H12263_MB_1m_MLLW_1of4.bag.gz
+# 477fd3b148b2047ec2ff4c9b9daa740b  H12263_MB_8m_MLLW_combined.bag.gz
+sha256sum *.bag.gz
+# 9ff5775098fd7ee168969268a59e8f141742a99c09fd7429e16f47eb1662e29f  H12263_MB_1m_MLLW_1of4.bag.gz
+# aaa4ef417049d6144744bc26a1e975b99f2ac41df88f6c057989ca3fb1329e3e  H12263_MB_8m_MLLW_combined.bag.gz
+
+gunzip *.gz
+
+ls -l
+# total 3363696
+# -rw-r--r-- 1 researchtools researchtools 3391351952 2011-05-25 20:31 H12263_MB_1m_MLLW_1of4.bag
+# -rw-r--r-- 1 researchtools researchtools   53067176 2011-05-25 20:50 H12263_MB_8m_MLLW_combined.bag
+md5sum *.bag
+33593312d06a614f22d4e8dcf3e756e5  H12263_MB_1m_MLLW_1of4.bag
+9229e785dd69bd708bf63eba136d31d7  H12263_MB_8m_MLLW_combined.bag
+
+file *
+# H12263_MB_1m_MLLW_1of4.bag:     Hierarchical Data Format (version 5) data
+# H12263_MB_8m_MLLW_combined.bag: Hierarchical Data Format (version 5) data
+#+END_SRC
+
+Err... what is a Hierarchical Data Format???  (HDF)  It is a container
+for data of all different sorts of format.
+
+And this one will not load in qgis
+
+* Another try at a bag
+
+http://surveys.ngdc.noaa.gov/mgg/NOS/coast/H10001-H12000/H11703/BAG/
+
+#+BEGIN_SRC sh
+wget http://surveys.ngdc.noaa.gov/mgg/NOS/coast/H10001-H12000/H11703/BAG/H11703_5m_Combined_MLLW_5of5.bag.gz
+file *.gz
+# H11703_5m_Combined_MLLW_5of5.bag.gz: gzip compressed data, was "H11703_5m_Combined_MLLW_5of5.ba", from Unix, last modified: Fri Jul 16 08:47:06 2010
+#+END_SRC
+
+Nope!  But I have a snapshot of NGDC's bag archive from May 2010.
+
+#+BEGIN_SRC sh
+wget http://vislab-ccom.unh.edu/~schwehr/rt/examples/old-bags/H11703_Combined_5m.bag.bz2
+wget http://vislab-ccom.unh.edu/~schwehr/rt/examples/old-bags/H11703_Office_5m.bag.bz2
+
+gdalinfo --version
+GDAL 1.6.3, released 2009/11/19
+researchtools@ubuntu:~/Dropbox/rt/class/17/bags$ gdalinfo H11703_Office_5m.bag 
+Driver: HDF5/Hierarchical Data Format Release 5
+Files: H11703_Office_5m.bag
+Size is 512, 512
+Coordinate System is `'
+Metadata:
+  BAG_root:Bag Version=1.0.0
+Subdatasets:
+  SUBDATASET_1_NAME=HDF5:"H11703_Office_5m.bag"://BAG_root/elevation
+  SUBDATASET_1_DESC=[1434x2004] //BAG_root/elevation (32-bit floating-point)
+  SUBDATASET_2_NAME=HDF5:"H11703_Office_5m.bag"://BAG_root/uncertainty
+  SUBDATASET_2_DESC=[1434x2004] //BAG_root/uncertainty (32-bit floating-point)
+Corner Coordinates:
+Upper Left  (    0.0,    0.0)
+Lower Left  (    0.0,  512.0)
+Upper Right (  512.0,    0.0)
+Lower Right (  512.0,  512.0)
+Center      (  256.0,  256.0)
+#+END_SRC
+
+The version of gdal that comes with Ubuntu 11.04 is just too old to
+read bags.
+
+#+BEGIN_SRC sh
+gdalinfo --formats | egrep -i 'bag|hdf'
+#  HDF4 (ro): Hierarchical Data Format Release 4
+#  HDF4Image (rw+): HDF4 Dataset
+#  HDF5 (ro): Hierarchical Data Format Release 5
+#  HDF5Image (ro): HDF5 Dataset
+#+END_SRC
+
+Using gdal from fink on Mac OSX:
+
+#+BEGIN_SRC sh
+gdalinfo --version
+# GDAL 1.8.1, released 2011/07/09
+snipe:BAG schwehr$ gdalinfo --formats | egrep -i 'hdf|bag'
+#  BAG (ro): Bathymetry Attributed Grid
+#  HDF5 (ro): Hierarchical Data Format Release 5
+#  HDF5Image (ro): HDF5 Dataset
+#+END_SRC
+
+* Descriptive Report (DR)
+
+
+Descriptive report is similar to a cruise report.
+
+http://surveys.ngdc.noaa.gov/mgg/NOS/coast/H12001-H14000/H12263/DR/
+
+http://surveys.ngdc.noaa.gov/mgg/NOS/coast/H12001-H14000/H12263/DR/H12263.pdf
