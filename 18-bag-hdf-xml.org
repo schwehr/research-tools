@@ -1,0 +1,294 @@
+#+STARTUP: showall
+
+#+TITLE:     Class 18: BAGs, HDF5 and XML
+#+AUTHOR:    Kurt Schwehr
+#+EMAIL:     schwehr@ccom.unh.edu
+#+DATE:      <2011-11-01 Tue>
+#+DESCRIPTION: Marine Research Data Manipulation and Practices
+#+KEYWORDS: BAG HDF HDF5 XML lxml etree hydrographic survey raster
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:nil toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   TeX:t LaTeX:nil skip:t d:nil todo:t pri:nil tags:not-in-toc
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+LINK_HOME: http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/
+
+* Introduction
+
+* Bathymetric Attributed Grid (BAG)
+
+Bags were started here at CCOM.  
+
+- http://www.opennavsurf.org/ (hosted at CCOM)
+- http://www.ngdc.noaa.gov/mgg/bathymetry/hydro.html
+
+I am not sure how to go from the above to this:
+
+- http://surveys.ngdc.noaa.gov/mgg/
+- http://surveys.ngdc.noaa.gov/mgg/NOS/coast/H12001-H14000/H12263/BAG/
+
+#+BEGIN_SRC sh
+cd ~/class/18
+mkdir bags
+cd bags
+wget http://surveys.ngdc.noaa.gov/mgg/NOS/coast/H12001-H14000/H12263/BAG/H12263_MB_1m_MLLW_1of4.bag.gz
+wget http://surveys.ngdc.noaa.gov/mgg/NOS/coast/H12001-H14000/H12263/BAG/H12263_MB_8m_MLLW_combined.bag.gz
+
+ls -l
+
+file *.bag.gz
+# H12263_MB_1m_MLLW_1of4.bag.gz:     gzip compressed data, was "H12263_MB_1m_MLLW_1of4.bag", from Unix, last modified: Wed May 25 20:31:52 2011
+# H12263_MB_8m_MLLW_combined.bag.gz: gzip compressed data, was "H12263_MB_8m_MLLW_combined.bag", from Unix, last modified: Wed May 25 20:50:56 2011
+
+md5sum *.bag.gz
+# da017d513457ec242c5e7df29ff13a6e  H12263_MB_1m_MLLW_1of4.bag.gz
+# 477fd3b148b2047ec2ff4c9b9daa740b  H12263_MB_8m_MLLW_combined.bag.gz
+sha256sum *.bag.gz
+# 9ff5775098fd7ee168969268a59e8f141742a99c09fd7429e16f47eb1662e29f  H12263_MB_1m_MLLW_1of4.bag.gz
+# aaa4ef417049d6144744bc26a1e975b99f2ac41df88f6c057989ca3fb1329e3e  H12263_MB_8m_MLLW_combined.bag.gz
+
+gunzip *.gz
+
+ls -l
+# total 3363696
+# -rw-r--r-- 1 researchtools researchtools 3391351952 2011-05-25 20:31 H12263_MB_1m_MLLW_1of4.bag
+# -rw-r--r-- 1 researchtools researchtools   53067176 2011-05-25 20:50 H12263_MB_8m_MLLW_combined.bag
+md5sum *.bag
+33593312d06a614f22d4e8dcf3e756e5  H12263_MB_1m_MLLW_1of4.bag
+9229e785dd69bd708bf63eba136d31d7  H12263_MB_8m_MLLW_combined.bag
+
+file *
+# H12263_MB_1m_MLLW_1of4.bag:     Hierarchical Data Format (version 5) data
+# H12263_MB_8m_MLLW_combined.bag: Hierarchical Data Format (version 5) data
+#+END_SRC
+
+Err... what is a Hierarchical Data Format???  (HDF)  It is a container
+for data of all different sorts of format.
+
+And this one will not load in qgis
+
+* Another try at a bag
+
+http://surveys.ngdc.noaa.gov/mgg/NOS/coast/H10001-H12000/H11703/BAG/
+
+#+BEGIN_SRC sh
+wget http://surveys.ngdc.noaa.gov/mgg/NOS/coast/H10001-H12000/H11703/BAG/H11703_5m_Combined_MLLW_5of5.bag.gz
+file *.gz
+# H11703_5m_Combined_MLLW_5of5.bag.gz: gzip compressed data, was "H11703_5m_Combined_MLLW_5of5.ba", from Unix, last modified: Fri Jul 16 08:47:06 2010
+#+END_SRC
+
+Nope!  But I have a snapshot of NGDC's bag archive from May 2010.
+
+#+BEGIN_SRC sh
+wget http://vislab-ccom.unh.edu/~schwehr/rt/examples/old-bags/H11703_Combined_5m.bag.bz2
+wget http://vislab-ccom.unh.edu/~schwehr/rt/examples/old-bags/H11703_Office_5m.bag.bz2
+
+gdalinfo --version
+# GDAL 1.6.3, released 2009/11/19
+
+gdalinfo H11703_Office_5m.bag 
+#+END_SRC
+
+#+BEGIN_EXAMPLE
+Driver: HDF5/Hierarchical Data Format Release 5
+Files: H11703_Office_5m.bag
+Size is 512, 512
+Coordinate System is `'
+Metadata:
+  BAG_root:Bag Version=1.0.0
+Subdatasets:
+  SUBDATASET_1_NAME=HDF5:"H11703_Office_5m.bag"://BAG_root/elevation
+  SUBDATASET_1_DESC=[1434x2004] //BAG_root/elevation (32-bit floating-point)
+  SUBDATASET_2_NAME=HDF5:"H11703_Office_5m.bag"://BAG_root/uncertainty
+  SUBDATASET_2_DESC=[1434x2004] //BAG_root/uncertainty (32-bit floating-point)
+Corner Coordinates:
+Upper Left  (    0.0,    0.0)
+Lower Left  (    0.0,  512.0)
+Upper Right (  512.0,    0.0)
+Lower Right (  512.0,  512.0)
+Center      (  256.0,  256.0)
+#+END_EXAMPLE
+
+The version of gdal that comes with Ubuntu 11.04 is just too old to
+read bags.
+
+#+BEGIN_SRC sh
+gdalinfo --formats | egrep -i 'bag|hdf'
+#  HDF4 (ro): Hierarchical Data Format Release 4
+#  HDF4Image (rw+): HDF4 Dataset
+#  HDF5 (ro): Hierarchical Data Format Release 5
+#  HDF5Image (ro): HDF5 Dataset
+#+END_SRC
+
+Using gdal from fink on Mac OSX:
+
+#+BEGIN_SRC sh
+gdalinfo --version
+# GDAL 1.8.1, released 2011/07/09
+snipe:BAG schwehr$ gdalinfo --formats | egrep -i 'hdf|bag'
+#  BAG (ro): Bathymetry Attributed Grid
+#  HDF5 (ro): Hierarchical Data Format Release 5
+#  HDF5Image (ro): HDF5 Dataset
+#+END_SRC
+
+* Bags from hdf5 tools
+
+#+BEGIN_SRC sh
+sudo apt-get install hdf5-tools
+#+END_SRC
+
+#+BEGIN_SRC sh
+h5ls H11703_Office_5m.bag
+h5ls --recursive H11703_Office_5m.bag
+h5ls -d H11703_Office_5m.bag/BAG_root/metadata | head
+h5ls --simple -d H11703_Office_5m.bag/BAG_root/metadata  | head
+h5ls --string --simple -d H11703_Office_5m.bag/BAG_root/metadata | head
+
+h5ls --string --simple -d H11703_Office_5m.bag/BAG_root/metadata | grep '"' | head
+
+h5ls --string --simple -d H11703_Office_5m.bag/BAG_root/metadata | grep '"' | cut -f2 -d\" | head
+
+h5ls --string --simple -d H11703_Office_5m.bag/BAG_root/metadata | grep '"' | cut -f2 -d\" | tr -d '\n' | less
+
+h5ls --string --simple -d H11703_Office_5m.bag/BAG_root/metadata | grep '"' | cut -f2 -d\" | tr -d '\n' > H11703_Office_5m.xml
+
+emacsclient --no-wait H11703_Office_5m.xml
+#+END_SRC
+
+In emacs, we need to make this more readable:
+
+M-x replace-string > < <RET> > C-q C-j <
+
+Got that?  C-q says to take the next character litterally.  Then C-j is a new line (aka move the move down a line command)
+
+Now we want to change the indenting of the XML metadata file.
+
+- Go to the beginning of the file: C-<
+- Start marking a region: C-space
+- Go to the end of the file: C->
+- Ask emacs to indent all: M-x indent-region
+  - or press C-M-\
+
+Not the most fun way to get the metadata out of a bag!
+
+* Bags from python
+
+See also: https://github.com/schwehr/bag-py/
+
+#+BEGIN_SRC sh
+sudo apt-get install python-h5py # Only need to do this once!
+ipython
+#+END_SRC
+
+#+BEGIN_SRC python
+bag = h5py.File('H11703_Office_5m.bag')
+bag.values()
+bag.items()
+
+root = bag['/BAG_root']
+root.values()
+root.items()
+root.keys()
+
+metadata = bag['/BAG_root/metadata']
+type(metadata)
+metadata[0]
+metadata.value
+
+metadata_txt = ''.join(metadata)
+metadata_txt[:80]
+
+elevation = bag['/BAG_root/elevation'].value
+elevation.shape
+elevation.min()
+elevation.max()
+
+from matplotlib import pyplot
+pyplot.plot(elevation)
+pyplot.show()  # YUCK!
+pyplot.imshow(elevation) # Better but not great
+#+END_SRC
+
+Can we make the plot more useful?
+
+#+BEGIN_SRC python
+import numpy # for NAN aka "not a number"
+for x in range(elevation.shape[0]):
+    for y in range(elevation.shape[1]):
+        if elevation[x,y] > 0:
+            elevation[x,y] = numpy.NAN
+# wait a while... this isn't fast
+
+pyplot.figure(2)
+pyplot.imshow(elevation)
+
+e_data = elevation.reshape(elevation.size)
+e_data_clean = [ ]
+for i in range(len(e_data)):
+    if not numpy.isnan(e_data[i]):
+        e_data_clean.append(e_data[i])
+
+pyplot.figure(3)
+pyplot.hist(e_data_clean, bins=100)
+#+END_SRC
+
+What about that uncertainty???
+
+#+BEGIN_SRC python
+uncertainty = bag['/BAG_root/uncertainty'].value
+uncertainty.shape
+uncertainty.min()
+uncertainty.max()
+
+for x in range(uncertainty.shape[0]):
+    for y in range(uncertainty.shape[1]):
+        if uncertainty[x,y] > 1000:
+            uncertainty[x,y] = numpy.NAN
+
+pyplot.figure(4)
+pyplot.imshow(uncertainty)
+
+u_data = uncertainty.reshape(uncertainty.size)
+u_data_clean = [ ]
+for i in range(len(u_data)):
+    if not numpy.isnan(u_data[i]):
+        u_data_clean.append(u_data[i])
+
+pyplot.figure(5)
+pyplot.hist(u_data_clean, bins=100)
+#+END_SRC
+
+* What is XML and how can we read metadata with python?
+
+#+BEGIN_SRC python
+from lxml import etree
+metadata_txt = ''.join(metadata)  # We did this before to get the metadata string
+
+et = etree.fromstring(metadata_txt)  # Use the element tree interface to xml
+
+xmin = float(root.xpath('//*/westBoundLongitude')[0].text)
+xmax = float(root.xpath('//*/eastBoundLongitude')[0].text)
+
+ymin = float(root.xpath('//*/southBoundLatitude')[0].text)
+ymax = float(root.xpath('//*/northBoundLatitude')[0].text)
+#+END_SRC
+
+Say what?????
+
+We need to talk about what XML is and then what is xpath.
+
+* Descriptive Report (DR)
+
+Descriptive report is similar to a cruise report.
+
+http://surveys.ngdc.noaa.gov/mgg/NOS/coast/H12001-H14000/H12263/DR/
+
+http://surveys.ngdc.noaa.gov/mgg/NOS/coast/H12001-H14000/H12263/DR/H12263.pdf
+
+* Global shore lines - Do not expect to get here in this class
+
+- http://www.soest.hawaii.edu/pwessel/papers/1996/JGR_96/jgr_96.html
+- http://www.ngdc.noaa.gov/mgg/shorelines/gshhs.html
+
+#+BEGIN_SRC sh
+wget http://ngdc.noaa.gov/mgg/shorelines/data/gshhs/version2.2.0/gshhs+wdbii_2.2.0.zip
+#+END_SRC

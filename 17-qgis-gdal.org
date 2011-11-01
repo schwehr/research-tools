@@ -22,13 +22,15 @@ break from python.
 #+BEGIN_SRC sh
 mkdir -p ~/class/17
 cd ~/class/17
-wget 
+wget http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/src/17-qgis-gdal.org
 #+END_SRC
 
 * Getting NOAA charts
 
-- What is an S57?  What is a BSB?
+- What is an S57?  
+- What is a BSB?
 - Why is proprietary bad?
+  - http://www.maptech.com/support/doc.cfm?docid=388&plid=77
 - S10x standards
 
 http://www.nauticalcharts.noaa.gov/mcd/enc/
@@ -263,120 +265,3 @@ File -> New Project
 - Layer -> Open Raster Layer
   - Navigate to ~/class/17/BSB_ROOT/
 
-* Bathymetric Attributed Grid (BAG)
-
-- http://www.ngdc.noaa.gov/mgg/bathymetry/hydro.html
-
-I am not sure how to go from the above to this:
-
-- http://surveys.ngdc.noaa.gov/mgg/
-- http://surveys.ngdc.noaa.gov/mgg/NOS/coast/H12001-H14000/H12263/BAG/
-
-#+BEGIN_SRC sh
-cd ~/class/17
-mkdir bags
-cd bags
-wget http://surveys.ngdc.noaa.gov/mgg/NOS/coast/H12001-H14000/H12263/BAG/H12263_MB_1m_MLLW_1of4.bag.gz
-wget http://surveys.ngdc.noaa.gov/mgg/NOS/coast/H12001-H14000/H12263/BAG/H12263_MB_8m_MLLW_combined.bag.gz
-
-ls -l
-
-file *.bag.gz
-# H12263_MB_1m_MLLW_1of4.bag.gz:     gzip compressed data, was "H12263_MB_1m_MLLW_1of4.bag", from Unix, last modified: Wed May 25 20:31:52 2011
-# H12263_MB_8m_MLLW_combined.bag.gz: gzip compressed data, was "H12263_MB_8m_MLLW_combined.bag", from Unix, last modified: Wed May 25 20:50:56 2011
-
-md5sum *.bag.gz
-# da017d513457ec242c5e7df29ff13a6e  H12263_MB_1m_MLLW_1of4.bag.gz
-# 477fd3b148b2047ec2ff4c9b9daa740b  H12263_MB_8m_MLLW_combined.bag.gz
-sha256sum *.bag.gz
-# 9ff5775098fd7ee168969268a59e8f141742a99c09fd7429e16f47eb1662e29f  H12263_MB_1m_MLLW_1of4.bag.gz
-# aaa4ef417049d6144744bc26a1e975b99f2ac41df88f6c057989ca3fb1329e3e  H12263_MB_8m_MLLW_combined.bag.gz
-
-gunzip *.gz
-
-ls -l
-# total 3363696
-# -rw-r--r-- 1 researchtools researchtools 3391351952 2011-05-25 20:31 H12263_MB_1m_MLLW_1of4.bag
-# -rw-r--r-- 1 researchtools researchtools   53067176 2011-05-25 20:50 H12263_MB_8m_MLLW_combined.bag
-md5sum *.bag
-33593312d06a614f22d4e8dcf3e756e5  H12263_MB_1m_MLLW_1of4.bag
-9229e785dd69bd708bf63eba136d31d7  H12263_MB_8m_MLLW_combined.bag
-
-file *
-# H12263_MB_1m_MLLW_1of4.bag:     Hierarchical Data Format (version 5) data
-# H12263_MB_8m_MLLW_combined.bag: Hierarchical Data Format (version 5) data
-#+END_SRC
-
-Err... what is a Hierarchical Data Format???  (HDF)  It is a container
-for data of all different sorts of format.
-
-And this one will not load in qgis
-
-* Another try at a bag
-
-http://surveys.ngdc.noaa.gov/mgg/NOS/coast/H10001-H12000/H11703/BAG/
-
-#+BEGIN_SRC sh
-wget http://surveys.ngdc.noaa.gov/mgg/NOS/coast/H10001-H12000/H11703/BAG/H11703_5m_Combined_MLLW_5of5.bag.gz
-file *.gz
-# H11703_5m_Combined_MLLW_5of5.bag.gz: gzip compressed data, was "H11703_5m_Combined_MLLW_5of5.ba", from Unix, last modified: Fri Jul 16 08:47:06 2010
-#+END_SRC
-
-Nope!  But I have a snapshot of NGDC's bag archive from May 2010.
-
-#+BEGIN_SRC sh
-wget http://vislab-ccom.unh.edu/~schwehr/rt/examples/old-bags/H11703_Combined_5m.bag.bz2
-wget http://vislab-ccom.unh.edu/~schwehr/rt/examples/old-bags/H11703_Office_5m.bag.bz2
-
-gdalinfo --version
-GDAL 1.6.3, released 2009/11/19
-researchtools@ubuntu:~/Dropbox/rt/class/17/bags$ gdalinfo H11703_Office_5m.bag 
-Driver: HDF5/Hierarchical Data Format Release 5
-Files: H11703_Office_5m.bag
-Size is 512, 512
-Coordinate System is `'
-Metadata:
-  BAG_root:Bag Version=1.0.0
-Subdatasets:
-  SUBDATASET_1_NAME=HDF5:"H11703_Office_5m.bag"://BAG_root/elevation
-  SUBDATASET_1_DESC=[1434x2004] //BAG_root/elevation (32-bit floating-point)
-  SUBDATASET_2_NAME=HDF5:"H11703_Office_5m.bag"://BAG_root/uncertainty
-  SUBDATASET_2_DESC=[1434x2004] //BAG_root/uncertainty (32-bit floating-point)
-Corner Coordinates:
-Upper Left  (    0.0,    0.0)
-Lower Left  (    0.0,  512.0)
-Upper Right (  512.0,    0.0)
-Lower Right (  512.0,  512.0)
-Center      (  256.0,  256.0)
-#+END_SRC
-
-The version of gdal that comes with Ubuntu 11.04 is just too old to
-read bags.
-
-#+BEGIN_SRC sh
-gdalinfo --formats | egrep -i 'bag|hdf'
-#  HDF4 (ro): Hierarchical Data Format Release 4
-#  HDF4Image (rw+): HDF4 Dataset
-#  HDF5 (ro): Hierarchical Data Format Release 5
-#  HDF5Image (ro): HDF5 Dataset
-#+END_SRC
-
-Using gdal from fink on Mac OSX:
-
-#+BEGIN_SRC sh
-gdalinfo --version
-# GDAL 1.8.1, released 2011/07/09
-snipe:BAG schwehr$ gdalinfo --formats | egrep -i 'hdf|bag'
-#  BAG (ro): Bathymetry Attributed Grid
-#  HDF5 (ro): Hierarchical Data Format Release 5
-#  HDF5Image (ro): HDF5 Dataset
-#+END_SRC
-
-* Descriptive Report (DR)
-
-
-Descriptive report is similar to a cruise report.
-
-http://surveys.ngdc.noaa.gov/mgg/NOS/coast/H12001-H14000/H12263/DR/
-
-http://surveys.ngdc.noaa.gov/mgg/NOS/coast/H12001-H14000/H12263/DR/H12263.pdf
