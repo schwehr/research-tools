@@ -143,13 +143,13 @@ h5ls -d H11703_Office_5m.bag/BAG_root/metadata | head
 h5ls --simple -d H11703_Office_5m.bag/BAG_root/metadata  | head
 h5ls --string --simple -d H11703_Office_5m.bag/BAG_root/metadata | head
 
-h5ls --string --simple -d H11703_Office_5m.bag/BAG_root/metadata | grep '"' | head
+h5ls --string --simple -d H11703_Office_5m.bag/BAG_root/metadata | egrep '"' | head
 
-h5ls --string --simple -d H11703_Office_5m.bag/BAG_root/metadata | grep '"' | cut -f2 -d\" | head
+h5ls --string --simple -d H11703_Office_5m.bag/BAG_root/metadata | egrep '"' | cut -f2 -d\" | head
 
-h5ls --string --simple -d H11703_Office_5m.bag/BAG_root/metadata | grep '"' | cut -f2 -d\" | tr -d '\n' | less
+h5ls --string --simple -d H11703_Office_5m.bag/BAG_root/metadata | egrep '"' | cut -f2 -d\" | tr -d '\n' | less
 
-h5ls --string --simple -d H11703_Office_5m.bag/BAG_root/metadata | grep '"' | cut -f2 -d\" | tr -d '\n' > H11703_Office_5m.xml
+h5ls --string --simple -d H11703_Office_5m.bag/BAG_root/metadata | egrep '"' | cut -f2 -d\" | tr -d '\n' > H11703_Office_5m.xml
 
 emacsclient --no-wait H11703_Office_5m.xml
 #+END_SRC
@@ -170,6 +170,26 @@ Now we want to change the indenting of the XML metadata file.
 
 Not the most fun way to get the metadata out of a bag!
 
+** A simpler solution
+
+I asked on the Open Nav Surf mailing list and Marcus Cole responded
+with this solution:
+
+#+BEGIN_SRC sh
+wget http://surveys.ngdc.noaa.gov/mgg/NOS/coast/H12001-H14000/H12279/BAG/H12279_VB_4m_MLLW_1of1.bag.gz
+h5dump -b FILE -o H12279_VB_4m_MLLW_1of1.xml -d BAG_root/metadata H12279_VB_4m_MLLW_1of1.bag
+#+END_SRC
+
+This writes the data in a raw form that passes xmllint
+
+#+BEGIN_SRC sh
+xmllint H12279_VB_4m_MLLW_1of1.xml
+#+END_SRC
+
+This issue is discussed on stack overflow:
+
+http://stackoverflow.com/questions/7966747/hdf5dump-of-h5t-string
+
 * Bags from python
 
 See also: https://github.com/schwehr/bag-py/
@@ -177,6 +197,7 @@ See also: https://github.com/schwehr/bag-py/
 #+BEGIN_SRC sh
 sudo apt-get install python-h5py # Only need to do this once!
 ipython
+import h5py
 #+END_SRC
 
 #+BEGIN_SRC python
@@ -291,4 +312,59 @@ http://surveys.ngdc.noaa.gov/mgg/NOS/coast/H12001-H14000/H12263/DR/H12263.pdf
 
 #+BEGIN_SRC sh
 wget http://ngdc.noaa.gov/mgg/shorelines/data/gshhs/version2.2.0/gshhs+wdbii_2.2.0.zip
+#+END_SRC
+
+* History
+
+#+BEGIN_SRC python
+In [36]: history 1 35
+1 : import h5py
+2 : h5py.File('H11703_Office_5m.bag')
+3 : bag = h5py.File('H11703_Office_5m.bag')
+4 : _ip.magic("whos")
+5 : bag.values()
+6 : bag.items()
+7 : root = bag['/BAG_root']
+8 : root.items()
+9 : metadata = bag['/BAG_root/metadata']
+10: type(metadata)
+11: metadata[0]
+12: metadata.value
+13: metadata_txt = ''.join(metadata.value)
+14: metadata_txt[:100]
+15: elevation = bag['/BAG_root/elevation'].value
+16: type(elevation)
+17: elevation.shape
+18: elevation.min()
+19: elevation.max()
+20: from matplotlib import pyplot
+21: pyplot.plot(elevation)
+22: 
+23: pyplot.show()
+24: pyplot.imshow(elevation)
+25: elevation.max()
+26: #for x in range(elevation.
+27: elevation.shape
+28: 
+29: import numpy
+30: #?numpy.NAN
+31: numpy.NAN
+32:
+for x in range(elevation.shape[0]):
+    for y in range(elevation.shape[1]):
+        if elevation[x,y] > 0:
+            elevation[x,y] = numpy.NAN
+33: pyplot.imshow(elevation)
+34: #?pyplot.imshow
+#+END_SRC
+
+* Alternative python code with gdal
+
+If you have gdal version 1.7.0 or newer, you can use this method,
+contribed by Jack Riley, to get the metadata:
+
+#+BEGIN_SRC python
+from osgeo import gdal
+bag = gdal.OpenShared(r"C:\DATA\NGDC\H11555_2m_1.bag") # NOTE: This is a windows file path
+bagmetadata = bag.GetMetadata("xml:BAG")[0]
 #+END_SRC
