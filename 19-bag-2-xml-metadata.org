@@ -1,0 +1,394 @@
+#+STARTUP: showall
+
+#+TITLE:     Class 19: BAGs part 2, XML Metadata
+#+AUTHOR:    Kurt Schwehr
+#+EMAIL:     schwehr@ccom.unh.edu
+#+DATE:      <2011-11-03 Thu>
+#+DESCRIPTION: Marine Research Data Manipulation and Practices
+#+KEYWORDS: BAG HDF HDF5 XML lxml etree hydrographic survey raster metadata shapefile
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:nil toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   TeX:t LaTeX:nil skip:t d:nil todo:t pri:nil tags:not-in-toc
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+LINK_HOME: http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/
+
+* Introduction
+
+* Setup
+
+#+BEGIN_SRC sh
+mkdir -p ~/class/19
+cd ~/class/19
+#+END_SRC
+
+* A slight intermission
+
+Start ipython.  We had a [[http://en.wikipedia.org/wiki/Brownout_%28electricity%29][brown out]] last week at the end of class
+and some people lost their histories.
+
+#+BEGIN_SRC python
+%quickref # Get an overview from ipython
+%logstart? # Ask for help with logging
+
+logstart log-class-19.py
+
+# Check out the log file
+!head log-class-19.py
+#+END_SRC
+
+Your head results will look something like this:
+
+#+BEGIN_EXAMPLE 
+!head log-class-19.py
+#log# Automatic Logger file. *** THIS MUST BE THE FIRST LINE ***
+#log# DO NOT CHANGE THIS LINE OR THE TWO BELOW
+#log# opts = Struct({'__allownew': True, 'logfile': 'log-class-19.py'})
+#log# args = []
+#log# It is safe to make manual edits below here.
+#log#-----------------------------------------------------------------------
+_ip.magic("logstate ")
+help %logstart
+help(logstart)
+#?%logstart
+#+END_EXAMPLE
+
+And now for some fun!
+
+#+BEGIN_SRC python
+import antigravity
+#+END_SRC
+
+* Getting back to where we were before with BAGs
+
+Make sure you are in ipython.  Note that there is a bang ( =!= ) in 
+front of the first two commands to ipython.  The =!= is a shell 
+escape to use the bash shell to call wget and bunzip2
+
+#+BEGIN_SRC python
+!wget http://vislab-ccom.unh.edu/~schwehr/rt/examples/old-bags/H11703_Office_5m.bag.bz2
+!bunzip2 *.bz2
+ls -l
+#+END_SRC
+
+Last time, we went through a very painful process to use h5dump to view 
+the metadata.  Thanks to Marcus Cole, we have a better way to view the xml
+from the command line.  We can quick try it from ipython.
+
+#+BEGIN_SRC python
+!h5dump -b FILE -o H11703_Office_5m.xml -d BAG_root/metadata H11703_Office_5m.bag
+# You will see a few summary lines (like 13 lines)
+
+!file H11703_Office_5m.xml
+# H11703_Office_5m.xml: XML  document text
+
+!less
+# <?xml version="1.0"?>
+# <smXML:MD_Metadata xmlns:smXML="http://metadata.dgiwg.org/smXML" xmlns:xlink="http://www.w3.org/19
+# and so on
+#+END_SRC
+
+#+BEGIN_SRC python
+import h5py  # To read HDF5 files (e.g. our BAG bathy)
+import numpy # for NAN aka "not a number"
+from matplotlib import pyplot
+
+bag = h5py.File('H11703_Office_5m.bag')
+bag.keys()
+# ['BAG_root']
+
+bag['BAG_root'].keys()
+# ['elevation', 'metadata', 'tracking_list', 'uncertainty']
+
+elevation = bag['/BAG_root/elevation'].value
+
+# Convert large values used for unknown values to
+# NANs a.k.a "Not a Number"
+
+# This is how we did it last time:
+# for x in range(elevation.shape[0]):
+#     for y in range(elevation.shape[1]):
+#         if elevation[x,y] > 0:
+#             elevation[x,y] = numpy.NAN
+
+# The less obvious, but faster solution:
+elevation[elevation > 0] = numpy.NAN
+
+# Try this to see that it builds a "mask" matrix:
+elevation > 0
+
+pyplot.interactive(True) # Make plotting easier to work with
+
+pyplot.figure(1)
+pyplot.subplot(221)
+pyplot.imshow(elevation)
+
+# pyplot.show() # Not needed because we have set interactive to True
+#+END_SRC
+
+We are now back to where we were at the end of last class.
+
+Time to try to make a histogram of the elevations.  First,
+make a 1D list of just the valid data.  There is likely a 
+much faster way to do this in numpy!
+
+#+BEGIN_SRC python
+e_data = elevation.reshape(elevation.size)
+e_data_clean = [ ]
+for i in range(len(e_data)):
+    if not numpy.isnan(e_data[i]):
+        e_data_clean.append(e_data[i])
+
+# len(e_data_clean)
+# 228449
+
+e_data.size - len(e_data_clean)
+# 2645287 cells remain with NANs
+
+# pyplot.figure(2)
+pyplot.subplot(222)
+pyplot.hist(e_data_clean, bins=100)
+#+END_SRC
+
+* Looking at the uncertainty
+
+#+BEGIN_SRC python
+uncertainty = bag['/BAG_root/uncertainty'].value
+
+uncertainty.shape
+# (1434, 2004)
+
+uncertainty.min()
+# 0.21800001
+
+uncertainty.max()
+# 1000000.0
+
+uncertainty[uncertainty > 1] = numpy.NAN
+
+pyplot.subplot(223)
+pyplot.imshow(uncertainty)
+#+END_SRC
+
+And make a histogram of the uncertainty
+
+#+BEGIN_SRC python
+u_data = uncertainty.reshape(uncertainty.size)
+u_data_clean = [ ]
+for i in range(len(u_data)):
+    if not numpy.isnan(u_data[i]):
+        u_data_clean.append(u_data[i])
+
+pyplot.subplot(224)
+pyplot.hist(u_data_clean, bins=100)
+#+END_SRC
+
+Normally, you would have properly labeled all of the subplots!
+
+* Examining the metadata                                                :xml:
+
+We are going to use the "Element Tree" interface to XML as provided by the lxml library:
+
+http://lxml.de/tutorial.html#the-elementtree-class
+
+[[http://lxml.de/tutorial.html#using-xpath-to-find-text][xpath]] is a way to search the tree of XML for parts that we want.
+
+#+BEGIN_SRC python
+from lxml import etree
+
+metadata_txt = ''.join(bag['/BAG_root/metadata'])
+
+out = file('H11703_Office_5m-try2.xml','w')
+out.write(metadata_txt)
+out.close()
+!diff H11703_Office_5m.xml H11703_Office_5m-try2.xml
+# YES!  The xml files are the same.  Woohoo!
+
+out3 = open('H11703_Office_5m-try3.xml','w')
+out3.write( metadata_txt.replace('><','>\n<') )
+out3.close()
+
+# !emacsclient --no-wait H11703_Office_5m-try3.xml
+edit?
+edit -x H11703_Office_5m-try3.xml
+# Use this to tell emacs you are done editing the file: C-x # 
+
+# Use the element tree interface to xml
+root = etree.fromstring(metadata_txt).getroottree() 
+
+title = root.xpath('//*/title')
+title
+# it's a list with one "Element"
+title = title[0]
+title # Yuck, not very nice
+title?
+title. # Press <TAB> after the period (full stop) to see what an element offers.
+
+title.tag
+# 'title'
+title.text
+# Yes!  This gives us the title
+
+# Put it all together
+title = root.xpath('//*/title')[0].text
+
+abstract = root.xpath('//*/abstract)[0].text
+
+xmin = float(root.xpath('//*/westBoundLongitude')[0].text)
+xmax = float(root.xpath('//*/eastBoundLongitude')[0].text)
+
+ymin = float(root.xpath('//*/southBoundLatitude')[0].text)
+ymax = float(root.xpath('//*/northBoundLatitude')[0].text)
+#+END_SRC
+
+* COMMENT Can we plot the bounding box?                                         :kml:
+
+We need something more.  matplotlib has [[http://matplotlib.github.com/basemap/][basemap]], but sadly, this
+libary was not updated for a long time and did not make it into 
+Ubuntu 11.04.  It has recently been updated and hopefully this
+will be fixed in the near future.
+
+We need to instead give it a go in Google Earth with KML and then
+in QGIS using the global shoreline db.
+
+Let's create a KML.  We will try to do this as a template using the
+python [[http://docs.python.org/library/string.html#formatstrings][.format]] template language in python 2.6 or newer.  This will
+let us put variables into strings fairly easily.
+
+#+BEGIN_SRC python
+'{myvalue}.format()
+# Error!
+
+'{myvalue}'.format(myvalue='hello world')
+'{myvalue}'.format(myvalue=123)
+
+'{xmin}'.format(xmin=xmin)
+'{xmin} and {ymax}'.format(xmin=xmin, ymax=ymax)
+
+bbox = {'xmin': xmin, 'ymin': ymin, 'xmax': xmax, 'ymax': ymax}
+bbox
+
+'{xmin} and {ymax}'.format(bbox)
+# ERROR!
+
+# Use the crazy expansion syntax of ** to use bbox as arguments
+# to the format method of a string
+'{xmin} and {ymax}'.format( **bbox )
+
+# Better yet, there is a function that returns a dictionary of all
+locals?
+len( locals() )
+locals().keys()[:10]
+
+'{xmin},{ymin} {xmax},{ymax}'.format( **locals() )
+# '-134.49,57.34 -134.32,57.4'
+#+END_SRC
+
+Here is our template file. Save this as the file bbox-template.kml
+
+#+BEGIN_SRC xml
+    <?xml version="1.0" encoding="UTF-8"?>
+    <kml xmlns="http://www.opengis.net/kml/2.2">
+    <Document>
+            <Placemark>
+                    <name>{filename}</name>
+                    <description>
+  {title}
+  
+  {abstract}
+                    </description>
+                    <LineString>
+                            <coordinates>
+    {xmin},{ymin}
+    {xmin},{ymax}
+    {xmax},{ymax}
+    {xmax},{ymin}
+    {xmin},{ymin}
+                            </coordinates>
+                    </LineString>
+            </Placemark>
+    </Document>
+    </kml>
+#+END_SRC
+
+Now we can load the template and fill it in.
+
+#+BEGIN_SRC python
+kml_template = open('bbox-template.kml').read()
+kml_template
+
+filename = 'H11703_Office_5m.bag'
+
+kml_template.format( **locals )
+print kml_template.format( **locals() )
+
+out = open('/home/researchtools/Dropbox/H11703_Office_5m-bbox.kml','w')
+out.write( kml_template.format( **locals() ) )
+out.close()
+#+END_SRC
+
+You can try running Google Earth inside the virtual machine and loading the kml.
+
+#+BEGIN_SRC sh
+google-earth
+#+END_SRC
+
+Or, if you are in the class Linux Virtual Machine, leave the virtual machine
+and from your normal desktop, go to your Dropbox folder or download the KML 
+through the web interface: https://www.dropbox.com/
+
+Then open the KML file on your desktop.
+
+* Viewing in QGIS
+
+We can also view the file in QGIS.  
+
+- Layer -> Add Vector Layer
+  - Browse  and find the file
+  - ok
+  - ok
+
+You should now have a borring rectangle on your screen.
+
+* Global shore lines - Do not expect to get here in this class
+
+It would be better if we could see the shoreline of Alaska around this!
+
+- http://www.soest.hawaii.edu/pwessel/papers/1996/JGR_96/jgr_96.html
+- http://www.ngdc.noaa.gov/mgg/shorelines/gshhs.html
+
+#+BEGIN_SRC sh
+wget http://ngdc.noaa.gov/mgg/shorelines/data/gshhs/version2.2.0/gshhs+wdbii_2.2.0.zip
+#+END_SRC
+
+* Descriptive Report (DR)
+
+Descriptive report is similar to a cruise report.
+
+http://surveys.ngdc.noaa.gov/mgg/NOS/coast/H12001-H14000/H12263/DR/
+
+http://surveys.ngdc.noaa.gov/mgg/NOS/coast/H12001-H14000/H12263/DR/H12263.pdf
+
+* Global shore lines - Do not expect to get here in this class
+
+- http://www.soest.hawaii.edu/pwessel/papers/1996/JGR_96/jgr_96.html
+- http://www.ngdc.noaa.gov/mgg/shorelines/gshhs.html
+
+#+BEGIN_SRC sh
+# wget ftp://ftp.soest.hawaii.edu/pwessel/gshhs/GSHHS_shp_2.2.0.zip
+# or faster:
+
+wget http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/examples/gshhs-shp-h-2.2.0.tar.bz2
+tar tf gshhs-shp-h-2.2.0.tar.bz2
+tar xf gshhs-shp-h-2.2.0.tar.bz2
+
+cd gshhs-shp-h-2.2.0
+ls -l
+file *
+#+END_SRC
+
+Load the L1 shape file in QGIS.
+
+Layer -> Add Vector Layer
+
+The new layer will be on top of the bounding box, so drag the bbox
+layer to the other side of the shape file.
