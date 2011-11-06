@@ -5,7 +5,7 @@
 #+EMAIL:     schwehr@ccom.unh.edu
 #+DATE:      <2011-11-03 Thu>
 #+DESCRIPTION: Marine Research Data Manipulation and Practices
-#+KEYWORDS: BAG HDF HDF5 XML lxml etree hydrographic survey raster metadata shapefile
+#+KEYWORDS: BAG HDF HDF5 XML lxml etree hydrographic survey raster metadata
 #+LANGUAGE:  en
 #+OPTIONS:   H:3 num:nil toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
 #+OPTIONS:   TeX:t LaTeX:nil skip:t d:nil todo:t pri:nil tags:not-in-toc
@@ -13,6 +13,10 @@
 #+LINK_HOME: http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/
 
 * Introduction
+
+* See also
+
+- 5 part tutorial covering IPython on showmedo: http://showmedo.com/videotutorials/series?name=CnluURUTV
 
 * Setup
 
@@ -104,13 +108,15 @@ elevation = bag['/BAG_root/elevation'].value
 # Convert large values used for unknown values to
 # NANs a.k.a "Not a Number"
 
-# This is how we did it last time:
+# This is how we did it last time, but it is slow and takes 4 lines:
+#
 # for x in range(elevation.shape[0]):
 #     for y in range(elevation.shape[1]):
 #         if elevation[x,y] > 0:
 #             elevation[x,y] = numpy.NAN
 
 # The less obvious, but faster solution:
+# 
 elevation[elevation > 0] = numpy.NAN
 
 # Try this to see that it builds a "mask" matrix:
@@ -124,6 +130,11 @@ pyplot.imshow(elevation)
 
 # pyplot.show() # Not needed because we have set interactive to True
 #+END_SRC
+
+Here is wehre I learned how to do the faster replacement of NAN in a
+matrix / numpy ndarray:
+
+http://stackoverflow.com/questions/7994133/fast-in-place-replacement-of-some-values-in-a-numpy-array
 
 We are now back to where we were at the end of last class.
 
@@ -231,7 +242,7 @@ title.text
 # Put it all together
 title = root.xpath('//*/title')[0].text
 
-abstract = root.xpath('//*/abstract)[0].text
+abstract = root.xpath('//*/abstract')[0].text
 
 xmin = float(root.xpath('//*/westBoundLongitude')[0].text)
 xmax = float(root.xpath('//*/eastBoundLongitude')[0].text)
@@ -240,7 +251,7 @@ ymin = float(root.xpath('//*/southBoundLatitude')[0].text)
 ymax = float(root.xpath('//*/northBoundLatitude')[0].text)
 #+END_SRC
 
-* COMMENT Can we plot the bounding box?                                         :kml:
+* Can we plot the bounding box?                                         :kml:
 
 We need something more.  matplotlib has [[http://matplotlib.github.com/basemap/][basemap]], but sadly, this
 libary was not updated for a long time and did not make it into 
@@ -255,7 +266,7 @@ python [[http://docs.python.org/library/string.html#formatstrings][.format]] tem
 let us put variables into strings fairly easily.
 
 #+BEGIN_SRC python
-'{myvalue}.format()
+'{myvalue}'.format()
 # Error!
 
 '{myvalue}'.format(myvalue='hello world')
@@ -263,6 +274,8 @@ let us put variables into strings fairly easily.
 
 '{xmin}'.format(xmin=xmin)
 '{xmin} and {ymax}'.format(xmin=xmin, ymax=ymax)
+
+'{xmin} and {wahoo}'.format(xmin=xman, wahoo=ymax)
 
 bbox = {'xmin': xmin, 'ymin': ymin, 'xmax': xmax, 'ymax': ymax}
 bbox
@@ -278,117 +291,144 @@ bbox
 locals?
 len( locals() )
 locals().keys()[:10]
+locals()
 
 '{xmin},{ymin} {xmax},{ymax}'.format( **locals() )
 # '-134.49,57.34 -134.32,57.4'
 #+END_SRC
 
-Here is our template file. Save this as the file bbox-template.kml
+* Actually building KML
 
-#+BEGIN_SRC xml
-    <?xml version="1.0" encoding="UTF-8"?>
-    <kml xmlns="http://www.opengis.net/kml/2.2">
-    <Document>
-            <Placemark>
-                    <name>{filename}</name>
-                    <description>
-  {title}
-  
-  {abstract}
-                    </description>
-                    <LineString>
-                            <coordinates>
-    {xmin},{ymin}
-    {xmin},{ymax}
-    {xmax},{ymax}
-    {xmax},{ymin}
-    {xmin},{ymin}
-                            </coordinates>
-                    </LineString>
-            </Placemark>
-    </Document>
-    </kml>
-#+END_SRC
+See lecture 19!
 
-Now we can load the template and fill it in.
+* History
 
 #+BEGIN_SRC python
-kml_template = open('bbox-template.kml').read()
-kml_template
+#log# Automatic Logger file. *** THIS MUST BE THE FIRST LINE ***
+#log# DO NOT CHANGE THIS LINE OR THE TWO BELOW
+#log# opts = Struct({'__allownew': True, 'logfile': 'log-class-19.py'})
+#log# args = []
+#log# It is safe to make manual edits below here.
+#log#-----------------------------------------------------------------------
+_ip.magic("quickref ")
+_ip.magic("quickref ")
+_ip.magic("logstate ")
+#?%logstart
+_ip.magic("logstart log-class-19.py")
 
-filename = 'H11703_Office_5m.bag'
-
-kml_template.format( **locals )
-print kml_template.format( **locals() )
-
-out = open('/home/researchtools/Dropbox/H11703_Office_5m-bbox.kml','w')
-out.write( kml_template.format( **locals() ) )
+_ip.system("ls -F ")
+_ip.system("head log-class-19.py")
+import antigravity
+_ip.system("wget http://vislab-ccom.unh.edu/~schwehr/rt/examples/old-bags/H11703_Office_5m.bag.bz2")
+_ip.system("bunzip2 H11703_Office_5m.bag.bz2")
+_ip.system("ls -F -l")
+_ip.system("ls -F -l")
+import numpy
+import h5py
+from matplotlib import pyplot
+bag = h5py.File('H11703_Office_5m.bag')
+bag.keys()
+bag['BAG_root'].keys()
+elevation = bag['BAG_root/elevation'].value
+type(elevation)
+elevation.size
+elevation.shape
+elevation
+elevation[elevation > 0] = numpy.NAN
+elevation[elevation > 999999] = numpy.NAN
+#?pyplot.interactive
+pyplot.interactive(True)
+pyplot.figure(1)
+#pyplot.imshow(elevation)
+pyplot.subplot(221)
+pyplot.imshow(elevation)
+#?e_data = elevation.reshape
+#?elevation.reshape
+e_data = elevation.reshape(elevation.size)
+e_data
+e_data_clean = [ ]
+for i in range( len(e_data) ):
+    if not numpy.isnan (e_data[i]): 
+for i in range( len(e_data) ):
+    if not numpy.isnan(e_data[i]):
+        e_data_clean.append = e_data[i]
+        
+for i in range( len(e_data) ):
+    if not numpy.isnan(e_data[i]):
+        e_data_clean.append( e_data[i] )
+        
+len ( e_data )
+len ( e_data_clean )
+len(e_data) - len(e_data_clean)
+( len(e_data) - len(e_data_clean) ) / float( len (e_data) )
+pyplot.subplot(222)
+pyplot.hist(e_data_clean, bins=100)
+uncertainty = bag['/BAG_root/uncertainty'].value
+type(uncertainty)
+_ip.magic("whos ")
+_ip.magic("history ")
+uncertainty.shape
+uncertainty.min 
+uncertainty.min()
+uncertainty.max()
+uncertainty[uncertainty > 1000] = numpy.NAN
+pyplot.subplot(223)
+pyplot.imshow(uncertainty)
+uncertainty.min()
+uncertainty.max()
+u_data = uncertainty.reshape(uncertainty.size)
+u_data_clean = [ ]
+for i in range(len(u_data)):
+    if not numpy.isnan(u_data[i]):
+        u_data_clean.append(u_data[i])
+        
+u_data_clean
+pyplot.subplot(224)
+pyplot.hist(u_data_clean)
+pyplot.hist(u_data_clean, bins=100)
+pyplot.cla()
+pyplot.hist(u_data_clean, bins=100)
+from lxml import etree
+metadata_txt = ''.join(bag['/BAG_root/metadata'])
+metadata_txt[:50]
+out = open('H11703_Office_5m.xml','w')
+type(out)
+out.write(metadata_txt)
 out.close()
+_ip.system("ls -F -l")
+_ip.magic("edit -x H11703_Office_5m.xml")
+out2 = open('H11703_Office_5m-try3.xml','w')
+metadata_txt.replace('><','>\n<')
+print ( metadata_txt.replace('><','>\n<') )
+out2.write(metadata_txt.replace('><','>\n<'))
+out2.close()
+_ip.system("ls -F -l")
+_ip.magic("edit -x H11703_Office_5m-try3.xml")
+root = etree.fromstring(metadata_txt).getroottree()
+title = root.xpath('//*/title')
+title
+title = title[0]
+title
+title.tag
+title.text
+title = root.xpath('//*/title')[0].text
+title
+abstract = root.xpath('//*/abstract')[0].text
+abstract
+xmin = float( root.xpath('//*/westBoundLongtude')[0].text )
+xmin = float( root.xpath('//*/westBoundLongitude')[0].text )
+xmin
+xmax = float(root.xpath('//*/eastBoundLongitude')[0].text)
+ymin = float(root.xpath('//*/southBoundLatitude')[0].text)
+ymax = float(root.xpath('//*/northBoundLatitude')[0].text)
+_ip.magic("whos ")
+'hello %d world' % (1234, )
+'   {myvalue}   '.format()
+'   {myvalue}   '.format(myvalue= 'hello world')
+'   {myvalue}   '.format(myvalue= 123.45)
+'{xmin}'.format(xmin=xmin)
+'{xmin} and {ymax}'.format(xmin=xmin, ymax=ymax)
+'{xmin} and {wahoo}'.format(xmin=xmin, wahoo=ymax)
+str(ymax)
+locals()
 #+END_SRC
-
-You can try running Google Earth inside the virtual machine and loading the kml.
-
-#+BEGIN_SRC sh
-google-earth
-#+END_SRC
-
-Or, if you are in the class Linux Virtual Machine, leave the virtual machine
-and from your normal desktop, go to your Dropbox folder or download the KML 
-through the web interface: https://www.dropbox.com/
-
-Then open the KML file on your desktop.
-
-* Viewing in QGIS
-
-We can also view the file in QGIS.  
-
-- Layer -> Add Vector Layer
-  - Browse  and find the file
-  - ok
-  - ok
-
-You should now have a borring rectangle on your screen.
-
-* Global shore lines - Do not expect to get here in this class
-
-It would be better if we could see the shoreline of Alaska around this!
-
-- http://www.soest.hawaii.edu/pwessel/papers/1996/JGR_96/jgr_96.html
-- http://www.ngdc.noaa.gov/mgg/shorelines/gshhs.html
-
-#+BEGIN_SRC sh
-wget http://ngdc.noaa.gov/mgg/shorelines/data/gshhs/version2.2.0/gshhs+wdbii_2.2.0.zip
-#+END_SRC
-
-* Descriptive Report (DR)
-
-Descriptive report is similar to a cruise report.
-
-http://surveys.ngdc.noaa.gov/mgg/NOS/coast/H12001-H14000/H12263/DR/
-
-http://surveys.ngdc.noaa.gov/mgg/NOS/coast/H12001-H14000/H12263/DR/H12263.pdf
-
-* Global shore lines - Do not expect to get here in this class
-
-- http://www.soest.hawaii.edu/pwessel/papers/1996/JGR_96/jgr_96.html
-- http://www.ngdc.noaa.gov/mgg/shorelines/gshhs.html
-
-#+BEGIN_SRC sh
-# wget ftp://ftp.soest.hawaii.edu/pwessel/gshhs/GSHHS_shp_2.2.0.zip
-# or faster:
-
-wget http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/examples/gshhs-shp-h-2.2.0.tar.bz2
-tar tf gshhs-shp-h-2.2.0.tar.bz2
-tar xf gshhs-shp-h-2.2.0.tar.bz2
-
-cd gshhs-shp-h-2.2.0
-ls -l
-file *
-#+END_SRC
-
-Load the L1 shape file in QGIS.
-
-Layer -> Add Vector Layer
-
-The new layer will be on top of the bounding box, so drag the bbox
-layer to the other side of the shape file.

@@ -147,6 +147,8 @@ Web tutorials and references:
 - [[http://www.doughellmann.com/PyMOTW/][Python Module of the Week (PyMOTW)]] by Doug Hellmann
 - [[http://google-styleguide.googlecode.com/svn/trunk/pyguide.html][Google Python Style Guide]]
 - [[http://python.net/~goodger/projects/pycon/2007/idiomatic/handout.html][Code Like a Pythonista: Idiomatic Python]] by David Goodger, 2008
+- http://code.google.com/edu/languages/
+  http://code.google.com/edu/languages/google-python-class/index.html
 
 iTunesU, YouTube, and other videos:
 

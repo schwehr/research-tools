@@ -1,0 +1,220 @@
+#+STARTUP: showall
+
+#+TITLE:     Class 20: BAGs 3, XML Metadata, KML, and GSHHS shapefile
+#+AUTHOR:    Kurt Schwehr
+#+EMAIL:     schwehr@ccom.unh.edu
+#+DATE:      <2011-11-08 Tue>
+#+DESCRIPTION: Marine Research Data Manipulation and Practices
+#+KEYWORDS: BAG HDF5 XML lxml etree hydrographic survey raster metadata shapefile qgis
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:nil toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   TeX:t LaTeX:nil skip:t d:nil todo:t pri:nil tags:not-in-toc
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+LINK_HOME: http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/
+
+* Introduction
+
+* See also
+
+* Setup
+
+#+BEGIN_SRC sh
+mkdir -p ~/class/20
+cd ~/class/20
+
+ipython
+logstart log-class-20.py
+
+# FIX: put in the name of the org file
+!wget http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/src/20
+!emacsclient --no-wait 20
+
+!wget http://vislab-ccom.unh.edu/~schwehr/rt/examples/old-bags/H11703_Office_5m.bag.bz2
+!bunzip2 *.bz2
+#+END_SRC
+
+* BAG catchup
+
+#+BEGIN_SRC python
+import h5py  # To read HDF5 files (e.g. our BAG bathy)
+import numpy # for NAN aka "not a number"
+from matplotlib import pyplot
+from lxml import etree
+
+bag = h5py.File('H11703_Office_5m.bag')
+metadata_txt = ''.join(bag['/BAG_root/metadata'])
+
+out = file('H11703_Office_5m.xml','w')
+out.write(metadata_txt)
+out.close()
+
+del out
+del bag
+
+root = etree.fromstring(metadata_txt).getroottree() 
+
+title = root.xpath('//*/title')[0].text
+abstract = root.xpath('//*/abstract')[0].text
+
+xmin = float(root.xpath('//*/westBoundLongitude')[0].text)
+xmax = float(root.xpath('//*/eastBoundLongitude')[0].text)
+
+ymin = float(root.xpath('//*/southBoundLatitude')[0].text)
+ymax = float(root.xpath('//*/northBoundLatitude')[0].text)
+
+whos
+#+END_SRC
+
+Unlike in class 19, we now don't have insane amounts of data in our workspace, so 
+we can work with =locals()= without getting in trouble as easily!
+
+* Back to the python string .format template language            :format:str:
+
+Last time we started working with =.format=, which is a nice and simple templating
+language.  We can use "**" with a dictionary to expand it out to work as the arguments
+functions.
+
+FIX: I have not yet found good documentation for using ** to expand a dict into 
+named function arguments, but here is at least a blog post talking about it:
+
+http://www.electricmonk.nl/log/2008/07/25/why-python-rocks-iii-parameter-expansion/
+
+# This used to be done with the =apply= function
+# From [[http://www.siafoo.net/article/52][Python Tips, Tricks, and Hacks on SiafOO]]
+
+#+BEGIN_SRC python
+'{xmin}'.format(xmin=xmin)
+'{xmin} and {ymax}'.format(xmin=xmin, ymax=ymax)
+
+'{xmin} and {wahoo}'.format(xmin=xman, wahoo=ymax)
+
+bbox = {'xmin': xmin, 'ymin': ymin, 'xmax': xmax, 'ymax': ymax}
+bbox
+
+'{xmin} and {ymax}'.format(bbox)
+# ERROR!
+
+# Use the crazy expansion syntax of ** to use bbox as arguments
+# to the format method of a string
+'{xmin} and {ymax}'.format( **bbox )
+
+# Better yet, there is a function that returns a dictionary of all
+locals?
+len( locals() )
+locals().keys()[:10]
+locals()
+
+'{xmin},{ymin} {xmax},{ymax}'.format( **locals() )
+# '-134.49,57.34 -134.32,57.4'
+#+END_SRC
+
+
+Here is our template file. Save this as the file bbox-template.kml
+
+#+BEGIN_SRC xml
+    <?xml version="1.0" encoding="UTF-8"?>
+    <kml xmlns="http://www.opengis.net/kml/2.2">
+    <Document>
+            <Placemark>
+                    <name>{filename}</name>
+                    <description>
+  {title}
+  
+  {abstract}
+                    </description>
+                    <LineString>
+                            <coordinates>
+    {xmin},{ymin}
+    {xmin},{ymax}
+    {xmax},{ymax}
+    {xmax},{ymin}
+    {xmin},{ymin}
+                            </coordinates>
+                    </LineString>
+            </Placemark>
+    </Document>
+    </kml>
+#+END_SRC
+
+Now we can load the template and fill it in.
+
+#+BEGIN_SRC python
+kml_template = open('bbox-template.kml').read()
+kml_template
+
+filename = 'H11703_Office_5m.bag'
+
+kml_template.format( **locals )
+print kml_template.format( **locals() )
+
+out = open('/home/researchtools/Dropbox/H11703_Office_5m-bbox.kml','w')
+out.write( kml_template.format( **locals() ) )
+out.close()
+#+END_SRC
+
+You can try running Google Earth inside the virtual machine and loading the kml.
+
+#+BEGIN_SRC sh
+google-earth
+#+END_SRC
+
+Or, if you are in the class Linux Virtual Machine, leave the virtual machine
+and from your normal desktop, go to your Dropbox folder or download the KML 
+through the web interface: https://www.dropbox.com/
+
+Then open the KML file on your desktop.
+
+* Viewing in QGIS
+
+We can also view the file in QGIS.  
+
+- Layer -> Add Vector Layer
+  - Browse  and find the file
+  - ok
+  - ok
+
+You should now have a borring rectangle on your screen.
+
+* Global shore lines - Do not expect to get here in this class
+
+It would be better if we could see the shoreline of Alaska around this!
+
+- http://www.soest.hawaii.edu/pwessel/papers/1996/JGR_96/jgr_96.html
+- http://www.ngdc.noaa.gov/mgg/shorelines/gshhs.html
+
+#+BEGIN_SRC sh
+wget http://ngdc.noaa.gov/mgg/shorelines/data/gshhs/version2.2.0/gshhs+wdbii_2.2.0.zip
+#+END_SRC
+
+* Descriptive Report (DR)
+
+Descriptive report is similar to a cruise report.
+
+http://surveys.ngdc.noaa.gov/mgg/NOS/coast/H12001-H14000/H12263/DR/
+
+http://surveys.ngdc.noaa.gov/mgg/NOS/coast/H12001-H14000/H12263/DR/H12263.pdf
+
+* Global shore lines - Do not expect to get here in this class
+
+- http://www.soest.hawaii.edu/pwessel/papers/1996/JGR_96/jgr_96.html
+- http://www.ngdc.noaa.gov/mgg/shorelines/gshhs.html
+
+#+BEGIN_SRC sh
+# wget ftp://ftp.soest.hawaii.edu/pwessel/gshhs/GSHHS_shp_2.2.0.zip
+# or faster:
+
+wget http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/examples/gshhs-shp-h-2.2.0.tar.bz2
+tar tf gshhs-shp-h-2.2.0.tar.bz2
+tar xf gshhs-shp-h-2.2.0.tar.bz2
+
+cd gshhs-shp-h-2.2.0
+ls -l
+file *
+#+END_SRC
+
+Load the L1 shape file in QGIS.
+
+Layer -> Add Vector Layer
+
+The new layer will be on top of the bounding box, so drag the bbox
+layer to the other side of the shape file.
