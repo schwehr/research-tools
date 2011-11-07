@@ -1,0 +1,49 @@
+#+STARTUP: showall
+
+#+TITLE:     Video 17: emacs - replace string and xml
+#+AUTHOR:    Kurt Schwehr
+#+EMAIL:     schwehr@ccom.unh.edu
+#+DATE:      <2011-10-24 Mon>
+#+DESCRIPTION: Marine Research Data Manipulation and Practices
+#+KEYWORDS: hdf hdf5 emacs
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:nil toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   TeX:t LaTeX:nil skip:t d:nil todo:t pri:nil tags:not-in-toc
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+LINK_HOME: http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/
+
+* Introduction
+
+This matches up with lecture 18
+
+* Working with HDF5
+
+#+BEGIN_SRC sh
+wget http://vislab-ccom.unh.edu/~schwehr/rt/examples/old-bags/H11703_Office_5m.bag.bz2
+bunzip2 *.bz2
+
+sudo apt-get install hdf5-tools
+
+h5ls H11703_Office_5m.bag
+h5ls --recursive H11703_Office_5m.bag
+
+h5ls --simple -d H11703_Office_5m.bag/BAG_root/metadata  | head
+
+h5ls --simple -d H11703_Office_5m.bag/BAG_root/metadata | egrep '"' | cut -f2 -d\" | tr -d '\n' > H11703_Office_5m-try1.xml
+
+emacsclient --no-wait H11703_Office_5m-try1.xml
+#+END_SRC
+
+http://en.wikipedia.org/wiki/XML
+
+- M-% query-replace
+- M-x replace-string > < <RET> > C-q C-j <
+
+#+BEGIN_SRC sh
+xmllint H11703_Office_5m-try1.xml
+echo h5dump -b FILE -o H11703_Office_5m.xml H11703_Office_5m.bag
+echo h5dump -b FILE -o H11703_Office_5m.{xml,bag}
+h5dump -b FILE -o H11703_Office_5m.{xml,bag}
+
+xmllint H11703_Office_5m.xml
+#+END_SRC
