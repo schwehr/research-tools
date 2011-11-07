@@ -197,10 +197,11 @@ See also: https://github.com/schwehr/bag-py/
 #+BEGIN_SRC sh
 sudo apt-get install python-h5py # Only need to do this once!
 ipython
-import h5py
 #+END_SRC
 
 #+BEGIN_SRC python
+import h5py
+
 bag = h5py.File('H11703_Office_5m.bag')
 bag.values()
 bag.items()
