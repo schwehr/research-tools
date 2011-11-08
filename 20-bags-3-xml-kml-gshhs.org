@@ -23,11 +23,19 @@ mkdir -p ~/class/20
 cd ~/class/20
 
 ipython
-logstart log-class-20.py
+#+END_SRC
+
+Now on to python and bathymetry!
+
+#+BEGIN_SRC python
+logstart?
+logstart -o -r -t log-class-20.py append
+
+!less log-class-20.py
 
 # FIX: put in the name of the org file
-!wget http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/src/20
-!emacsclient --no-wait 20
+!wget http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/src/20-bags-3-xml-kml-gshhs.org
+!emacsclient --no-wait 20-bags-3-xml-kml-gshhs.org
 
 !wget http://vislab-ccom.unh.edu/~schwehr/rt/examples/old-bags/H11703_Office_5m.bag.bz2
 !bunzip2 *.bz2
@@ -62,7 +70,9 @@ xmax = float(root.xpath('//*/eastBoundLongitude')[0].text)
 ymin = float(root.xpath('//*/southBoundLatitude')[0].text)
 ymax = float(root.xpath('//*/northBoundLatitude')[0].text)
 
+who
 whos
+whos float
 #+END_SRC
 
 Unlike in class 19, we now don't have insane amounts of data in our workspace, so 
@@ -107,7 +117,6 @@ locals()
 '{xmin},{ymin} {xmax},{ymax}'.format( **locals() )
 # '-134.49,57.34 -134.32,57.4'
 #+END_SRC
-
 
 Here is our template file. Save this as the file bbox-template.kml
 
@@ -164,7 +173,7 @@ through the web interface: https://www.dropbox.com/
 
 Then open the KML file on your desktop.
 
-* Viewing in QGIS
+* Viewing in QGIS                                                      :qgis:
 
 We can also view the file in QGIS.  
 
@@ -175,26 +184,22 @@ We can also view the file in QGIS.
 
 You should now have a borring rectangle on your screen.
 
-* Global shore lines - Do not expect to get here in this class
+* Global shore lines - GSHHS 
 
 It would be better if we could see the shoreline of Alaska around this!
+
+GSHHS == Global Self-consistent, Hierarchical, High-resolution Shoreline
 
 - http://www.soest.hawaii.edu/pwessel/papers/1996/JGR_96/jgr_96.html
 - http://www.ngdc.noaa.gov/mgg/shorelines/gshhs.html
 
 #+BEGIN_SRC sh
-wget http://ngdc.noaa.gov/mgg/shorelines/data/gshhs/version2.2.0/gshhs+wdbii_2.2.0.zip
+# wget http://ngdc.noaa.gov/mgg/shorelines/data/gshhs/version2.2.0/gshhs+wdbii_2.2.0.zip
 #+END_SRC
 
-* Descriptive Report (DR)
+Not directly usable by gdal or qgis.  This is meant for GMT.
 
-Descriptive report is similar to a cruise report.
-
-http://surveys.ngdc.noaa.gov/mgg/NOS/coast/H12001-H14000/H12263/DR/
-
-http://surveys.ngdc.noaa.gov/mgg/NOS/coast/H12001-H14000/H12263/DR/H12263.pdf
-
-* Global shore lines - Do not expect to get here in this class
+* Global shore lines - GSHHS shapefile
 
 - http://www.soest.hawaii.edu/pwessel/papers/1996/JGR_96/jgr_96.html
 - http://www.ngdc.noaa.gov/mgg/shorelines/gshhs.html
@@ -212,9 +217,226 @@ ls -l
 file *
 #+END_SRC
 
+# FIX: add gdalinfo
+
 Load the L1 shape file in QGIS.
 
 Layer -> Add Vector Layer
 
 The new layer will be on top of the bounding box, so drag the bbox
 layer to the other side of the shape file.
+
+* History
+
+#+BEGIN_SRC python
+# Tue, 08 Nov 2011 11:02:56
+!wget http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/src/20-bags-3-xml-kml-gshhs.org
+# Tue, 08 Nov 2011 11:03:18
+!emacsclient --no-wait 20-bags-3-xml-kml-gshhs.org
+# Tue, 08 Nov 2011 11:11:23
+logstart
+# Tue, 08 Nov 2011 11:13:28
+ls
+# Tue, 08 Nov 2011 11:13:42
+!less log-class-20.py
+# Tue, 08 Nov 2011 11:14:02
+history
+# Tue, 08 Nov 2011 11:14:12
+print 'hello world'
+# Tue, 08 Nov 2011 11:14:14
+!less log-class-20.py
+# Tue, 08 Nov 2011 11:14:23
+1+1
+#[Out]# 2
+# Tue, 08 Nov 2011 11:14:28
+!less log-class-20.py
+# Tue, 08 Nov 2011 11:15:59
+!wget http://vislab-ccom.unh.edu/~schwehr/rt/examples/old-bags/H11703_Office_5m.bag.bz2
+# Tue, 08 Nov 2011 11:16:10
+!bunzip2 H11703_Office_5m.bag.bz2
+# Tue, 08 Nov 2011 11:16:13
+ls -l
+# Tue, 08 Nov 2011 11:16:20
+ls -l
+# Tue, 08 Nov 2011 11:17:05
+pwd
+#[Out]# '/home/researchtools/class/20'
+# Tue, 08 Nov 2011 11:17:55
+import h5py
+# Tue, 08 Nov 2011 11:18:04
+import numpy
+# Tue, 08 Nov 2011 11:18:15
+from matplotlib import pyplot
+# Tue, 08 Nov 2011 11:18:24
+from lxml import etree
+# Tue, 08 Nov 2011 11:18:48
+bag = h5py.File('H11703_Office_5m.bag')
+# Tue, 08 Nov 2011 11:20:03
+whos
+# Tue, 08 Nov 2011 11:20:59
+bag['/BAG_root/metadata']
+#[Out]# <HDF5 dataset "metadata": shape (5097,), type "|S1">
+# Tue, 08 Nov 2011 11:21:04
+bag['/BAG_root/metadata'].value
+#[Out]# array(['<', '?', 'x', ..., '>', '\n', ''], 
+#[Out]#       dtype='|S1')
+# Tue, 08 Nov 2011 11:22:12
+metadata_txt = ''.join(bag['/BAG_root/metadata'])
+# Tue, 08 Nov 2011 11:22:16
+whos
+# Tue, 08 Nov 2011 11:22:36
+metadata_txt[:50]
+#[Out]# '<?xml version="1.0"?>\n<smXML:MD_Metadata xmlns:smX'
+# Tue, 08 Nov 2011 11:23:46
+out = open('H11703_Office_5m.xml','w')
+# Tue, 08 Nov 2011 11:24:00
+out.write(metadata_txt)
+# Tue, 08 Nov 2011 11:24:29
+out.close()
+# Tue, 08 Nov 2011 11:27:15
+whos
+# Tue, 08 Nov 2011 11:27:22
+del out
+# Tue, 08 Nov 2011 11:27:31
+del bag
+# Tue, 08 Nov 2011 11:27:37
+whos
+# Tue, 08 Nov 2011 11:28:39
+root = etree.fromstring(metadata_txt).getroottree()
+# Tue, 08 Nov 2011 11:28:45
+type(root)
+#[Out]# <type 'lxml.etree._ElementTree'>
+# Tue, 08 Nov 2011 11:30:00
+title = root.xpath('//*/title')[0].text
+# Tue, 08 Nov 2011 11:30:02
+title
+#[Out]# 'BAG file created from: N:\\OPRO322KR07\\Surveys\\H11703\\Caris\\Fieldsheets\\H11703_Office\\H11703_Office_5m_Final.hns'
+# Tue, 08 Nov 2011 11:31:05
+abstract = root.xpath('//*/abstract')[0].text
+# Tue, 08 Nov 2011 11:31:21
+print abstract
+# Tue, 08 Nov 2011 11:32:35
+xmin = float( root.xpath('//*/westBoundLongitude')[0].text )
+# Tue, 08 Nov 2011 11:32:37
+xmin
+#[Out]# -134.49
+# Tue, 08 Nov 2011 11:33:44
+xmax = float( root.xpath('//*/eastBoundLongitude')[0].text )
+# Tue, 08 Nov 2011 11:34:36
+ymin = float( root.xpath('//*/southBoundLatitude')[0].text )
+# Tue, 08 Nov 2011 11:34:48
+ymax = float( root.xpath('//*/northBoundLatitude')[0].text )
+# Tue, 08 Nov 2011 11:34:58
+whos
+# Tue, 08 Nov 2011 11:35:17
+whos float
+# Tue, 08 Nov 2011 11:35:40
+whos str
+# Tue, 08 Nov 2011 11:37:14
+whos float
+# Tue, 08 Nov 2011 11:37:47
+'{xmin}'.format(xmin=xmin)
+#[Out]# '-134.49'
+# Tue, 08 Nov 2011 11:38:05
+'{xmin} and {ymax}'.format(xmin=xmin)
+# Tue, 08 Nov 2011 11:38:17
+'{xmin} and {ymax}'.format(xmin=xmin, ymax=ymax)
+#[Out]# '-134.49 and 57.4'
+# Tue, 08 Nov 2011 11:38:36
+'{xmin} and {ymax}'.format(ymax=ymax, xmin=xmin)
+#[Out]# '-134.49 and 57.4'
+# Tue, 08 Nov 2011 11:40:39
+'{wahoo}'.format(wahoo=ymax)
+#[Out]# '57.4'
+# Tue, 08 Nov 2011 11:40:50
+whos float
+# Tue, 08 Nov 2011 11:42:05
+bbox = {'xmin': xmin, 'ymin': ymin, 'xmax': xmax, 'ymax': ymax}
+# Tue, 08 Nov 2011 11:42:11
+bbox
+#[Out]# {'xmin': -134.49, 'ymin': 57.34, 'ymax': 57.4, 'xmax': -134.32}
+# Tue, 08 Nov 2011 11:42:31
+bbox['xmin']
+#[Out]# -134.49
+# Tue, 08 Nov 2011 11:43:39
+'{xmin} and {ymax}'.format(bbox)
+# Tue, 08 Nov 2011 11:44:23
+'{xmin} and {ymax}'.format(**bbox)
+#[Out]# '-134.49 and 57.4'
+# Tue, 08 Nov 2011 11:44:47
+locals
+# Tue, 08 Nov 2011 11:45:08
+who
+# Tue, 08 Nov 2011 11:45:11
+whos
+# Tue, 08 Nov 2011 11:45:24
+del metadata_txt
+# Tue, 08 Nov 2011 11:45:26
+whos
+# Tue, 08 Nov 2011 11:45:37
+locals()
+#[Out]# {'__': '-134.49 and 57.4', ...
+#[Out]#       dtype='|S1'), 57: {'xmin': -134.49, 'ymin': 57.34, 'ymax': 57.4, 'xmax': -134.32}, 58: -134.49, ..., '>', '\n', ''], 
+#[Out]#       dtype='|S1'), 57: {'xmin': -134.49, 'ymin': 57.34, 'ymax': 57.4, 'xmax': -134.32}, 58: ... <type 'lxml.etree._ElementTree'>}
+# Tue, 08 Nov 2011 11:46:19
+'{xmin} and {ymax}'.format( ** locals() )
+#[Out]# '-134.49 and 57.4'
+# Tue, 08 Nov 2011 11:57:24
+print open('bbox-template.kml).read()
+# Tue, 08 Nov 2011 11:57:36
+print open('bbox-template.kml').read()
+# Tue, 08 Nov 2011 11:58:18
+open('bbox-template.kml').read()
+#[Out]# '<?xml version="1.0" encoding="UTF-8"?>\n    <kml xmlns="http://www.opengis.net/kml/2.2">\n...'
+# Tue, 08 Nov 2011 11:59:05
+kml_template = open('bbox-template.kml').read()
+# Tue, 08 Nov 2011 11:59:32
+filename = 'H11703_Office_5m.bag'
+# Tue, 08 Nov 2011 11:59:42
+whos
+# Tue, 08 Nov 2011 12:00:50
+print kml_template.format( **locals() )
+# Tue, 08 Nov 2011 12:03:04
+out = open('H11703_Office_5m-bbox.kml','w')
+# Tue, 08 Nov 2011 12:03:44
+out.write( kml_template.format( **locals() ) )
+# Tue, 08 Nov 2011 12:03:49
+out.close()
+# Tue, 08 Nov 2011 12:05:17
+history
+# Tue, 08 Nov 2011 12:05:48
+out.close
+#[Out]# <built-in method close of file object at 0x96c95a0>
+# Tue, 08 Nov 2011 12:05:58
+xmin
+#[Out]# -134.49
+# Tue, 08 Nov 2011 12:37:48
+history
+# Tue, 08 Nov 2011 12:37:57
+ls
+# Tue, 08 Nov 2011 12:38:03
+!tail log-class-20.py
+#+END_SRC
+
+#+BEGIN_SRC sh
+1999  google-earth 
+ 2000  cd class/20
+ 2001  ls -l
+ 2002  cp H11703_Office_5m-bbox.kml ~/Dropbox/
+ 2003  wget http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/examples/gshhs-shp-h-2.2.0.tar.bz2
+ 2004  tar tf gshhs-shp-h-2.2.0.tar.bz2 
+ 2005  tar xf gshhs-shp-h-2.2.0.tar.bz2 
+ 2006  cd gshhs-shp-h-2.2.0/
+ 2007  ls -l
+ 2008  file *
+ 2009  ogrinfo GSHHS_h_L1.shp
+#+END_SRC
+
+* Descriptive Report (DR)
+
+Descriptive report is similar to a cruise report.
+
+http://surveys.ngdc.noaa.gov/mgg/NOS/coast/H12001-H14000/H12263/DR/
+
+http://surveys.ngdc.noaa.gov/mgg/NOS/coast/H12001-H14000/H12263/DR/H12263.pdf
+
