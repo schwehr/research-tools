@@ -1,0 +1,110 @@
+#+STARTUP: showall
+
+#+TITLE:     Video 18: python - hdf5 via h5py
+#+AUTHOR:    Kurt Schwehr
+#+EMAIL:     schwehr@ccom.unh.edu
+#+DATE:      <2011-10-25 Tue>
+#+DESCRIPTION: Marine Research Data Manipulation and Practices
+#+KEYWORDS: hdf hdf5 h5py python numpy matplotlib
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:nil toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   TeX:t LaTeX:nil skip:t d:nil todo:t pri:nil tags:not-in-toc
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+LINK_HOME: http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/
+
+* Introduction
+
+This matches up with lecture 18
+
+* Setup
+
+#+BEGIN_SRC sh
+mkdir -p video/18
+cd video/18
+sudo apt-get install python-h5py
+#+END_SRC
+
+* Plan
+
+#+BEGIN_SRC python
+ipython
+
+%logstart? # Ask for help
+
+logstart -o -r -t video-18-log.py append
+
+!wget http://surveys.ngdc.noaa.gov/mgg/NOS/coast/H12001-H14000/H12279/BAG/H12279_VB_4m_MLLW_1of1.bag.gz
+!gunzip *.gz
+
+import h5py
+bag = h5py.File('H12279_VB_4m_MLLW_1of1.bag')
+
+type(bag)
+bag. # Tab
+
+bag.filename
+bag.name
+
+bag.items()
+bag.values()
+bag.items()[0][1] # Yuck!
+
+bag['BAG_root']
+bag['BAG_root'].items()
+root = bag['BAG_root']
+
+root.name
+root.parent
+root.items()
+root.values()
+
+metadata_node = root['metadata']
+metadata_node = bag['/BAG_root/metadata']
+metadata_node.parent
+metadata_node.value
+
+metadata = ''.join(metadata_node.value)
+metadata[:50]
+
+whos
+#+END_SRC
+
+On to the gridded data
+
+#+BEGIN_SRC python
+import numpy # For isfinite() and NAN - "not a number"
+from matplotlib import pyplot
+pyplot.interactive(True)
+
+
+elev_node = root['elevation']
+elev = elev_node.value
+elev.shape
+whos ndarray
+
+elev.min()
+elev.max()
+elev1d_finite.mean()
+elev1d_finite.std()
+
+pyplot.figure(1)
+pyplot.subplot(121)
+pyplot.imshow(elev)  # Yuck... single beam data! VB == "vertical beam"
+
+elev1d = elev.reshape(elev.size)
+elev1d_finite = [ ]
+for item in elev1d:
+    if numpy.isfinite(item):
+        elev1d_finite.append(item)
+
+elev1d_finite = numpy.array(elev1d_finite) # Not required, but makes future operations faster
+min(elev1d_finite)
+max(elev1d_finite)
+
+100 * float(len(elev1d) - len(elev1d_finite)) / len(elev1d) # 90% empty!
+
+pyplot.subplot(122)
+pyplot.hist(elev1d_finite, bins=50)
+pyplot.hist(elev1d_finite, bins=100)
+pyplot.hist(elev1d_finite, bins=200)
+#+END_SRC
