@@ -84,8 +84,6 @@ whos ndarray
 
 elev.min()
 elev.max()
-elev1d_finite.mean()
-elev1d_finite.std()
 
 pyplot.figure(1)
 pyplot.subplot(121)
@@ -107,4 +105,9 @@ pyplot.subplot(122)
 pyplot.hist(elev1d_finite, bins=50)
 pyplot.hist(elev1d_finite, bins=100)
 pyplot.hist(elev1d_finite, bins=200)
+
+elev1d_finite.min() 
+elev1d_finite.max() 
+elev1d_finite.mean()
+elev1d_finite.std()
 #+END_SRC
