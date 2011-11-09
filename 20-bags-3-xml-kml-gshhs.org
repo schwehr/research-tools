@@ -25,9 +25,14 @@ cd ~/class/20
 ipython
 #+END_SRC
 
-Now on to python and bathymetry!
+We should turn on logging from ipython to record what we do and then
+get the class org notes file into our local work directory
 
 #+BEGIN_SRC python
+# Make sure you are in a class/20 directory
+# for me, I'm working ~/class/20
+pwd
+
 logstart?
 logstart -o -r -t log-class-20.py append
 
@@ -43,6 +48,8 @@ logstart -o -r -t log-class-20.py append
 
 * BAG catchup
 
+Now on to python and bathymetry!
+
 #+BEGIN_SRC python
 import h5py  # To read HDF5 files (e.g. our BAG bathy)
 import numpy # for NAN aka "not a number"
@@ -52,7 +59,11 @@ from lxml import etree
 bag = h5py.File('H11703_Office_5m.bag')
 metadata_txt = ''.join(bag['/BAG_root/metadata'])
 
-out = file('H11703_Office_5m.xml','w')
+# Old python <= 2.7 style that is not available in python 3
+# out = file('H11703_Office_5m.xml','w') 
+
+# open works on python 2.x and 3.x 
+out = open('H11703_Office_5m.xml','w') 
 out.write(metadata_txt)
 out.close()
 
@@ -121,29 +132,38 @@ locals()
 Here is our template file. Save this as the file bbox-template.kml
 
 #+BEGIN_SRC xml
-    <?xml version="1.0" encoding="UTF-8"?>
-    <kml xmlns="http://www.opengis.net/kml/2.2">
-    <Document>
-            <Placemark>
-                    <name>{filename}</name>
-                    <description>
-  {title}
+<?xml version="1.0" encoding="UTF-8"?>
+<kml xmlns="http://www.opengis.net/kml/2.2">
+<Document>
+        <Placemark>
+                <name>{filename}</name>
+                <description>
+{title}
   
-  {abstract}
-                    </description>
-                    <LineString>
-                            <coordinates>
-    {xmin},{ymin}
-    {xmin},{ymax}
-    {xmax},{ymax}
-    {xmax},{ymin}
-    {xmin},{ymin}
-                            </coordinates>
-                    </LineString>
-            </Placemark>
-    </Document>
-    </kml>
+{abstract}
+                </description>
+                <LineString>
+                        <coordinates>
+{xmin},{ymin}
+{xmin},{ymax}
+{xmax},{ymax}
+{xmax},{ymin}
+{xmin},{ymin}
+                        </coordinates>
+                </LineString>
+        </Placemark>
+</Document>
+</kml>
 #+END_SRC
+
+Save the above src block into a "bbox-template.kml" file.  Save it and
+use this to see if it switches to nXML mode in emacs
+
+M-x revert-buffer
+
+Or you can just do:
+
+M-x xml-mode
 
 Now we can load the template and fill it in.
 
