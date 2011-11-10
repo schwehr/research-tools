@@ -31,7 +31,7 @@ pwd
 #+END_SRC
 
 #+BEGIN_SRC sh
-curl -O http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/examples/sample.sbet.bz2
+curl -O http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/examples/21/sample.sbet.bz2
 bunzip2 sample.sbet.bz2
 
 md5sum sample.sbet 
@@ -78,16 +78,19 @@ ls -l *.sbet
 -rw-r--r--  1 schwehr  staff  225820248 Dec 12 09:02 original.sbet
 #+END_EXAMPLE
 
-#+BEGIN_EXAMPLE
+#+BEGIN_SRC sh
 file *.sbet
 original.sbet: data
 sample.sbet:   data
 
 less sample.sbet
-#+END_EXAMPLE
+#+END_SRC sh
+
+#+BEGIN_SRC sh
+od -a sample.sbet  | head
+#+END_SRC
 
 #+BEGIN_EXAMPLE
-od -a sample.sbet  | head
 0000000    ##  g   ####t   #   q dc4   A   ### H soh   # nak   ### ####?
 0000020    G   ####f   Q   ##  z eot   ##  n   ### ##  ##dle   #   )   @
 0000040    K   ##  #  9a   *   ### $   @   R   #  90  83   |   ####### ?
@@ -106,8 +109,13 @@ Since we know that our SBET file will contain a series of 17 doubles
 (8 bytes each) in a row, let's try out a sample file that contains the
 numbers 0 through 16,
 
-#+BEGIN_EXAMPLE
+#+BEGIN_SRC sh
+wget http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/examples/21/s1.bin
+
 od -t fD s1.bin 
+#+END_SRC
+
+#+BEGIN_EXAMPLE 
 0000000     0.000000000000000e+00    1.000000000000000e+00
 0000020     2.000000000000000e+00    3.000000000000000e+00
 0000040     4.000000000000000e+00    5.000000000000000e+00
@@ -119,3 +127,433 @@ od -t fD s1.bin
 0000200     1.600000000000000e+01                         
 0000210
 #+END_EXAMPLE
+
+* Reading binary data in python
+
+#+BEGIN_SRC sh
+ipython
+#+END_SRC
+
+Setup:
+
+#+BEGIN_SRC python
+logstart -o -r log-class-21.py
+
+import struct
+import numpy
+#+END_SRC
+
+http://docs.python.org/library/struct.html#format-characters
+
+Run this section to create some sample files:
+
+#+BEGIN_SRC python
+import struct
+open('c-65.bin','w').write(struct.pack('c','z'))
+open('b-120.bin','w').write(struct.pack('b',120 ))
+open('B-121.bin','w').write(struct.pack('B',121 ))
+open('B-series.bin','w').write(struct.pack('10B',*range(115,125) ))
+open('i-nine.bin','w').write(struct.pack('i',9))
+open('d-pi.bin','w').write(struct.pack('d',math.pi))
+open('d-1.bin','w').write(struct.pack('d',1.0))
+open('d-series.bin','w').write(struct.pack('10d',*range(10)))
+
+!file *.bin
+#+END_SRC
+
+Open B-series.bin in emacs.  Try this emacs command: 
+
+M-x hexl-mode
+
+Open another terminal and run this:
+
+#+BEGIN_SRC sh
+man ascii
+#+END_SRC
+
+Or in emacs, M-x man <RET> ascii
+
+* Load up the SBET
+
+#+BEGIN_SRC python
+sbet_file = open('sample.sbet')
+#+END_SRC
+
+There are many things you can do with a file, but in our case, we want
+to pull the entire file into a variable.
+
+#+BEGIN_SRC python
+sbet_data = sbet_file.read()
+
+type(sbet_data)
+# Out: <type 'str'>
+
+len(sbet_data)
+# 22712
+#+END_SRC
+
+#+BEGIN_SRC python
+struct.unpack('d',sbet_data[0:8])
+# (334959.0048233234,)
+
+struct.unpack('d',sbet_data[0:8])[0]
+# 334959.0048233234
+#+END_SRC
+
+#+BEGIN_SRC python
+struct.unpack('dd',sbet_data[8:24])
+(1.0549522638507869, -2.559965741819528)
+#+END_SRC
+
+#+BEGIN_SRC python
+struct.unpack('2d',sbet_data[8:24])
+(1.0549522638507869, -2.559965741819528)
+#+END_SRC
+
+#+BEGIN_SRC python
+struct.unpack('17d',sbet_data[0:8*17])
+Out[38]: 
+(334959.0048233234,
+ 1.0549522638507869,
+ -2.559965741819528,
+ 12.826300557342815,
+ 10.437825046453915,
+ 0.998228318178983,
+ 0.18282804536664027,
+ -0.0026283394812042344,
+ 0.11416603057936824,
+ -0.09985686530029529,
+ -0.40154673926674145,
+ -0.8249097558096672,
+ -0.3413483211034812,
+ 0.07018300645653144,
+ 0.021320176833628756,
+ 0.029000032024608147,
+ -0.006807197876212325)
+#+END_SRC
+
+
+#+BEGIN_SRC python
+time, latitude, longitude, altitude, \
+    x_vel, y_vel, z_vel, \
+    roll, pitch, platform_heading, wander_angle, \
+    x_acceleration, y_acceleration, z_acceleration, \
+    x_angular_rate, y_angular_rate, z_angular = struct.unpack('ddddddddddddddddd',data[0:17*8])
+#+END_SRC
+
+#+BEGIN_SRC python
+field_names = ('time', 'latitude', 'longitude', 'altitude', \
+          'x_vel', 'y_vel', 'z_vel', \
+          'roll', 'pitch', 'platform_heading', 'wander_angle', \
+          'x_acceleration', 'y_acceleration', 'z_acceleration', \
+          'x_angular_rate', 'y_angular_rate', 'z_angular')
+
+values = struct.unpack('17d',sbet_data[0:8*17])
+
+# Crazy stuff happens here!
+dict(  zip(field_names, values) )
+#+END_SRC
+
+#+BEGIN_SRC python
+zip(field_names[:4], values[:4])
+
+# Results in:
+[('time', 334959.0048233234),
+ ('latitude', 1.0549522638507869),
+ ('longitude', -2.559965741819528),
+ ('altitude', 12.826300557342815)]
+#+END_SRC
+
+#+BEGIN_SRC python
+sbet_values = dict(zip (field_names, values))
+
+# convert radians to degrees and put it in a new dictionary key
+sbet_values['lat_deg'] = math.degrees(sbet_values['latitude'])
+
+sbet_values['lat_deg']
+# 60.444312306421736
+#+END_SRC
+
+* Creating sbet.py - module for reading sbets
+
+Open sbet.py and add this:
+
+#+BEGIN_SRC python
+# Decode Applanix POSPac SBET IMU binary files
+
+def decode():
+    print "hello from decode"
+#+END_SRC
+
+in ipython:
+
+#+BEGIN_SRC python
+import sbet
+sbet.decode()
+# hello from decode
+#+END_SRC
+
+edit sbet.py:
+
+#+BEGIN_SRC python
+# Decode Applanix POSPac SBET IMU binary files
+
+# You will see this when you load or reload this file, this line will print
+print "load or reload happening"
+
+def decode():
+    print "hello from decode"
+    print 7*6
+#+END_SRC
+
+in ipython:
+
+#+BEGIN_SRC python
+reload(sbet)
+# load or reload happening
+
+sbet.decode()
+# hello from decode
+# 42
+#+END_SRC
+
+
+* Getting ready to parse sbets
+
+#+BEGIN_SRC python
+# Decode Applanix POSPac SBET IMU binary files
+
+# You will see this when you load or reload this file, this line will print
+print "load or reload happening"
+
+def decode():
+    print "hello from decode"
+    print 7*6
+
+def main():
+    print 'Starting main'
+    sbet_file = open('sample.sbet')
+    sbet_data = sbet_file.read()
+    print 'Finishing main'
+#+END_SRC
+
+in python:
+
+#+BEGIN_SRC python
+reload(sbet)
+# load or reload happening
+
+In [12]: sbet.main()
+# Starting main
+# Finishing main
+#+END_SRC
+
+update sbet.py to have a decode with an argument:
+
+#+BEGIN_SRC python
+# Add data argument to decode
+def decode(data):
+    'Decipher a SBET datagram from binary'
+    print "hello from decode"
+    print 'Data length:', len(data)
+
+def main():
+    print 'Starting main'
+    sbet_file = open('sample.sbet')
+    sbet_data = sbet_file.read()
+    print 'Read this many bytes:',len(sbet_data)
+
+    decode(sbet_data)  # Pass in the sbet_data variable to decode
+    
+    print 'Finishing main'
+#+END_SRC
+
+
+#+BEGIN_SRC python
+help(sbet.decode)
+# Help on function decode in module sbet:
+# 
+# decode(data)
+#     Decipher a SBET datagram from binary
+
+sbet.decode?
+# Type:           function
+# Base Class:     <type 'function'>
+# String Form:    <function decode at 0x11f09f0>
+# Namespace:      Interactive
+# File:           /Users/schwehr/Desktop/sbet/sbet.py
+# Definition:     sbet.decode(data)
+# Docstring:
+#     Decipher a SBET datagram from binary
+#+END_SRC 
+
+edit decode function:
+
+#+BEGIN_SRC python
+import math
+import struct
+
+def decode(data):
+    "Decipher a SBET datagram from binary"
+    print "Start decoding datagram"
+    values = struct.unpack('17d',data[0:8*17])
+
+    time = values[0]
+
+    latitude = values[1]
+    lat_deg = math.degrees(latitude)
+
+    longitude = values[2]
+    lon_deg = math.degrees(longitude)
+
+    print 'results:', time, lat_deg, lon_deg
+#+END_SRC
+
+
+#+BEGIN_SRC python
+if __name__=='__main__':
+    print 'starting to run script...'
+    main()
+    print 'script done!'
+#+END_SRC
+
+Add this to the top of sbet.py
+
+#+BEGIN_SRC python
+#!/usr/bin/env python
+#+END_SRC
+
+
+#+BEGIN_SRC python
+#!/usr/bin/env python
+
+# Decode Applanix POSPac SBET IMU binary files
+
+import math, struct
+
+def decode(data):
+    "Decipher a SBET datagram from binary"
+    values = struct.unpack('17d',data[0:8*17])
+
+    time = values[0]
+
+    latitude = values[1]
+    lat_deg = math.degrees(latitude)
+
+    longitude = values[2]
+    lon_deg = math.degrees(longitude)
+
+    print 'results:', time, lat_deg, lon_deg
+
+def main():
+    sbet_file = open('sample.sbet')
+    sbet_data = sbet_file.read()
+
+    decode(sbet_data)
+    
+if __name__=='__main__':
+    main()
+#+END_SRC
+
+
+Decode needs to return something!
+
+#+BEGIN_SRC python
+field_names = ('time', 'latitude', 'longitude', 'altitude', \
+          'x_vel', 'y_vel', 'z_vel', \
+          'roll', 'pitch', 'platform_heading', 'wander_angle', \
+          'x_acceleration', 'y_acceleration', 'z_acceleration', \
+          'x_angular_rate', 'y_angular_rate', 'z_angular')
+
+def decode(data):
+    "Decipher a SBET datagram from binary"
+    values = struct.unpack('17d',data[0:8*17])
+
+    # Create a dictionary for all the values
+    sbet_values = dict(zip (field_names, values))
+
+    sbet_values['lat_deg'] = math.degrees(sbet_values['latitude'])
+    sbet_values['lon_deg'] = math.degrees(sbet_values['longitude'])
+
+    print 'results:'
+    for key in sbet_values:
+        print '    ', key, sbet_values[key]
+#+END_SRC
+
+
+#+BEGIN_SRC python
+def main():
+    sbet_file = open('sample.sbet')
+    sbet_data = sbet_file.read()
+
+    datagram = decode(sbet_data)
+    print datagram
+#+END_SRC
+
+#+BEGIN_SRC python
+def decode(data):
+    "Decipher a SBET datagram from binary"
+    values = struct.unpack('17d',data[0:8*17])
+
+    # Create a dictionary for all the values
+    sbet_values = dict(zip (field_names, values))
+
+    sbet_values['lat_deg'] = math.degrees(sbet_values['latitude'])
+    sbet_values['lon_deg'] = math.degrees(sbet_values['longitude'])
+
+    return sbet_values  # Send the sbet_values dictionary back to the caller
+#+END_SRC
+
+
+#+BEGIN_SRC python
+def sbet_print(sbet_values):
+    'Print out all the values of a SBET dictionary'
+    print 'results:'
+    for key in sbet_values:
+        print '    ', key, sbet_values[key]
+#+END_SRC
+
+* Being able to use the whole sbet file
+
+#+BEGIN_SRC python
+def decode(data, offset=0):
+    '''Decipher a SBET datagram from binary'''
+
+    # Offset now tells it how far to start
+    values = struct.unpack('17d',data[ offset + 0 : offset + 8*17 ])
+
+    # Create a dictionary for all the values
+    sbet_values = dict(zip (field_names, values))
+
+    sbet_values['lat_deg'] = math.degrees(sbet_values['latitude'])
+    sbet_values['lon_deg'] = math.degrees(sbet_values['longitude'])
+
+    return sbet_values
+#+END_SRC
+
+#+BEGIN_SRC python
+datagram_size = 136 # 8*17 bytes per datagram
+
+def num_datagrams(data):
+    'How many packets are in data'
+
+    # Make sure we have an even number of datagrams
+    assert (len(data) % datagram_size == 0)
+
+    return len(data) / datagram_size
+#+END_SRC
+
+#+BEGIN_SRC python
+def main():
+    sbet_file = open('sample.sbet')
+    sbet_data = sbet_file.read()
+
+    print 'Number of datagrams:', num_datagrams(sbet_data)
+#+END_SRC
+
+#+BEGIN_SRC python
+def get_offset(datagram_number):
+    'Calculate the starting offset of a datagram'
+    return datagram_number * datagram_size
+#+END_SRC
+
