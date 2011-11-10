@@ -1,0 +1,121 @@
+#+STARTUP: showall
+
+#+TITLE:     Class 20: BAGs 3, XML Metadata, KML, and GSHHS shapefile
+#+AUTHOR:    Kurt Schwehr
+#+EMAIL:     schwehr@ccom.unh.edu
+#+DATE:      <2011-11-08 Tue>
+#+DESCRIPTION: Marine Research Data Manipulation and Practices
+#+KEYWORDS: BAG HDF5 XML lxml etree hydrographic survey raster metadata shapefile qgis
+#+LANGUAGE:  en
+#+OPTIONS:   H:3 num:nil toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
+#+OPTIONS:   TeX:t LaTeX:nil skip:t d:nil todo:t pri:nil tags:not-in-toc
+#+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
+#+LINK_HOME: http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/
+
+* Introduction
+
+Thanks to Glen Rice for this topic and sample data.
+
+* See also
+
+http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/python-binary-files.org
+
+* Setup
+
+#+BEGIN_SRC sh
+mkdir -p ~/class/20
+cd ~/class/20
+
+pwd
+# Make sure you are in the right location
+#+END_SRC
+
+#+BEGIN_SRC sh
+curl -O http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/examples/sample.sbet.bz2
+bunzip2 sample.sbet.bz2
+
+md5sum sample.sbet 
+196c21f16f07ceae180888b12e9edc56  sample.sbet
+#+END_SRC
+
+Applanix provides documentation for the POSPac SBET files.  It is
+essential to look at the documentation (if it is available) before
+starting to parse the data.  The documentation might not be perfect,
+but it can save you tons of time (and likely frustration).
+
+Based on Table 4 of [[ftp://ftp.optech.ca/imaging/LYNX/Programs/PosPacLand_V5/POSPac%20Land%205.0%20Service%20Pack%203/Manuals/POSPac%20Quick%20Start%20Guide.pdf][PosPac Quick Start Guide.pdf]] in 3.0 POSPac Land
+Output Data Files Post-Processed Solution File:
+
+#+ATTR_HTML: border="1" rules="all" frame="all"
+| Data                | Units          | Type   |
+|---------------------+----------------+--------|
+| time                | seconds        | double |
+| latitude            | radians        | double |
+| longitude           | radians        | double |
+| altitude            | meters         | double |
+| x velocity          | meters/second  | double |
+| y velocity          | meters/second  | double |
+| z velocity          | meters/second  | double |
+| roll                | radians        | double |
+| pitch               | radians        | double |
+| platform heading    | radians        | double |
+| wander angle        | radians        | double |
+| x body acceleration | meters/second^2 | double |
+| y body acceleration | meters/second^2 | double |
+| z body acceleration | meters/second^2 | double |
+| x body angular rate | radians/second | double |
+| y body angular rate | radians/second | double |
+| z body angular rate | radians/second | double |
+
+* Initial Look
+
+#+BEGIN_EXAMPLE
+ls -l *.sbet
+-rw-r--r--  1 schwehr  staff      22712 Dec 14 12:44 sample.sbet
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE 
+-rw-r--r--  1 schwehr  staff  225820248 Dec 12 09:02 original.sbet
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+file *.sbet
+original.sbet: data
+sample.sbet:   data
+
+less sample.sbet
+#+END_EXAMPLE
+
+#+BEGIN_EXAMPLE
+od -a sample.sbet  | head
+0000000    ##  g   ####t   #   q dc4   A   ### H soh   # nak   ### ####?
+0000020    G   ####f   Q   ##  z eot   ##  n   ### ##  ##dle   #   )   @
+0000040    K   ##  #  9a   *   ### $   @   R   #  90  83   |   ####### ?
+0000060    ###yn   ##  ##  ### f   ##  ? esc   u   # etx bel  88   e   #
+0000100    #  vt   #   '   ######  #   ?   #   ### #   2   8  90   #   #
+0000120    z   ##  = can   #####   ##  #   ### R   ### $   #   e   ### #
+0000140    #####   ### #   #   ##  ##  # stx   <   w   u  83   #####   ?
+0000160    ### B   #####   ###### 95   ?   m   #  83   4   /   #  9d   ?
+0000200   si   { etb   D   ##  ### {   #   ###ff  99 etx  84   r dc4   A
+0000220  dc3  95   #   ### e   ### ####?   #######c3 stx   #   z eot   ##
+#+END_EXAMPLE
+
+Better yet, Octal Dump has a mode that will try to treat the file as
+uniform binary data (for example, a series of 4 byte integers).
+Since we know that our SBET file will contain a series of 17 doubles
+(8 bytes each) in a row, let's try out a sample file that contains the
+numbers 0 through 16,
+
+#+BEGIN_EXAMPLE
+od -t fD s1.bin 
+0000000     0.000000000000000e+00    1.000000000000000e+00
+0000020     2.000000000000000e+00    3.000000000000000e+00
+0000040     4.000000000000000e+00    5.000000000000000e+00
+0000060     6.000000000000000e+00    7.000000000000000e+00
+0000100     8.000000000000000e+00    9.000000000000000e+00
+0000120     1.000000000000000e+01    1.100000000000000e+01
+0000140     1.200000000000000e+01    1.300000000000000e+01
+0000160     1.400000000000000e+01    1.500000000000000e+01
+0000200     1.600000000000000e+01                         
+0000210
+#+END_EXAMPLE
