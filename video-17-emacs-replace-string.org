@@ -3,7 +3,7 @@
 #+TITLE:     Video 17: emacs - replace string and xml
 #+AUTHOR:    Kurt Schwehr
 #+EMAIL:     schwehr@ccom.unh.edu
-#+DATE:      <2011-10-24 Mon>
+#+DATE:      <2011-11-07 Mon>
 #+DESCRIPTION: Marine Research Data Manipulation and Practices
 #+KEYWORDS: hdf hdf5 emacs
 #+LANGUAGE:  en

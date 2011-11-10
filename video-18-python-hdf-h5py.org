@@ -3,7 +3,7 @@
 #+TITLE:     Video 18: python - hdf5 via h5py
 #+AUTHOR:    Kurt Schwehr
 #+EMAIL:     schwehr@ccom.unh.edu
-#+DATE:      <2011-10-25 Tue>
+#+DATE:      <2011-11-08 Tue>
 #+DESCRIPTION: Marine Research Data Manipulation and Practices
 #+KEYWORDS: hdf hdf5 h5py python numpy matplotlib
 #+LANGUAGE:  en

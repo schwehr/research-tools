@@ -79,7 +79,7 @@ laser ranges to create a properly a georeferenced model of the
 environment.
 
 I have taken a sample file from a research cruise in Alaska on the
-NOAA survey ship Fairweather.  To simplify the example I have only
+NOAA survey ship Fairweather.  To simplify the example, I have only
 kept every 1/10000th data message.  The original file had 22 million
 reports and the new file has 166 reports.  When learning, smaller
 examples are easier to work with!  I will not show you how I did this,
@@ -130,7 +130,8 @@ To download the file, you can save it from a web browser or pull it
 down in the terminal using *curl* or *wget*.
 
 #+BEGIN_SRC sh
-curl -O http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/sample.sbet
+curl -O http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/examples/sample.sbet.bz2
+bunzip2 sample.sbet.bz2
 #+END_SRC
 
 You will just have the sample.sbet, but here I am showing you both the
