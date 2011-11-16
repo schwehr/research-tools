@@ -101,12 +101,16 @@ If there is time:
 - Parsing a multibeam file using python or Jonathan's parsing
   multibeam with C
 
-Possible addition if someone could provide it and there is time:
+* Possible addition if someone could provide it and there is time:
 
 - Quick introduction to statistical analysis
   - Using http://cran.R-project.org/
-  - Accessing R from python
+  - Accessing R from python - hoping for Rob Braswell
 
-Other courses at UNH or elsewhere
+* Other courses at UNH or elsewhere
 
 - Ernst Linder.  Math 944 - Spatial Statistics using R at UNH
+
+* TODO items
+  - [ ] GeoMapApp youtube video?
+  - [ ] IVS / ArcGIS / Caris Videos

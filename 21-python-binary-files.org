@@ -1,16 +1,21 @@
 #+STARTUP: showall
 
-#+TITLE:     Class 20: BAGs 3, XML Metadata, KML, and GSHHS shapefile
+#+TITLE:     Class 21: Python - parsing binary data - SBET IMU data
 #+AUTHOR:    Kurt Schwehr
 #+EMAIL:     schwehr@ccom.unh.edu
-#+DATE:      <2011-11-08 Tue>
+#+DATE:      <2011-11-10 Thu>
 #+DESCRIPTION: Marine Research Data Manipulation and Practices
-#+KEYWORDS: BAG HDF5 XML lxml etree hydrographic survey raster metadata shapefile qgis
+#+KEYWORDS: struct numpy sbet imu navigation binary
 #+LANGUAGE:  en
 #+OPTIONS:   H:3 num:nil toc:t \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
 #+OPTIONS:   TeX:t LaTeX:nil skip:t d:nil todo:t pri:nil tags:not-in-toc
 #+INFOJS_OPT: view:nil toc:nil ltoc:t mouse:underline buttons:0 path:http://orgmode.org/org-info.js
 #+LINK_HOME: http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/
+
+* TODO items to add or fix for Kurt
+
+- [ ] Link to the documentation on hexl-mode
+- [ ] windows binary opening file
 
 * Introduction
 
@@ -18,13 +23,13 @@ Thanks to Glen Rice for this topic and sample data.
 
 * See also
 
-http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/python-binary-files.org
+- http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/python-binary-files.org
 
 * Setup
 
 #+BEGIN_SRC sh
-mkdir -p ~/class/20
-cd ~/class/20
+mkdir -p ~/class/21
+cd ~/class/21
 
 pwd
 # Make sure you are in the right location
@@ -141,6 +146,7 @@ logstart -o -r log-class-21.py
 
 import struct
 import numpy
+import math
 #+END_SRC
 
 http://docs.python.org/library/struct.html#format-characters
@@ -148,7 +154,7 @@ http://docs.python.org/library/struct.html#format-characters
 Run this section to create some sample files:
 
 #+BEGIN_SRC python
-import struct
+import struct, math
 open('c-65.bin','w').write(struct.pack('c','z'))
 open('b-120.bin','w').write(struct.pack('b',120 ))
 open('B-121.bin','w').write(struct.pack('B',121 ))
@@ -200,6 +206,24 @@ struct.unpack('d',sbet_data[0:8])[0]
 # 334959.0048233234
 #+END_SRC
 
+That's hard to tell if it was correct.  Let's use a file
+where we know the answer:
+
+#+BEGIN_SRC python
+ls
+data_file = open('d-series.bin')
+data = data_file.read()
+len(data)
+
+struct.unpack('d',data[:8])
+
+struct.unpack('dd',data[:8*2])
+
+struct.unpack('dddddddddd',data)
+
+struct.unpack('10d',data)
+#+END_SRC
+
 #+BEGIN_SRC python
 struct.unpack('dd',sbet_data[8:24])
 (1.0549522638507869, -2.559965741819528)
@@ -238,7 +262,7 @@ time, latitude, longitude, altitude, \
     x_vel, y_vel, z_vel, \
     roll, pitch, platform_heading, wander_angle, \
     x_acceleration, y_acceleration, z_acceleration, \
-    x_angular_rate, y_angular_rate, z_angular = struct.unpack('ddddddddddddddddd',data[0:17*8])
+    x_angular_rate, y_angular_rate, z_angular = struct.unpack('ddddddddddddddddd',sbet_data[0:17*8])
 #+END_SRC
 
 #+BEGIN_SRC python
@@ -557,3 +581,122 @@ def get_offset(datagram_number):
     return datagram_number * datagram_size
 #+END_SRC
 
+
+* History
+
+#+BEGIN_SRC python
+#log# Automatic Logger file. *** THIS MUST BE THE FIRST LINE ***
+#log# DO NOT CHANGE THIS LINE OR THE TWO BELOW
+#log# opts = Struct({'__allownew': True, 'logfile': 'log-cass-21.py'})
+#log# args = []
+#log# It is safe to make manual edits below here.
+#log#-----------------------------------------------------------------------
+!head log-cass-21.py
+import struct
+import numpy
+import struct
+open('c-65.bin','w').write(struct.pack('c','z'))
+open('b-120.bin','w').write(struct.pack('b',120 ))
+open('B-121.bin','w').write(struct.pack('B',121 ))
+open('B-series.bin','w').write(struct.pack('10B',*range(115,125) ))
+open('i-nine.bin','w').write(struct.pack('i',9))
+open('d-pi.bin','w').write(struct.pack('d',math.pi))
+open('d-1.bin','w').write(struct.pack('d',1.0))
+open('d-series.bin','w').write(struct.pack('10d',*range(10)))
+!file *.bin
+ls -l
+sbet_file = open('sample.sbet')
+sbet_data = sbet_file.read()
+whos
+type (sbet_data)
+#[Out]# <type 'str'>
+len(sbet_data)
+#[Out]# 22712
+struct.unpack
+struct.unpack('d', sbet_data)
+struct.unpack('d', sbet_data[:8])
+#[Out]# (334959.0048233234,)
+!
+ls
+data_file = open('d-series.bin')
+data = data_file.read()
+len(data)
+#[Out]# 80
+struct.unpack('d',data[:8])
+#[Out]# (0.0,)
+struct.unpack('dd',data[:8*2])
+#[Out]# (0.0, 1.0)
+struct.unpack('dddddddddd',data)
+#[Out]# (0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0)
+struct.unpack('10d',data)
+#[Out]# (0.0, 1.0, 2.0, 3.0, 4.0, 5.0, 6.0, 7.0, 8.0, 9.0)
+struct.unpack('dd',sbet_data[8:24])
+#[Out]# (1.0549522638507869, -2.559965741819528)
+struct.unpack('2d',sbet_data[8:24])
+#[Out]# (1.0549522638507869, -2.559965741819528)
+struct.unpack('17d',sbet_data[:17*8])
+#[Out]# (334959.0048233234, 1.0549522638507869, -2.559965741819528, 12.826300557342815, 10.437825046453915, 0.998228318178983, 0.18282804536664027, -0.0026283394812042344, 0.11416603057936824, -0.09985686530029529, -0.40154673926674145, -0.8249097558096672, -0.3413483211034812, 0.07018300645653144, 0.021320176833628756, 0.029000032024608147, -0.006807197876212325)
+x,y = -1, 999
+whos
+time, lat, long, alt, x_vel, y_vel, z_vel, roll, pitch, heading, wander, x_accel, y_accel, z_accel, x_ang, y_ang, z_ang = struct.unpack('17d',data[:17*8])
+time, latitude, longitude, altitude, \
+    x_vel, y_vel, z_vel, \
+    roll, pitch, platform_heading, wander_angle, \
+    x_acceleration, y_acceleration, z_acceleration, \
+    x_angular_rate, y_angular_rate, z_angular = struct.unpack('ddddddddddddddddd',data[0:17*8])
+time, lat, long, alt, x_vel, y_vel, z_vel, roll, pitch, heading, wander, x_accel, y_accel, z_accel, x_ang, y_ang, z_ang = struct.unpack('17d',sbet_data[:17*8])
+del data
+whos
+zip
+zip( ['x','y'], [1,2])
+#[Out]# [('x', 1), ('y', 2)]
+dict(  zip( ['x','y'], [1,2]) )
+#[Out]# {'y': 2, 'x': 1}
+field_names = ('time', 'latitude', 'longitude', 'altitude', \
+          'x_vel', 'y_vel', 'z_vel', \
+          'roll', 'pitch', 'platform_heading', 'wander_angle', \
+          'x_acceleration', 'y_acceleration', 'z_acceleration', \
+          'x_angular_rate', 'y_angular_rate', 'z_angular')
+field_names
+#[Out]# ('time', 'latitude', 'longitude', 'altitude', 'x_vel', 'y_vel', 'z_vel', 'roll', 'pitch', 'platform_heading', 'wander_angle', 'x_acceleration', 'y_acceleration', 'z_acceleration', 'x_angular_rate', 'y_angular_rate', 'z_angular')
+values = struct.unpack('17d',sbet_data[:8*17])
+values
+#[Out]# (334959.0048233234, 1.0549522638507869, -2.559965741819528, 12.826300557342815, 10.437825046453915, 0.998228318178983, 0.18282804536664027, -0.0026283394812042344, 0.11416603057936824, -0.09985686530029529, -0.40154673926674145, -0.8249097558096672, -0.3413483211034812, 0.07018300645653144, 0.021320176833628756, 0.029000032024608147, -0.006807197876212325)
+dict( zip(field_names, values) )
+#[Out]# {'x_acceleration': -0.8249097558096672, 'x_angular_rate': 0.021320176833628756, 'platform_heading': -0.09985686530029529, 'y_angular_rate': 0.029000032024608147, 'pitch': 0.11416603057936824, 'altitude': 12.826300557342815, 'z_vel': 0.18282804536664027, 'longitude': -2.559965741819528, 'roll': -0.0026283394812042344, 'y_vel': 0.998228318178983, 'y_acceleration': -0.3413483211034812, 'time': 334959.0048233234, 'latitude': 1.0549522638507869, 'z_acceleration': 0.07018300645653144, 'z_angular': -0.006807197876212325, 'x_vel': 10.437825046453915, 'wander_angle': -0.40154673926674145}
+dict( zip(field_names[:4], values[:4]) )
+#[Out]# {'latitude': 1.0549522638507869, 'altitude': 12.826300557342815, 'longitude': -2.559965741819528, 'time': 334959.0048233234}
+sbet_values = dict( zip(field_names, values) )
+type(sbet_values)
+#[Out]# <type 'dict'>
+import math
+history
+math.degrees
+math.degrees(sbet_values['longitude'])
+#[Out]# -146.6752327043359
+sbet_values['long_deg'] = math.degrees(sbet_values['longitude'])
+sbet_values['lat_deg'] = math.degrees(sbet_values['latitude'])
+sbet_values
+#[Out]# {'x_acceleration': -0.8249097558096672, 'x_angular_rate': 0.021320176833628756, 'long_deg': -146.6752327043359, 'platform_heading': -0.09985686530029529, 'y_angular_rate': 0.029000032024608147, 'pitch': 0.11416603057936824, 'altitude': 12.826300557342815, 'z_vel': 0.18282804536664027, 'lat_deg': 60.444312306421736, 'longitude': -2.559965741819528, 'roll': -0.0026283394812042344, 'y_vel': 0.998228318178983, 'y_acceleration': -0.3413483211034812, 'time': 334959.0048233234, 'latitude': 1.0549522638507869, 'z_acceleration': 0.07018300645653144, 'z_angular': -0.006807197876212325, 'x_vel': 10.437825046453915, 'wander_angle': -0.40154673926674145}
+ls
+import sbet
+sbet.decode()
+import sbet
+sbet.decode()
+reload sbet
+#[Out]# <module 'sbet' from 'sbet.py'>
+sbet.decode()
+history
+reload()
+reload
+#[Out]# <built-in function reload>
+reload sbet
+#[Out]# <module 'sbet' from 'sbet.py'>
+sbet.main()
+reload sbet
+#[Out]# <module 'sbet' from 'sbet.py'>
+sbet.main()
+reload sbet
+#[Out]# <module 'sbet' from 'sbet.py'>
+sbet.main()
+#+END_SRC
