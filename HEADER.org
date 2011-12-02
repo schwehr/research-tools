@@ -44,10 +44,11 @@ hg update # Change the working files to have the latest changes
 #+ATTR_HTML: border="1" rules="all" frame="all"
 |    No. |       Date | Title/Notes                                       | Audio | Present     | Video        | Blog    |
 |--------+------------+---------------------------------------------------+-------+-------------+--------------+---------|
+|        |            | No Final                                          |       |             |              |         |
 |     28 | 2011-12-08 | No Class                                          |       |             |              |         |
 |     27 | 2011-12-06 | No Class                                          |       |             |              |         |
 |   HW 5 | 2011-12-06 | Turn in final log file for the whole class        |       |             |              |         |
-|     26 | 2011-12-01 | Last Class                                        |       |             |              |         |
+|     26 | 2011-12-01 | [[./26-python-binary-files-part-5.html][Python: parsing binary data - SBETs - Part 5]]      | [[./audio/26-python-binary-files-part-5.mp3][mp3]]   | [[./present/26-python-binary-files-part-5.pdf][pdf]] [[./present/26-python-binary-files-part-5.key][key]]     |              | [[http://schwehr.blogspot.com/2011/12/rt-26-part-6-parsing-binary-sbet-files.html][comment]] |
 |     25 | 2011-11-29 | Rob Braswell: [[./25-R-lab1-Intro.pdf][1-Intro]] [[./25-R-lab2-CO2.pdf][2-CO2]] [[./25-R-lab3-ANOVA.pdf][3-ANOVA]]               | [[./audio/25-r-statistics.mp3][mp3]]   | [[./present/25-braswell-intro-R.pdf][pdf-1]] [[./present/25-r-statistics.pdf][pdf-2]] |              | [[http://schwehr.blogspot.com/2011/11/rt-25-r-for-statistics.html][comment]] |
 | Vid 19 | 2011-11-27 | [[http://youtu.be/wup-lP32MUQ][Mercurial (hg) for version control]]                |       | [[./video/video-19-mercurial-hg-dvcs.pdf][pdf]] [[./video/video-19-mercurial-hg-dvcs.key][key]]     | [[http://youtu.be/wup-lP32MUQ][YouTube]] [[http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/video/video-19-mercurial-hg-dvcs.mov][H264]] |         |
 |        | 2011-11-24 | No Class - Thanksgiving                           |       |             |              |         |
