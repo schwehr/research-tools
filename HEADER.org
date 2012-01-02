@@ -3,6 +3,20 @@
 #+OPTIONS:   H:3 num:nil toc:nil \n:nil @:t ::t |:t ^:t -:t f:t *:t <:t
 #+OPTIONS:   TeX:nil LaTeX:nil skip:t d:nil todo:t pri:nil tags:not-in-toc
 
+* Class material:
+
+- Videos: [[http://www.youtube.com/playlist?list%3DPL7E11B34616530F5E][Playlist of extra class videos on YouTube]]
+- [[file:audio][Audio podcasts of class]]
+- Mercurial (hg) repository: https://bitbucket.org/schwehr/researchtools
+
+* Instructors:
+
+All but 1 of the classes were taught by [[http://schwehr.org][Kurt Schwehr]].  I am an Affiliate
+Research Professor in the [[http://ccom.unh.edu][Center for Coastal and Ocean Mapping / Joint Hydrographic Center]] at the [[http://unh.edu][University of New Hampshire]] and a GIS Data Engineer at Google for Oceans.
+  
+[[http://waage.sr.unh.edu/~braswell/][Rob Braswell]] taught class 25 on R for statistics.  Rob is an Affiliate Faculty in EOS
+at UNH and works at [[http://appliedgeosolutions.com/][Applied Geosolutions]].
+
 * Introduction
 
 The goal of this UNH course is to
@@ -14,36 +28,12 @@ that you can pass copies to your co-workers.  2011 is the first year
 that the course is being taught in this style.  Please email me if you
 find any typos.
 
-* Final
-
-*There will be NO final*.  The real test will be how well you are able
-to use and adapt the material from this class for your own research
-and future classes.
-
-* Lectures:
-
-*NOTE:* Starting at lecture 22, org files should now be "pulled" using
-mercurial ("hg"). I have removed the org links to encourage people to
-do exactly that. To get setup with the notes via hg:
-
-#+BEGIN_SRC sh
-mkdir ~/projects
-cd ~/projects
-sudo apt-get install mercurial # hg
-hg clone https://bitbucket.org/schwehr/researchtools
-#+END_SRC
-
-You should update the notes before everytime you work on the material:
-
-#+BEGIN_SRC sh
-cd ~/projects/researchtools
-hg pull   # Bring the changes down to the local "repo"
-hg update # Change the working files to have the latest changes
-#+END_SRC
-
 #+ATTR_HTML: border="1" rules="all" frame="all"
 |    No. |       Date | Title/Notes                                       | Audio | Present     | Video        | Blog    |
 |--------+------------+---------------------------------------------------+-------+-------------+--------------+---------|
+| Vid 20 | 2011-12-26 | [[https://bitbucket.org/schwehr/researchtools/src/tip/video/video-20-secure-shell-ssh-sftp-scp.org][Secure shell (ssh, scp), crontab and emacs tramp]]  |       | [[./video/video-20-secure-shell-ssh.pdf][pdf]] [[./video/video-20-secure-shell-ssh.key][key]]     | [[http://youtu.be/BsM58rADjMI][YouTube]] [[./video/video-20-secure-shell-ssh.mov][H264]] |         |
+|--------+------------+---------------------------------------------------+-------+-------------+--------------+---------|
+|        | 2011-12-25 | Grades submitted                                  |       |             |              |         |
 |        |            | No Final                                          |       |             |              |         |
 |     28 | 2011-12-08 | No Class                                          |       |             |              |         |
 |     27 | 2011-12-06 | No Class                                          |       |             |              |         |
@@ -73,6 +63,7 @@ hg update # Change the working files to have the latest changes
 |     13 | 2011-10-13 | [[http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/13-python.html][Python: if, while, functions, classes]]             | [[http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/audio/13-python-if-while-def-class.mp3][mp3]]   | [[./present/13-python-if-while-def-class.pdf][pdf]] [[./present/13-python-if-while-def-class.key][key]]     |              | [[http://schwehr.blogspot.com/2011/10/research-tools-lecture-13-if-while.html][comment]] |
 | Vid 12 | 2011-10-13 | [[http://youtu.be/M_98sy6xGxY][Python part 5 - while loops]]                       |       | [[./video/video-12-python-part-5-while.pdf][pdf]] [[./video/video-12-python-part-5-while.key][key]]     | [[http://youtu.be/M_98sy6xGxY][YouTube]] [[./video/video-12-python-5-while.m4v][m4v]]  |         |
 | Vid 11 | 2011-10-12 | [[http://www.youtube.com/watch?v%3D-Qu3YrckJgA][Python part 4 - if, modules, command line args]]    |       | [[http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/video/video-11-python-part-4-if-argv.pdf][pdf]] [[./video/video-11-python-part-4-if-argv.key][key]]     | [[http://www.youtube.com/watch?v%3D-Qu3YrckJgA][YouTube]] [[http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/video/video-11-python-if-argv.mov][H264]] |         |
+|   HW 4 | 2011-10-11 | Submit your log file with lectures 09 and 10      |       |             |              |         |
 |        | 2011-10-11 | No class - UNH Monday Schedule                    |       |             |              |         |
 | Vid 10 | 2011-10-10 | [[http://www.youtube.com/watch?v%3DLLhSroiMexE][Emacs part 5 - modes]]                              |       |             | [[http://youtu.be/LLhSroiMexE][YouTube]] [[http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/video/video-10-emacs-5-modes.mov][H264]] |         |
 |  Vid 9 | 2011-10-09 | [[http://www.youtube.com/watch?v%3Dj6jZxRUheVE][Python part 3: parts]]                              |       |             | [[http://www.youtube.com/watch?v%3Dj6jZxRUheVE][YouTube]] [[./video/video-9-python-3-parts.mov][H264]] |         |
@@ -109,15 +100,39 @@ account for feedback.
 - http://vislab-ccom.unh.edu/~schwehr/rt/ is an alias to [[http://vislab-ccom.unh.edu/~schwehr/Classes/2011/esci895-researchtools/][ResearchTools 2011]]
 - http://tinyurl.com/researchtools2011
 
-* Course Materials
+* More Course Materials
 
-- Mercurial (hg) repository: https://bitbucket.org/schwehr/researchtools
 - Google Group for discussions: [[http://groups.google.com/group/researchtools2011]]
-- [[file:audio][Audio podcasts of class]]
-- [[http://www.youtube.com/playlist?list%3DPL7E11B34616530F5E][Playlist of extra class videos on YouTube]]
 - [[file:virtual-machines][Ubuntu Virtual Machines]] for VMWare
 
 * Virtual Machine account:
 
 - user: researchtools
 - pass: !rt2011vm
+
+* Final
+
+*There will be NO final*.  The real test will be how well you are able
+to use and adapt the material from this class for your own research
+and future classes.
+
+* Lectures:
+
+*NOTE:* Starting at lecture 22, org files should now be "pulled" using
+mercurial ("hg"). I have removed the org links to encourage people to
+do exactly that. To get setup with the notes via hg:
+
+#+BEGIN_SRC sh
+mkdir ~/projects
+cd ~/projects
+sudo apt-get install mercurial # hg
+hg clone https://bitbucket.org/schwehr/researchtools
+#+END_SRC
+
+You should update the notes before everytime you work on the material:
+
+#+BEGIN_SRC sh
+cd ~/projects/researchtools
+hg pull   # Bring the changes down to the local "repo"
+hg update # Change the working files to have the latest changes
+#+END_SRC
